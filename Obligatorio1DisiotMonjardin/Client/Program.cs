@@ -8,11 +8,10 @@ using Common.Protocol;
 
 namespace Client
 {
-    public class Program
+    public static class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
             opciones.Add("ver", () => Console.WriteLine("opcion ver XD"));
             opciones.Add("comprar", () => Console.WriteLine("no compre este juego"));

@@ -8,7 +8,7 @@ namespace Client
     public static class CliMenu
     {
         public static void showMenu(Dictionary<string,Action> options, string message) {
-            Console.Clear();
+           // Console.Clear();
             Console.WriteLine(message);
             for (int i = 0; i < options.Count; i++)
             {

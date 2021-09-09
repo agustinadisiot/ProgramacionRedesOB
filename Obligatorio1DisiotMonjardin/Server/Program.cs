@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Server
 {
-    public class Program
+    public static class Program
     {
 
         static readonly ISettingsManager SettingsMgr = new SettingsManager();
@@ -22,8 +22,10 @@ namespace Server
 
         private static void startServer()
         {
-            var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.ServerIpConfigKey);
-            var serverPort = SettingsMgr.ReadSetting(ServerConfig.SeverPortConfigKey);
+            //var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.ServerIpConfigKey);
+            var serverIpAddress = "127.0.0.1";
+            //var serverPort = SettingsMgr.ReadSetting(ServerConfig.SeverPortConfigKey);
+            var serverPort = "6000";
 
             Console.WriteLine($"Server is starting in address {serverIpAddress} and port {serverPort}");
 
@@ -73,7 +75,11 @@ namespace Server
                     }
                     else
                     {
-                        Console.WriteLine("Client says: " + word);
+                        Console.WriteLine("Client says (header): " + parsedHeader);
+                        Console.WriteLine("Client says (CMD):" + parsedCmd);
+                        Console.WriteLine("Client says (length): " + parsedLength);
+                        Console.WriteLine("Client says (data): " + parsedData);
+
                     }
                 }
             }

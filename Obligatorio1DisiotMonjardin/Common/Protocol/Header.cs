@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Text;
 
 namespace Common.Protocol
@@ -27,4 +27,4 @@ namespace Common.Protocol
             return header;
         }
     }
-}
+}*/
