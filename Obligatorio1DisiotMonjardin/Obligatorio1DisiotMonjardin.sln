@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{DF5619ED-0284-449C-8AA4-3D16ABBA46D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{26CEE33C-B394-48B5-A5FD-54E5C001609A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eliminar", "BusinessLogic\Eliminar.csproj", "{26CEE33C-B394-48B5-A5FD-54E5C001609A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
