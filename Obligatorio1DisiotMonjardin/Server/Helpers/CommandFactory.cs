@@ -17,6 +17,9 @@ namespace Server
                     return new PublishGame(nwsh);
                 case Command.BROWSE_CATALOGUE:
                     return new BrowseCatalogue(nwsh);
+                case Command.CREATE_USER:
+                case Command.MODIFY_GAME:
+                case Command.LOGIN:
                 default:
                     throw new NotImplementedException();
 

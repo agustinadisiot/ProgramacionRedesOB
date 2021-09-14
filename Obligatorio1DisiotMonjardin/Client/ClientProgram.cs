@@ -24,6 +24,7 @@ namespace Client
 
             networkStream = tcpClient.GetStream();
 
+
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
             opciones.Add("ver", () => Console.WriteLine("opcion ver XD"));
             opciones.Add("comprar", () => Console.WriteLine("no compre este juego"));
@@ -33,9 +34,11 @@ namespace Client
             opciones.Add("TestMandarServer", () => TestMandarAlServer());
             opciones.Add("Browse games", () => BrowseCatalogue());
             opciones.Add("Publish game", () => Publish());
+            while (true)
+            {
+                CliMenu.showMenu(opciones, "Menuuuu");
+            }
 
-            CliMenu.showMenu(opciones, "Menuuuu");
-        
         }
 
 
@@ -85,20 +88,49 @@ namespace Client
         // REQ/02/303/JUEGO1ID
 
         private static void BrowseCatalogue()
-            {
+        {
 
             byte[] header = Encoding.UTF8.GetBytes("REQ");
             ushort command = (ushort)Command.BROWSE_CATALOGUE;
             byte[] cmd = BitConverter.GetBytes(command);
 
-            var word = Console.ReadLine();
+            var word = "juego";
             byte[] data = Encoding.UTF8.GetBytes(word);
             byte[] dataLength = BitConverter.GetBytes(data.Length);
 
+            // mandar request
             networkStream.Write(header, 0, Specification.HeaderLength); // Header
             networkStream.Write(cmd, 0, Specification.CmdLength); // CMD
             networkStream.Write(dataLength, 0, Specification.dataSizeLength); // Largo
             networkStream.Write(data, 0, data.Length); // Datos
+
+            // conseguir respuesta
+
+            byte[] header2 = new byte[Specification.HeaderLength];
+            networkStream.Read(header2, 0, Specification.HeaderLength);
+            string parsedHeader = Encoding.UTF8.GetString(header2);
+
+            byte[] cmd2 = new byte[Specification.CmdLength];
+            networkStream.Read(cmd2, 0, Specification.CmdLength);
+            Command parsedCmd = (Command)BitConverter.ToUInt16(cmd2);
+
+
+            byte[] dataLength2 = new byte[Specification.dataSizeLength];
+            networkStream.Read(dataLength2, 0, Specification.dataSizeLength);
+            int parsedDataLength = BitConverter.ToInt32(dataLength2);
+
+            byte[] data2 = new byte[parsedDataLength];
+            networkStream.Read(data2, 0, parsedDataLength);
+            string parsedData2 = Encoding.UTF8.GetString(dataLength2);
+
+            //CommandHandler commandHandler = CommandFactory.GetCommandHandler(parsedCmd, _networkStreamHandler);
+
+            Console.WriteLine("Client says (header): " + parsedHeader);
+            Console.WriteLine("Client says (CMD):" + parsedCmd);
+            Console.WriteLine("Client says (data):" + parsedData2);
+
+            //commandHandler.HandleRequest();
+
 
         }
 
@@ -108,6 +140,7 @@ namespace Client
             ushort command = (ushort)Command.PUBLISH_GAME;
             byte[] cmd = BitConverter.GetBytes(command);
 
+            Console.WriteLine("Escriba el Titulo del juego:");
             var word = Console.ReadLine();
             byte[] data = Encoding.UTF8.GetBytes(word);
             byte[] dataLength = BitConverter.GetBytes(data.Length);
