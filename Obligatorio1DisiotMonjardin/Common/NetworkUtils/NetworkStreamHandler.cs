@@ -1,5 +1,8 @@
+using System;
 using System.Net.Sockets;
+using System.Text;
 using Common.NetworkUtils.Interfaces;
+using Common.Protocol;
 
 namespace Common.NetworkUtils
 {
@@ -29,9 +32,46 @@ namespace Common.NetworkUtils
             return data;
         }
 
+        public Command ReadCommand()
+        {
+            byte[] cmd = Read(Specification.CmdLength);
+            return (Command)BitConverter.ToUInt16(cmd);
+        }
+
+        public int ReadInt(int length)
+        {
+            byte[] number = Read(length);
+            return BitConverter.ToInt32(number);
+        }
+
+        public string ReadString(int length)
+        {
+            byte[] text = Read(length);
+            return Encoding.UTF8.GetString(text);
+        }
+
         public void Write(byte[] data)
         {
             _networkStream.Write(data, 0, data.Length);
+        }
+
+        public void WriteCommand(Command data)
+        {
+            ushort command = (ushort)data;
+            byte[] cmd = BitConverter.GetBytes(command);
+            Write(cmd);
+        }
+
+        public void WriteInt(int data)
+        {
+            byte[] number = BitConverter.GetBytes(data);
+            Write(number);
+        }
+
+        public void WriteString(string data)
+        {
+            byte[] header = Encoding.UTF8.GetBytes(data);
+            Write(header);
         }
     }
 }

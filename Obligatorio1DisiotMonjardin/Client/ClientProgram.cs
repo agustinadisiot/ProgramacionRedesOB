@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Client.Commands;
 using Common;
+using Common.NetworkUtils;
 using Common.Protocol;
+using Server.SteamHelpers;
 
 namespace Client
 {
@@ -21,26 +24,58 @@ namespace Client
             // This has to be the same IpEndPoint as the server.
             Console.WriteLine("Trying to connect to server"); // TODO catcher excepciones de cuando el server se apaga 
             tcpClient.Connect(serverIpEndPoint);
-
             networkStream = tcpClient.GetStream();
 
+            MainMenu();
 
+
+        }
+
+        private static void MainMenu()
+        {
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
-            opciones.Add("ver", () => Console.WriteLine("opcion ver XD"));
-            opciones.Add("comprar", () => Console.WriteLine("no compre este juego"));
-            opciones.Add("eliminar", () => Console.WriteLine("seguro que lo quiere borrar"));
+            opciones.Add("Ver catalogo", () => BrowseCatalogue());
+            opciones.Add("Publicar Juego", () => Publish());
+            opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
-            opciones.Add("explota", () => Main(args));
             opciones.Add("TestMandarServer", () => TestMandarAlServer());
-            opciones.Add("Browse games", () => BrowseCatalogue());
-            opciones.Add("Publish game", () => Publish());
             while (true)
             {
                 CliMenu.showMenu(opciones, "Menuuuu");
             }
-
         }
 
+
+
+        private static void BrowseCatalogue()
+        {
+            NetworkStreamHandler networkStreamHandler = new NetworkStreamHandler(networkStream);
+            BrowseCatalogue commandHandler = (BrowseCatalogue) CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
+            commandHandler.SendRequest(1); //magic number
+        }
+
+        internal static void ShowCataloguePage(GamePage gamePage)
+        {
+            Console.WriteLine(gamePage.GamesTitles[0]);
+        }
+
+        private static void Publish()
+        {
+            byte[] header = Encoding.UTF8.GetBytes("REQ");
+            ushort command = (ushort)Command.PUBLISH_GAME;
+            byte[] cmd = BitConverter.GetBytes(command);
+
+            Console.WriteLine("Escriba el Titulo del juego:");
+            var word = Console.ReadLine();
+            byte[] data = Encoding.UTF8.GetBytes(word);
+            byte[] dataLength = BitConverter.GetBytes(data.Length);
+
+            networkStream.Write(header, 0, Specification.HeaderLength); // Header
+            networkStream.Write(cmd, 0, Specification.CmdLength); // CMD
+            networkStream.Write(dataLength, 0, Specification.dataSizeLength); // Largo
+            networkStream.Write(data, 0, data.Length); // Datos
+
+        }
 
         private static void TestMandarAlServer()
         {
@@ -82,75 +117,7 @@ namespace Client
             }
             tcpClient.Close();
         }
-        // TODO ELIMINAR
-        // JUEGO1$IDJUEGO1#JUEGO2$IDJUE/GO2#JUEGO3$IDJUEGO3#_##1#0
-
-        // REQ/02/303/JUEGO1ID
-
-        private static void BrowseCatalogue()
-        {
-
-            byte[] header = Encoding.UTF8.GetBytes("REQ");
-            ushort command = (ushort)Command.BROWSE_CATALOGUE;
-            byte[] cmd = BitConverter.GetBytes(command);
-
-            var word = "juego";
-            byte[] data = Encoding.UTF8.GetBytes(word);
-            byte[] dataLength = BitConverter.GetBytes(data.Length);
-
-            // mandar request
-            networkStream.Write(header, 0, Specification.HeaderLength); // Header
-            networkStream.Write(cmd, 0, Specification.CmdLength); // CMD
-            networkStream.Write(dataLength, 0, Specification.dataSizeLength); // Largo
-            networkStream.Write(data, 0, data.Length); // Datos
-
-            // conseguir respuesta
-
-            byte[] header2 = new byte[Specification.HeaderLength];
-            networkStream.Read(header2, 0, Specification.HeaderLength);
-            string parsedHeader = Encoding.UTF8.GetString(header2);
-
-            byte[] cmd2 = new byte[Specification.CmdLength];
-            networkStream.Read(cmd2, 0, Specification.CmdLength);
-            Command parsedCmd = (Command)BitConverter.ToUInt16(cmd2);
-
-
-            byte[] dataLength2 = new byte[Specification.dataSizeLength];
-            networkStream.Read(dataLength2, 0, Specification.dataSizeLength);
-            int parsedDataLength = BitConverter.ToInt32(dataLength2);
-
-            byte[] data2 = new byte[parsedDataLength];
-            networkStream.Read(data2, 0, parsedDataLength);
-            string parsedData2 = Encoding.UTF8.GetString(dataLength2);
-
-            //CommandHandler commandHandler = CommandFactory.GetCommandHandler(parsedCmd, _networkStreamHandler);
-
-            Console.WriteLine("Client says (header): " + parsedHeader);
-            Console.WriteLine("Client says (CMD):" + parsedCmd);
-            Console.WriteLine("Client says (data):" + parsedData2);
-
-            //commandHandler.HandleRequest();
-
-
-        }
-
-        private static void Publish()
-        {
-            byte[] header = Encoding.UTF8.GetBytes("REQ");
-            ushort command = (ushort)Command.PUBLISH_GAME;
-            byte[] cmd = BitConverter.GetBytes(command);
-
-            Console.WriteLine("Escriba el Titulo del juego:");
-            var word = Console.ReadLine();
-            byte[] data = Encoding.UTF8.GetBytes(word);
-            byte[] dataLength = BitConverter.GetBytes(data.Length);
-
-            networkStream.Write(header, 0, Specification.HeaderLength); // Header
-            networkStream.Write(cmd, 0, Specification.CmdLength); // CMD
-            networkStream.Write(dataLength, 0, Specification.dataSizeLength); // Largo
-            networkStream.Write(data, 0, data.Length); // Datos
-
-        }
-
     }
+
+
 }

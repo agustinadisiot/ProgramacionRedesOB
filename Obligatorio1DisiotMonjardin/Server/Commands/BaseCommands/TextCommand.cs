@@ -26,7 +26,7 @@ namespace Server
 
         public string[] Parse(string unparsedData)
         {
-            string[] parsedData = unparsedData.Split(Specification.separator);
+            string[] parsedData = unparsedData.Split(Specification.delimiter);
             return parsedData;
         }
 

@@ -1,4 +1,6 @@
-﻿using Server.Domain;
+﻿using Common.Protocol;
+using Server.Domain;
+using Server.SteamHelpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -39,10 +41,38 @@ namespace Server
 
         }
 
-        public string FirstGame()
+        public string FirstGame() // TODO eliminar cuando no se use mas- era para una prueba
         {
-            if (games.Count == 0) return "Primer Juego";
+            if (games.Count == 0) return "Primer Juego asdfghjk";
             return games[0].Title;
+        }
+
+        public GamePage BrowseGames(int pageNumber)
+        {
+            int firstGamePos = (pageNumber - 1) * Specification.pageSize;
+            int lastGamePos = firstGamePos + Specification.pageSize;
+            List<string> gameTitles = new List<string>();
+
+            for (int i = firstGamePos; (i < games.Count) && (i < lastGamePos); i++)
+            {
+                gameTitles.Add(games[i].Title); //Todo checkear pagenumber > 0
+            }
+            GamePage ret = new GamePage()
+            {
+                GamesTitles = gameTitles.ToArray(),
+                HasNextPage = ExistsNextGamePage(games, pageNumber),
+                HasPreviousPage = pageNumber > 1
+            };
+            return ret;
+        }
+
+        public bool ExistsNextGamePage(List<Game> games, int pageNumber)
+        {
+            int maxPageNumber = games.Count / Specification.pageSize;
+            if (games.Count % pageNumber == 0)
+                maxPageNumber++;
+
+            return pageNumber < maxPageNumber;
         }
     }
 }
