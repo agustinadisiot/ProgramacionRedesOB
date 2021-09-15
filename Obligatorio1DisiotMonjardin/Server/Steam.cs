@@ -69,7 +69,7 @@ namespace Server
         public bool ExistsNextGamePage(List<Game> games, int pageNumber)
         {
             int maxPageNumber = games.Count / Specification.pageSize;
-            if (games.Count % pageNumber == 0)
+            if (games.Count % Specification.pageSize != 0)
                 maxPageNumber++;
 
             return pageNumber < maxPageNumber;
