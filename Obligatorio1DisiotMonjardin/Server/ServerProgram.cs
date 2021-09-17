@@ -16,9 +16,13 @@ namespace Server
 
         static void Main(string[] args)
         {
-            
-            Server server = new Server();
+            //var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.ServerIpConfigKey);// TODO
+            var serverIpAddress = "127.0.0.1";
+            //var serverPort = SettingsMgr.ReadSetting(ServerConfig.SeverPortConfigKey);
+            var serverPort = "6000";
+            Console.WriteLine($"Server is starting in address {serverIpAddress} and port {serverPort}");
 
+            Server server = new Server(serverIpAddress,serverPort);
             Console.WriteLine("Server will start accepting connections from the clients");
             server. StartReceivingConnections();
 

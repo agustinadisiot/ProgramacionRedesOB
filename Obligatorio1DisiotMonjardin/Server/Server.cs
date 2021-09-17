@@ -11,13 +11,8 @@ namespace Server
     {
         private readonly TcpListener tcpListener;
         public const int  maxClientsInQ = 100;
-        public Server() {
-            //var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.ServerIpConfigKey);// TODO
-            var serverIpAddress = "127.0.0.1";
-            //var serverPort = SettingsMgr.ReadSetting(ServerConfig.SeverPortConfigKey);
-            var serverPort = "6000";
-            Console.WriteLine($"Server is starting in address {serverIpAddress} and port {serverPort}");
-
+        public Server(string serverIpAddress, string serverPort) {
+            
             var ipEndPoint = new IPEndPoint(IPAddress.Parse(serverIpAddress), int.Parse(serverPort));
             tcpListener = new TcpListener(ipEndPoint);
 
