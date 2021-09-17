@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Server.SteamHelpers
+namespace Common.Domain
 {
     public struct GamePage
     {

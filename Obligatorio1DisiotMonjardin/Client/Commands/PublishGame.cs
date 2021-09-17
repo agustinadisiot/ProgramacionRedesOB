@@ -24,7 +24,7 @@ namespace Client.Commands
             // TODO hacer la response  
         }
 
-        public void SendRequest(Game newGame)
+        public string SendRequest(Game newGame)
         {
             SendHeader();
             SendCommand(Command.PUBLISH_GAME);
@@ -38,18 +38,15 @@ namespace Client.Commands
             data += newGame.Title;*/
 
             SendData(data);
-            ResponseHandler();
+            return ResponseHandler();
         }
 
 
-        private void ResponseHandler()
+        private string ResponseHandler()
         {
-
             string[] data = GetData();
-
             string message = data[0];
-
-            ClientProgram.ShowSeverMessage(message);
+            return message;
 
         }
     }

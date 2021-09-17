@@ -4,8 +4,8 @@ using Common.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Server.SteamHelpers;
 using System.Linq;
+using Common.Domain;
 
 namespace Client.Commands
 {
@@ -23,18 +23,18 @@ namespace Client.Commands
             Console.WriteLine("This is the game list");*/
         }
 
-        public void SendRequest(int pageNumber)
+        public GamePage SendRequest(int pageNumber)
         {
             SendHeader();
             SendCommand(Command.BROWSE_CATALOGUE);
 
             string pageNumberText = pageNumber.ToString();
             SendData(pageNumberText);
-            ResponseHandler(pageNumber);
+            return ResponseHandler(pageNumber);
         }
 
 
-        private void ResponseHandler(int pageNumber)
+        private GamePage ResponseHandler(int pageNumber)
         {
            
             ReadHeader();
@@ -56,7 +56,7 @@ namespace Client.Commands
                 HasPreviousPage = ToBooleanFromString(parsedData[parsedData.Length - 1])
             };
 
-            ClientProgram.ShowCataloguePage(gamePage);
+            return gamePage;
     
         }
 
