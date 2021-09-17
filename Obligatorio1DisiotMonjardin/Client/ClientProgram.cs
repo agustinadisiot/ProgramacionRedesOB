@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using Client.Commands;
 using Common;
+using Common.Domain;
 using Common.NetworkUtils;
 using Common.Protocol;
 using Server.SteamHelpers;
@@ -47,34 +48,53 @@ namespace Client
 
 
 
-        private static void BrowseCatalogue()
+        private static void BrowseCatalogue(int pageNumber = 1)
         {
             NetworkStreamHandler networkStreamHandler = new NetworkStreamHandler(networkStream);
             BrowseCatalogue commandHandler = (BrowseCatalogue) CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
-            commandHandler.SendRequest(1); //magic number
+            commandHandler.SendRequest(pageNumber); 
         }
 
         internal static void ShowCataloguePage(GamePage gamePage)
         {
-            Console.WriteLine(gamePage.GamesTitles[0]);
+            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
+
+            foreach (string gameTitle in gamePage.GamesTitles) {
+                opciones.Add(gameTitle, () => MainMenu());
+            }
+
+            if(gamePage.HasNextPage)
+                opciones.Add("Siguiene Página", () => BrowseCatalogue(gamePage.CurrentPage + 1));
+
+            if (gamePage.HasPreviousPage)
+                opciones.Add("Página Anterior", () => BrowseCatalogue(gamePage.CurrentPage - 1));
+
+            opciones.Add("Volver al Menu Principal", () => MainMenu());
+
+            CliMenu.showMenu(opciones, $"Catalogo de Juegos Pagina {gamePage.CurrentPage}");
         }
 
         private static void Publish()
         {
-            byte[] header = Encoding.UTF8.GetBytes("REQ");
-            ushort command = (ushort)Command.PUBLISH_GAME;
-            byte[] cmd = BitConverter.GetBytes(command);
+            NetworkStreamHandler networkStreamHandler = new NetworkStreamHandler(networkStream);
+            PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
 
             Console.WriteLine("Escriba el Titulo del juego:");
             var word = Console.ReadLine();
-            byte[] data = Encoding.UTF8.GetBytes(word);
-            byte[] dataLength = BitConverter.GetBytes(data.Length);
+            // TODO agregar el resto de los datos y validarlos 
 
-            networkStream.Write(header, 0, Specification.HeaderLength); // Header
-            networkStream.Write(cmd, 0, Specification.CmdLength); // CMD
-            networkStream.Write(dataLength, 0, Specification.dataSizeLength); // Largo
-            networkStream.Write(data, 0, data.Length); // Datos
 
+            Game newGame = new Game
+            {
+                Title = word
+                // todo agregar los nuevos datos
+            };
+            commandHandler.SendRequest(newGame);
+        }
+
+        public  static void ShowSeverMessage(string message) {
+            Console.WriteLine(message);
+            MainMenu();
         }
 
         private static void TestMandarAlServer()

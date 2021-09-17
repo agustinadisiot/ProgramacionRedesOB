@@ -1,7 +1,10 @@
-﻿using Common.NetworkUtils;
+﻿using Common.Domain;
+using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
+using Common.Protocol;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Client.Commands
@@ -19,6 +22,35 @@ namespace Client.Commands
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.AddGame(newGame);*/
             // TODO hacer la response  
+        }
+
+        public void SendRequest(Game newGame)
+        {
+            SendHeader();
+            SendCommand(Command.PUBLISH_GAME);
+
+            string data = "";
+            data += newGame.Title;
+            // TODO agregar el resto
+            // data += Specification.delimiter;
+            /*data += newGame.Title;
+            data += newGame.Title;
+            data += newGame.Title;*/
+
+            SendData(data);
+            ResponseHandler();
+        }
+
+
+        private void ResponseHandler()
+        {
+
+            string[] data = GetData();
+
+            string message = data[0];
+
+            ClientProgram.ShowSeverMessage(message);
+
         }
     }
 }

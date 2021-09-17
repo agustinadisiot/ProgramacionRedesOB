@@ -1,5 +1,7 @@
-﻿using Common.NetworkUtils;
+﻿using Common.Domain;
+using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
+using Common.Protocol;
 using Server.Domain;
 using System;
 using System.Collections.Generic;
@@ -19,7 +21,18 @@ namespace Server.Commands
             };
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.AddGame(newGame);
-            // TODO hacer la response  
+            string message = "Game added succesfully"; // TODO agregar catch para cuando tira error
+            Respond(message);
+        }
+
+        private void Respond(string message)
+        {
+            
+            _networkStreamHandler.WriteString(Specification.responseHeader);
+            _networkStreamHandler.WriteCommand(Command.PUBLISH_GAME);
+            _networkStreamHandler.WriteInt(message.Length);
+            _networkStreamHandler.WriteString(message);
+
         }
     }
 }

@@ -40,7 +40,6 @@ namespace Server.Commands
             dataString += Convert.ToInt32(gamePage.HasNextPage);
             dataString += Specification.delimiter;
             dataString += Convert.ToInt32(gamePage.HasPreviousPage);
-            dataString += Specification.delimiter;
 
 
 

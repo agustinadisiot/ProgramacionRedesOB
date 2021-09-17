@@ -32,5 +32,17 @@ namespace Client
             _networkStreamHandler.WriteInt(data.Length);
             _networkStreamHandler.WriteString(data);
         }
+
+        protected string[] GetData() {
+            ReadHeader();
+            ReadCommand(); // TODO ver si hacemos algo mas con estos 
+
+            int dataLength = _networkStreamHandler.ReadInt(Specification.dataSizeLength);
+            string data = _networkStreamHandler.ReadString(dataLength);
+
+
+            string[] parsedData = Parse(data);
+            return parsedData;
+        }
     }
 }
