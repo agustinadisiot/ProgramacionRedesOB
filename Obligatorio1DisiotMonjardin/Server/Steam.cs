@@ -23,6 +23,8 @@ namespace Server
             return instance;
         }
 
+       
+
         public Steam()
         {
             games = new List<Game>();
@@ -55,13 +57,33 @@ namespace Server
                 throw new Exception(); // TODO cambiar excepction
         }
 
-        public void AddGame(Game newGame)
+        public GameView ViewGame(int gameID, INetworkStreamHandler nwsh)
+        {
+            Game game = games.Find(i => i.Id == gameID);
+            User actualUser = GetUser(GetUsername(nwsh));
+            GameView gameView = new GameView()
+            {
+                Game = games.Find(i => i.Id == gameID),
+                CanBuy = !actualUser.GamesOwned.Contains(game),
+                IsPublisher = actualUser.Equals(game.Publisher),
+            };
+
+            return gameView;
+        }
+
+        private User GetUser(string username)
+        {
+            return users.Find(i => i.Name == username);
+        }
+
+        public void PublishGame(Game newGame, INetworkStreamHandler nwsh)
         {
 
             var gameWithSameTitle = games.Find(i => i.Title == newGame.Title);
             if (gameWithSameTitle != null)
                 throw new Exception(); //TODO hacer la exception
             newGame.Id = this.gameId;
+            newGame.Publisher = GetUser(GetUsername(nwsh));
             gameId++;
             games.Add(newGame);
             Console.WriteLine("Game has been published with title: " + newGame.Title + " and id: " + newGame.Id);
@@ -70,7 +92,7 @@ namespace Server
 
         public string FirstGame() // TODO eliminar cuando no se use mas- era para una prueba
         {
-            if (games.Count == 0) return "Primer Juego asdfghjk";
+            if (games.Count == 0) return "Primer Juego";
             return games[0].Title;
         }
 
