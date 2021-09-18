@@ -24,6 +24,8 @@ namespace Client
                     return new SearchByTitle(nwsh);
                 case Command.LOGIN:
                     return new Login(nwsh);
+                case Command.VIEW_GAME:
+                    return new ViewGame(nwsh);
                 default:
                     throw new NotImplementedException();
 
