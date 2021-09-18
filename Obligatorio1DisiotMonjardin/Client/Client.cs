@@ -28,20 +28,24 @@ namespace Client
             networkStreamHandler = new NetworkStreamHandler(tcpClient.GetStream());
         }
 
-        
+        public void StartMenu() {
+            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
+            opciones.Add("Iniciar Sesión", () => Login());
+            CliMenu.showMenu(opciones, "Menu Inicial");
+
+        }
         public void MainMenu()
         {
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
             opciones.Add("Ver catalogo", () => BrowseCatalogue());
             opciones.Add("Publicar Juego", () => Publish());
             opciones.Add("Buscar por titulo", () => SearchByTitle());
-            opciones.Add("Iniciar Sesión", () => Login()); 
             opciones.Add("Logout", () => Logout());
             opciones.Add("Comprar Juego (sacar)", () => ShowBuyGameMenu());
             opciones.Add("Ver Juego", () => ShowGameInfo());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
-            while (true)
+            while (true) // TODO sacar
             {
                 CliMenu.showMenu(opciones, "Menuuuu");
             }
@@ -63,7 +67,7 @@ namespace Client
         {
             var commandHandler = (Logout)CommandFactory.GetCommandHandler(Command.LOGOUT, networkStreamHandler);
             commandHandler.SendRequest();
-            MainMenu();
+            StartMenu();
         }
 
         private  void BrowseCatalogue(int pageNumber = 1)
@@ -132,11 +136,11 @@ namespace Client
             MainMenu();
         }
 
-        private void ShowBuyGameMenu() {
+        private void ShowBuyGameMenu(int gameID = 1) {
             // TODO sacar writeLine y poner adentro de showGame
             Console.WriteLine("ID del juego: ");
             string TextId = Console.ReadLine();
-            int gameID = int.Parse(TextId);
+            gameID = int.Parse(TextId);
             var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
             string message = commandHandler.SendRequest(gameID);
             ShowServerMessage(message);
