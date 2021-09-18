@@ -97,9 +97,10 @@ namespace Client
         {
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
 
-            foreach (string gameTitle in gamePage.GamesTitles)
+            for(int i = 0; i < gamePage.GamesTitles.Count; i++)
             {
-                opciones.Add(gameTitle, () => MainMenu());
+                int idIndex = i;
+                opciones.Add(gamePage.GamesTitles[i], () => ShowGameInfo(gamePage.GamesIDs[idIndex]));
             }
 
             if (gamePage.HasNextPage)
@@ -111,6 +112,12 @@ namespace Client
             opciones.Add("Volver al Menu Principal", () => MainMenu());
 
             CliMenu.showMenu(opciones, $"Catalogo de Juegos Pagina {gamePage.CurrentPage}");
+        }
+
+        private void ShowGameInfo(int id)
+        {
+            Console.WriteLine($"ID del juego {id}");
+            MainMenu();
         }
 
         private  void Publish()

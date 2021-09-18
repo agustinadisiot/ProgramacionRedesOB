@@ -79,14 +79,17 @@ namespace Server
             int firstGamePos = (pageNumber - 1) * Specification.pageSize;
             int lastGamePos = firstGamePos + Specification.pageSize;
             List<string> gameTitles = new List<string>();
+            List<int> gamesIDs = new List<int>(); 
 
             for (int i = firstGamePos; (i < games.Count) && (i < lastGamePos); i++)
             {
                 gameTitles.Add(games[i].Title); //Todo checkear pagenumber > 0
+                gamesIDs.Add(games[i].Id); 
             }
             GamePage ret = new GamePage()
             {
-                GamesTitles = gameTitles.ToArray(),
+                GamesTitles = gameTitles,
+                GamesIDs = gamesIDs,
                 HasNextPage = ExistsNextGamePage(games, pageNumber),
                 HasPreviousPage = pageNumber > 1
             };
@@ -106,7 +109,7 @@ namespace Server
             }
             GamePage ret = new GamePage()
             {
-                GamesTitles = gameTitles.ToArray(),
+                GamesTitles = gameTitles,
                 HasNextPage = ExistsNextGamePage(filteredList, pageNumber),
                 HasPreviousPage = pageNumber > 1
             };
