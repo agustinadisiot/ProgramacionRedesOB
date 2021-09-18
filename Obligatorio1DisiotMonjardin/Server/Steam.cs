@@ -30,6 +30,7 @@ namespace Server
             gameId = 0;
         }
 
+
         public bool Login(string newUserName)
         {
             User newUser = new User(newUserName);
@@ -76,6 +77,29 @@ namespace Server
             return ret;
         }
 
+        internal GamePage SearchByTitle(int pageNumber, string title)
+        {
+            int firstGamePos = (pageNumber - 1) * Specification.pageSize;
+            int lastGamePos = firstGamePos + Specification.pageSize;
+            List<Game> filteredList = games.FindAll(game => textSearchIsMatch(game.Title, title));
+            List<string> gameTitles = new List<string>();
+
+            for (int i = firstGamePos; (i < filteredList.Count) && (i < lastGamePos); i++)
+            {
+                gameTitles.Add(filteredList[i].Title); //Todo checkear pagenumber > 0
+            }
+            GamePage ret = new GamePage()
+            {
+                GamesTitles = gameTitles.ToArray(),
+                HasNextPage = ExistsNextGamePage(games, pageNumber),
+                HasPreviousPage = pageNumber > 1
+            };
+            return ret;
+        }
+
+        bool textSearchIsMatch(string real, string search) { 
+            return (real.ToLower().Contains(search.ToLower()));
+        }
         public bool ExistsNextGamePage(List<Game> games, int pageNumber)
         {
             int maxPageNumber = games.Count / Specification.pageSize;

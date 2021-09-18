@@ -8,15 +8,16 @@ using System.Text;
 
 namespace Server.Commands
 {
-    public class BrowseCatalogue : TextCommand
+    public class SearchByTitle : TextCommand
     {
-        public BrowseCatalogue(INetworkStreamHandler nwsh) : base(nwsh) { }
+        public SearchByTitle(INetworkStreamHandler nwsh) : base(nwsh) { }
 
         public override void ParsedRequestHandler(string[] req)
         {
             Steam Steam = Steam.GetInstance();
             int pageNumber = int.Parse(req[0]);
-            GamePage gamePage = Steam.BrowseGames(pageNumber);
+            string title = req[1];
+            GamePage gamePage = Steam.SearchByTitle(pageNumber,title);
             Respond(gamePage);
             Console.WriteLine("This is the game list");
         }

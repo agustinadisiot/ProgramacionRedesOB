@@ -20,6 +20,8 @@ namespace Server
                     return new BrowseCatalogue(nwsh);
                 case Command.CREATE_USER:
                 case Command.MODIFY_GAME:
+                case Command.SEARCH_BY_TITLE:
+                    return new SearchByTitle(nwsh);
                 case Command.LOGIN:
                     return new Login(nwsh);
                 default:

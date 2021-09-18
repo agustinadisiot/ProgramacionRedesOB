@@ -33,6 +33,7 @@ namespace Client
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
             opciones.Add("Ver catalogo", () => BrowseCatalogue());
             opciones.Add("Publicar Juego", () => Publish());
+            opciones.Add("Buscar por titulo", () => SearchByTitle());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
             while (true)
@@ -41,8 +42,6 @@ namespace Client
             }
         }
 
-
-
         private  void BrowseCatalogue(int pageNumber = 1)
         {
             BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
@@ -50,7 +49,39 @@ namespace Client
             ShowCataloguePage(newGamePage);
         }
 
-        internal  void ShowCataloguePage(GamePage gamePage)
+        private void SearchByTitle() {
+            Console.WriteLine("Escriba el titulo del juego: ");
+            string title = Console.ReadLine();
+            // TODO pedir titulo devuelta si es vacio
+            ShowSearchByTitlePage(title);
+        }
+        public void ShowSearchByTitlePage(string title, int pageNumber = 1) {
+            var commandHandler = (SearchByTitle)CommandFactory.GetCommandHandler(Command.SEARCH_BY_TITLE, networkStreamHandler);
+            GamePage newGamePage = commandHandler.SendRequest(pageNumber, title);
+            ShowSearchByTitlePage(newGamePage, title);
+        }
+
+        private void ShowSearchByTitlePage(GamePage gamePage,string title)
+        {
+            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
+
+            foreach (string gameTitle in gamePage.GamesTitles)
+            {
+                opciones.Add(gameTitle, () => MainMenu());
+            }
+
+            if (gamePage.HasNextPage)
+                opciones.Add("Siguiene Página", () => ShowSearchByTitlePage(title, gamePage.CurrentPage + 1));
+
+            if (gamePage.HasPreviousPage)
+                opciones.Add("Página Anterior", () => ShowSearchByTitlePage(title, gamePage.CurrentPage - 1));
+
+            opciones.Add("Volver al Menu Principal", () => MainMenu());
+
+            CliMenu.showMenu(opciones, $"Juegos con \"{title}\" - Página {gamePage.CurrentPage}");
+        }
+
+        private  void ShowCataloguePage(GamePage gamePage)
         {
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
 
@@ -93,5 +124,6 @@ namespace Client
             Console.WriteLine(message);
             MainMenu();
         }
+
     }
 }
