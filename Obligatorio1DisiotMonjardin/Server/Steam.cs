@@ -31,6 +31,15 @@ namespace Server
             connections = new Dictionary<INetworkStreamHandler, string>();
         }
 
+        internal void BuyGame(int gameID, INetworkStreamHandler nwsh )
+        {
+            // TODO tirar error si el juego ya esta comprado / si la id no es valida
+            Game gameToBuy = games.Find(game => game.Id == gameID);
+            User userToBuyGame = users.Find(user => user.Name == GetUsername(nwsh)); // TODO ver que pasa si no hay user logeado
+            userToBuyGame.GamesOwned.Add(gameToBuy);
+            //TODO eliminar
+            Console.WriteLine($" {userToBuyGame.Name} bought {gameToBuy.Title} ");
+        }
 
         public bool Login(string newUserName, INetworkStreamHandler nwsh)
         {

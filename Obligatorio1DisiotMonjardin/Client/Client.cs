@@ -35,7 +35,8 @@ namespace Client
             opciones.Add("Ver catalogo", () => BrowseCatalogue());
             opciones.Add("Publicar Juego", () => Publish());
             opciones.Add("Buscar por titulo", () => SearchByTitle());
-            opciones.Add("Iniciar Sesión", () => Login());
+            opciones.Add("Iniciar Sesión", () => Login()); 
+            opciones.Add("Comprar Juego (sacar)", () => ShowBuyGameMenu());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
             while (true)
@@ -118,6 +119,16 @@ namespace Client
         {
             Console.WriteLine($"ID del juego {id}");
             MainMenu();
+        }
+
+        private void ShowBuyGameMenu() {
+            // TODO sacar writeLine y poner adentro de showGame
+            Console.WriteLine("ID del juego: ");
+            string TextId = Console.ReadLine();
+            int gameID = int.Parse(TextId);
+            var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
+            string message = commandHandler.SendRequest(gameID);
+            ShowServerMessage(message);
         }
 
         private  void Publish()
