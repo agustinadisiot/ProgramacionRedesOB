@@ -20,7 +20,7 @@ namespace Server.Commands
                 // TODO agregar los parametros de Game que faltan
             };
             Steam SteamInstance = Steam.GetInstance();
-            SteamInstance.AddGame(newGame);
+            SteamInstance.PublishGame(newGame, networkStreamHandler);
             string message = "Game added succesfully"; // TODO agregar catch para cuando tira error
             Respond(message);
         }

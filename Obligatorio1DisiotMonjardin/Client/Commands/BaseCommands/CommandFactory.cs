@@ -28,6 +28,8 @@ namespace Client
                     return new Login(nwsh);
                 case Command.LOGOUT:
                     return new Logout(nwsh);
+                case Command.VIEW_GAME:
+                    return new ViewGame(nwsh);
                 default:
                     throw new NotImplementedException();
 

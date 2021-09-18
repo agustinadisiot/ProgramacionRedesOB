@@ -38,6 +38,7 @@ namespace Client
             opciones.Add("Iniciar Sesión", () => Login()); 
             opciones.Add("Logout", () => Logout());
             opciones.Add("Comprar Juego (sacar)", () => ShowBuyGameMenu());
+            opciones.Add("Ver Juego", () => ShowGameInfo());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
             while (true)
@@ -45,6 +46,8 @@ namespace Client
                 CliMenu.showMenu(opciones, "Menuuuu");
             }
         }
+
+       
 
         private void Login()
         {
@@ -157,11 +160,22 @@ namespace Client
             ShowServerMessage(returnMessage);
         }
 
+        private void ShowGameInfo()
+        {
+            Console.WriteLine("Escriba el id del juego: ");
+            string id = Console.ReadLine();
+            ViewGame commandHandler = (ViewGame)CommandFactory.GetCommandHandler(Command.VIEW_GAME, networkStreamHandler);
+            commandHandler.SendRequest(id);
+            ShowServerMessage("This is the game info");
+
+        }
+
         public void ShowServerMessage(string message)
         {
             Console.WriteLine(message);
             MainMenu();
         }
+
 
     }
 }
