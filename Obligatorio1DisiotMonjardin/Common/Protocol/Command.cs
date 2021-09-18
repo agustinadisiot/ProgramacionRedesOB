@@ -6,19 +6,19 @@ namespace Common.Protocol
 {
     public enum Command
     {
-        LOGIN,
-        CREATE_USER,
-        PUBLISH_GAME,
-        MODIFY_GAME,
-        BUY_GAME,
-        VIEW_GAME,
-        SEARCH_BY_TITLE,
+        LOGIN, // maso
+        CREATE_USER, 
+        PUBLISH_GAME, // maso - solo hay titulo
+        MODIFY_GAME, 
+        BUY_GAME, 
+        VIEW_GAME, 
+        SEARCH_BY_TITLE, // si - hacer refactor para juntar con browse games
         SEARCH_BY_RATING,
-        VIEW_GENRES,
         SEARCH_BY_GENRE,
+        VIEW_GENRES, 
         WRITE_REVIEW,
         BROWSE_REVIEWS,
         DOWNLOAD_COVER,
-        BROWSE_CATALOGUE
+        BROWSE_CATALOGUE // si ponele
     }
 }

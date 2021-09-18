@@ -15,7 +15,7 @@ namespace Server.Commands.BaseCommands
         {
             Steam Steam = Steam.GetInstance();
             string newUser = req[0];
-            bool added = Steam.Login(newUser);
+            bool added = Steam.Login(newUser, networkStreamHandler);
             Respond(added);
             Console.WriteLine("Logged");
         }

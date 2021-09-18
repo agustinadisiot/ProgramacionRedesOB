@@ -8,12 +8,12 @@ namespace Client
     {
         public Login(INetworkStreamHandler nwsh) : base(nwsh) { }
 
-        public bool SendRequest(string userName)
+        public bool SendRequest(string username)
         {
             SendHeader();
             SendCommand(Command.LOGIN);
 
-            SendData(userName);
+            SendData(username);
             return ResponseHandler();
         }
 

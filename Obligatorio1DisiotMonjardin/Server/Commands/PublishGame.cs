@@ -34,5 +34,6 @@ namespace Server.Commands
             networkStreamHandler.WriteString(message);
 
         }
+
     }
 }

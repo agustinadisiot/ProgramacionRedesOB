@@ -1,4 +1,5 @@
 ﻿using Common.Domain;
+using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Server.Domain;
 using System;
@@ -13,6 +14,7 @@ namespace Server
         private List<User> users;
         private static Steam instance;
         private int gameId;
+        private Dictionary<INetworkStreamHandler, string> connections;
 
         public static Steam GetInstance()
         {
@@ -26,15 +28,31 @@ namespace Server
             games = new List<Game>();
             users = new List<User>();
             gameId = 0;
+            connections = new Dictionary<INetworkStreamHandler, string>();
         }
 
 
-        public bool Login(string newUserName)
+        public bool Login(string newUserName, INetworkStreamHandler nwsh)
         {
             User newUser = new User(newUserName);
             bool alreadyExists = users.Contains(newUser);
-            if (!alreadyExists) users.Add(newUser);
+            if (!alreadyExists)
+            {
+                users.Add(newUser);
+                connections.Add(nwsh, newUserName);
+            }
+
             return !alreadyExists;
+        }
+
+        private string GetUsername(INetworkStreamHandler nwsh)
+        {
+            string username;
+            bool userLoggedIn = connections.TryGetValue(nwsh, out username);
+            if (userLoggedIn)
+                return username;
+            else
+                throw new Exception(); // TODO cambiar excepction
         }
 
         public void AddGame(Game newGame)

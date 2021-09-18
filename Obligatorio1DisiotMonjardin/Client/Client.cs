@@ -28,18 +28,30 @@ namespace Client
             networkStreamHandler = new NetworkStreamHandler(tcpClient.GetStream());
         }
 
+        
         public void MainMenu()
         {
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
             opciones.Add("Ver catalogo", () => BrowseCatalogue());
             opciones.Add("Publicar Juego", () => Publish());
             opciones.Add("Buscar por titulo", () => SearchByTitle());
+            opciones.Add("Iniciar Sesión", () => Login());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
             while (true)
             {
                 CliMenu.showMenu(opciones, "Menuuuu");
             }
+        }
+
+        private void Login()
+        {
+            Console.WriteLine("Ingrese nombre de usuario: ");
+            string username = Console.ReadLine();
+            var commandHandler = (Login)CommandFactory.GetCommandHandler(Command.LOGIN, networkStreamHandler);
+            commandHandler.SendRequest(username);
+            // TODO separar createUser y log in
+            MainMenu();
         }
 
         private  void BrowseCatalogue(int pageNumber = 1)

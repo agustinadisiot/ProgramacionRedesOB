@@ -16,6 +16,7 @@ namespace Server
         private readonly TcpClient _acceptedTcpClient;
         private readonly IFileStreamHandler _fileStreamHandler;
         private INetworkStreamHandler networkStreamHandler;
+        private string userName;
 
         public ClientHandler(TcpClient newAcceptedTcpClient)
         {
