@@ -36,12 +36,14 @@ namespace Client.Commands
 
 
             string[] parsedData = Parse(data);
-            List<string> gameTitles = parsedData.ToList();
-            gameTitles.RemoveRange((parsedData.Length - 2), 2);
-
+            List<string> gamesInfo = parsedData.ToList();
+            gamesInfo.RemoveRange((parsedData.Length - 2), 2);
+            List<string> gamesTitles = gamesInfo.GetRange(0, gamesInfo.Count / 2);
+            List<string> gameIDs = gamesInfo.GetRange(gamesInfo.Count / 2, gamesInfo.Count / 2);
             GamePage gamePage = new GamePage()
             {
-                GamesTitles = gameTitles.ToArray(),
+                GamesTitles = gamesTitles,
+                GamesIDs = gameIDs.Select(int.Parse).ToList(),
                 CurrentPage = pageNumber,
                 HasNextPage = ToBooleanFromString(parsedData[parsedData.Length - 2]),
                 HasPreviousPage = ToBooleanFromString(parsedData[parsedData.Length - 1])

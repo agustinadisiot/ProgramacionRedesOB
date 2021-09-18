@@ -33,6 +33,15 @@ namespace Server
             connections = new Dictionary<INetworkStreamHandler, string>();
         }
 
+        internal void BuyGame(int gameID, INetworkStreamHandler nwsh )
+        {
+            // TODO tirar error si el juego ya esta comprado / si la id no es valida
+            Game gameToBuy = games.Find(game => game.Id == gameID);
+            User userToBuyGame = users.Find(user => user.Name == GetUsername(nwsh)); // TODO ver que pasa si no hay user logeado
+            userToBuyGame.GamesOwned.Add(gameToBuy);
+            //TODO eliminar
+            Console.WriteLine($" {userToBuyGame.Name} bought {gameToBuy.Title} ");
+        }
 
         public bool Login(string newUserName, INetworkStreamHandler nwsh)
         {
@@ -45,6 +54,12 @@ namespace Server
             }
 
             return !alreadyExists;
+        }
+
+        public bool Logout(INetworkStreamHandler nwsh) { 
+            connections.Remove(nwsh);
+            // TODO ver que retornamos
+            return true;
         }
 
         private string GetUsername(INetworkStreamHandler nwsh)
@@ -101,14 +116,17 @@ namespace Server
             int firstGamePos = (pageNumber - 1) * Specification.pageSize;
             int lastGamePos = firstGamePos + Specification.pageSize;
             List<string> gameTitles = new List<string>();
+            List<int> gamesIDs = new List<int>(); 
 
             for (int i = firstGamePos; (i < games.Count) && (i < lastGamePos); i++)
             {
                 gameTitles.Add(games[i].Title); //Todo checkear pagenumber > 0
+                gamesIDs.Add(games[i].Id); 
             }
             GamePage ret = new GamePage()
             {
-                GamesTitles = gameTitles.ToArray(),
+                GamesTitles = gameTitles,
+                GamesIDs = gamesIDs,
                 HasNextPage = ExistsNextGamePage(games, pageNumber),
                 HasPreviousPage = pageNumber > 1
             };
@@ -128,7 +146,7 @@ namespace Server
             }
             GamePage ret = new GamePage()
             {
-                GamesTitles = gameTitles.ToArray(),
+                GamesTitles = gameTitles,
                 HasNextPage = ExistsNextGamePage(filteredList, pageNumber),
                 HasPreviousPage = pageNumber > 1
             };

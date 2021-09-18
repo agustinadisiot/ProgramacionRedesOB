@@ -37,6 +37,11 @@ namespace Server.Commands
                 dataString += title;
                 dataString += Specification.delimiter;
             }
+            foreach (int id in gamePage.GamesIDs)
+            {
+                dataString += id;
+                dataString += Specification.delimiter;
+            }
             dataString += Convert.ToInt32(gamePage.HasNextPage);
             dataString += Specification.delimiter;
             dataString += Convert.ToInt32(gamePage.HasPreviousPage);

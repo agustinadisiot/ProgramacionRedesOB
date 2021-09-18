@@ -7,6 +7,7 @@ namespace Common.Protocol
     public enum Command
     {
         LOGIN, // maso
+        LOGOUT, // maso
         CREATE_USER, 
         PUBLISH_GAME, // maso - solo hay titulo
         MODIFY_GAME, 

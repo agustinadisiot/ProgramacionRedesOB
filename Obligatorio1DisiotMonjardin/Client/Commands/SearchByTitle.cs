@@ -42,7 +42,7 @@ namespace Client.Commands
 
             GamePage gamePage = new GamePage()
             {
-                GamesTitles = gameTitles.ToArray(),
+                GamesTitles = gameTitles,
                 CurrentPage = pageNumber,
                 HasNextPage = ToBooleanFromString(parsedData[parsedData.Length - 2]),
                 HasPreviousPage = ToBooleanFromString(parsedData[parsedData.Length - 1])

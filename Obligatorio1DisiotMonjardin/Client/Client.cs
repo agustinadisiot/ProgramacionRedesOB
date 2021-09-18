@@ -35,7 +35,9 @@ namespace Client
             opciones.Add("Ver catalogo", () => BrowseCatalogue());
             opciones.Add("Publicar Juego", () => Publish());
             opciones.Add("Buscar por titulo", () => SearchByTitle());
-            opciones.Add("Iniciar Sesión", () => Login());
+            opciones.Add("Iniciar Sesión", () => Login()); 
+            opciones.Add("Logout", () => Logout());
+            opciones.Add("Comprar Juego (sacar)", () => ShowBuyGameMenu());
             opciones.Add("Ver Juego", () => ShowGameInfo());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
@@ -54,6 +56,13 @@ namespace Client
             var commandHandler = (Login)CommandFactory.GetCommandHandler(Command.LOGIN, networkStreamHandler);
             commandHandler.SendRequest(username);
             // TODO separar createUser y log in
+            MainMenu();
+        }
+
+        private void Logout()
+        {
+            var commandHandler = (Logout)CommandFactory.GetCommandHandler(Command.LOGOUT, networkStreamHandler);
+            commandHandler.SendRequest();
             MainMenu();
         }
 
@@ -100,9 +109,10 @@ namespace Client
         {
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
 
-            foreach (string gameTitle in gamePage.GamesTitles)
+            for(int i = 0; i < gamePage.GamesTitles.Count; i++)
             {
-                opciones.Add(gameTitle, () => MainMenu());
+                int idIndex = i;
+                opciones.Add(gamePage.GamesTitles[i], () => ShowGameInfo(gamePage.GamesIDs[idIndex]));
             }
 
             if (gamePage.HasNextPage)
@@ -114,6 +124,22 @@ namespace Client
             opciones.Add("Volver al Menu Principal", () => MainMenu());
 
             CliMenu.showMenu(opciones, $"Catalogo de Juegos Pagina {gamePage.CurrentPage}");
+        }
+
+        private void ShowGameInfo(int id)
+        {
+            Console.WriteLine($"ID del juego {id}");
+            MainMenu();
+        }
+
+        private void ShowBuyGameMenu() {
+            // TODO sacar writeLine y poner adentro de showGame
+            Console.WriteLine("ID del juego: ");
+            string TextId = Console.ReadLine();
+            int gameID = int.Parse(TextId);
+            var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
+            string message = commandHandler.SendRequest(gameID);
+            ShowServerMessage(message);
         }
 
         private  void Publish()
