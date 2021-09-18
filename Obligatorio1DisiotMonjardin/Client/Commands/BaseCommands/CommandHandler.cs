@@ -9,30 +9,30 @@ namespace Client
 {
     public abstract class CommandHandler
     {
-        protected INetworkStreamHandler _networkStreamHandler;
+        protected INetworkStreamHandler networkStreamHandler;
         public CommandHandler(INetworkStreamHandler nwsh)
         {
-            _networkStreamHandler = nwsh;
+            networkStreamHandler = nwsh;
         }
 
         protected void SendHeader()
         {
-            _networkStreamHandler.WriteString(Specification.responseHeader);
+            networkStreamHandler.WriteString(Specification.responseHeader);
         }
 
         protected void SendCommand(Command cmd)
         {
-            _networkStreamHandler.WriteCommand(cmd);
+            networkStreamHandler.WriteCommand(cmd);
         }
 
         protected void ReadHeader()
         {
-            _networkStreamHandler.ReadString(Specification.HeaderLength);
+            networkStreamHandler.ReadString(Specification.HeaderLength);
         }
 
         protected void ReadCommand()
         {
-            _networkStreamHandler.ReadCommand();
+            networkStreamHandler.ReadCommand();
         }
     }
 }

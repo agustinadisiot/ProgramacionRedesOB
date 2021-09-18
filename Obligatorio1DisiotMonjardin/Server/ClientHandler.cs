@@ -15,7 +15,7 @@ namespace Server
     {
         private readonly TcpClient _acceptedTcpClient;
         private readonly IFileStreamHandler _fileStreamHandler;
-        private INetworkStreamHandler _networkStreamHandler;
+        private INetworkStreamHandler networkStreamHandler;
 
         public ClientHandler(TcpClient newAcceptedTcpClient)
         {
@@ -27,21 +27,19 @@ namespace Server
             var isClientConnected = true;
             try
             {
-                _networkStreamHandler = new NetworkStreamHandler(_acceptedTcpClient.GetStream());
+                networkStreamHandler = new NetworkStreamHandler(_acceptedTcpClient.GetStream());
 
                 while (isClientConnected)
                 {
 
-                    byte[] header = _networkStreamHandler.Read(Specification.HeaderLength);
-                    string parsedHeader = Encoding.UTF8.GetString(header);
+                    string header = networkStreamHandler.ReadString(Specification.HeaderLength);
 
-                    byte[] cmd = _networkStreamHandler.Read(Specification.CmdLength);
-                    Command parsedCmd = (Command)BitConverter.ToUInt16(cmd);
+                    Command cmd = networkStreamHandler.ReadCommand();
 
-                    CommandHandler commandHandler = CommandFactory.GetCommandHandler(parsedCmd, _networkStreamHandler);
+                    CommandHandler commandHandler = CommandFactory.GetCommandHandler(cmd, networkStreamHandler);
 
-                    Console.WriteLine("Client says (header): " + parsedHeader);
-                    Console.WriteLine("Client says (CMD):" + parsedCmd);
+                    Console.WriteLine("Client says (header): " + header);
+                    Console.WriteLine("Client says (CMD):" + cmd);
 
                     commandHandler.HandleRequest();
 

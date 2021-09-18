@@ -14,10 +14,10 @@ namespace Server
         public override void HandleRequest()
         {
 
-            byte[] dataLength = _networkStreamHandler.Read(Specification.dataSizeLength);
+            byte[] dataLength = networkStreamHandler.Read(Specification.dataSizeLength);
             int parsedLength = BitConverter.ToInt32(dataLength);
 
-            byte[] data = _networkStreamHandler.Read(parsedLength);
+            byte[] data = networkStreamHandler.Read(parsedLength);
             string unparsedData = Encoding.UTF8.GetString(data);
 
             string[] parsedData = Parse(unparsedData);

@@ -28,10 +28,10 @@ namespace Server.Commands
         private void Respond(string message)
         {
             
-            _networkStreamHandler.WriteString(Specification.responseHeader);
-            _networkStreamHandler.WriteCommand(Command.PUBLISH_GAME);
-            _networkStreamHandler.WriteInt(message.Length);
-            _networkStreamHandler.WriteString(message);
+            networkStreamHandler.WriteString(Specification.responseHeader);
+            networkStreamHandler.WriteCommand(Command.PUBLISH_GAME);
+            networkStreamHandler.WriteInt(message.Length);
+            networkStreamHandler.WriteString(message);
 
         }
     }

@@ -8,10 +8,10 @@ namespace Server
 {
     public abstract class CommandHandler
     {
-        protected INetworkStreamHandler _networkStreamHandler;
+        protected INetworkStreamHandler networkStreamHandler;
         public CommandHandler(INetworkStreamHandler nwsh)
         {
-            _networkStreamHandler = nwsh;
+            networkStreamHandler = nwsh;
         }
         public abstract void HandleRequest();
     }

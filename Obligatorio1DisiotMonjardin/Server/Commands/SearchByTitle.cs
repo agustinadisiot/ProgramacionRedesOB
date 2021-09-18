@@ -48,13 +48,13 @@ namespace Server.Commands
             byte[] dataLength = BitConverter.GetBytes(data.Length);
 
             // debuging TODO eliminar
-            _networkStreamHandler.Write(header); // Header
+            networkStreamHandler.Write(header); // Header
             Console.WriteLine(header.Length);
-            _networkStreamHandler.Write(cmd); // CMD
+            networkStreamHandler.Write(cmd); // CMD
             Console.WriteLine(cmd.Length);
-            _networkStreamHandler.Write(dataLength); // Largo
+            networkStreamHandler.Write(dataLength); // Largo
             Console.WriteLine(BitConverter.ToInt32(dataLength));
-            _networkStreamHandler.Write(data); //data 
+            networkStreamHandler.Write(data); //data 
             Console.WriteLine(Encoding.UTF8.GetString(data));
 
         }

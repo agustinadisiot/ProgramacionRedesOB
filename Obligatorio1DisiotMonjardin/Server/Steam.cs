@@ -21,8 +21,6 @@ namespace Server
             return instance;
         }
 
-        
-
         public Steam()
         {
             games = new List<Game>();
@@ -91,7 +89,7 @@ namespace Server
             GamePage ret = new GamePage()
             {
                 GamesTitles = gameTitles.ToArray(),
-                HasNextPage = ExistsNextGamePage(games, pageNumber),
+                HasNextPage = ExistsNextGamePage(filteredList, pageNumber),
                 HasPreviousPage = pageNumber > 1
             };
             return ret;

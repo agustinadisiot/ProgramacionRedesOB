@@ -22,11 +22,11 @@ namespace Server.Commands.BaseCommands
 
         private void Respond(bool resp)
         {
-            _networkStreamHandler.WriteString(Specification.responseHeader);
-            _networkStreamHandler.WriteCommand(Command.LOGIN);
+            networkStreamHandler.WriteString(Specification.responseHeader);
+            networkStreamHandler.WriteCommand(Command.LOGIN);
             string stringResp = resp ? "1" : "0";
-            _networkStreamHandler.WriteInt(1);
-            _networkStreamHandler.WriteString(stringResp);
+            networkStreamHandler.WriteInt(1);
+            networkStreamHandler.WriteString(stringResp);
         }
     }
 }

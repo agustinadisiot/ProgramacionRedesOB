@@ -32,8 +32,8 @@ namespace Client.Commands
             ReadHeader();
             ReadCommand(); // TODO ver si hacemos algo mas con estos 
 
-            int dataLength = _networkStreamHandler.ReadInt(Specification.dataSizeLength);
-            string data = _networkStreamHandler.ReadString(dataLength);
+            int dataLength = networkStreamHandler.ReadInt(Specification.dataSizeLength);
+            string data = networkStreamHandler.ReadString(dataLength);
 
 
             string[] parsedData = Parse(data);
@@ -52,6 +52,7 @@ namespace Client.Commands
     
         }
 
+        // TODO pasar a Common o a algun lado que  tambien lo pueda usar BrowseCatalog y SearchByX
         private bool ToBooleanFromString(string text)
         {
             return (text == "1");

@@ -28,16 +28,16 @@ namespace Client
 
         protected void SendData(string data)
         {
-            _networkStreamHandler.WriteInt(data.Length);
-            _networkStreamHandler.WriteString(data);
+            networkStreamHandler.WriteInt(data.Length);
+            networkStreamHandler.WriteString(data);
         }
 
         protected string[] GetData() {
             ReadHeader();
             ReadCommand(); // TODO ver si hacemos algo mas con estos 
 
-            int dataLength = _networkStreamHandler.ReadInt(Specification.dataSizeLength);
-            string data = _networkStreamHandler.ReadString(dataLength);
+            int dataLength = networkStreamHandler.ReadInt(Specification.dataSizeLength);
+            string data = networkStreamHandler.ReadString(dataLength);
 
 
             string[] parsedData = Parse(data);
