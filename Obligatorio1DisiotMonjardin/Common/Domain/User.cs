@@ -15,5 +15,11 @@ namespace Server.Domain
             Name = name;
             GamesOwned = new List<Game>();
         }
+
+        public override bool Equals(object obj)
+        {
+            User compare = (User)obj;
+            return compare.Name == this.Name;
+        }
     }
 }

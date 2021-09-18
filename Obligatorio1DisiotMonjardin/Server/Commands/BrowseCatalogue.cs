@@ -21,7 +21,7 @@ namespace Server.Commands
             Console.WriteLine("This is the game list");
         }
 
-        private void Respond(GamePage gamePage)
+        private void Respond(GamePage gamePage)  //todo refactor
         {
             byte[] header = Encoding.UTF8.GetBytes(Specification.responseHeader);
             ushort command = (ushort)Command.BROWSE_CATALOGUE;

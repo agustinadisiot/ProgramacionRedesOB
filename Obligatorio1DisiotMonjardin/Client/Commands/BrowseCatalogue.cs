@@ -13,15 +13,6 @@ namespace Client.Commands
     {
         public BrowseCatalogue(INetworkStreamHandler nwsh) : base(nwsh) { }
 
-       public override void ParsedRequestHandler(string[] req)
-        {
-            //TODO
-            /*Steam Steam = Steam.GetInstance();
-            int pageNumber = int.Parse(req[0]);
-            GamePage gamePage = Steam.BrowseGames(pageNumber);
-            Respond(gamePage);
-            Console.WriteLine("This is the game list");*/
-        }
 
         public GamePage SendRequest(int pageNumber)
         {

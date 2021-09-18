@@ -21,11 +21,21 @@ namespace Server
             return instance;
         }
 
+        
+
         public Steam()
         {
             games = new List<Game>();
             users = new List<User>();
             gameId = 0;
+        }
+
+        public bool Login(string newUserName)
+        {
+            User newUser = new User(newUserName);
+            bool alreadyExists = users.Contains(newUser);
+            if (!alreadyExists) users.Add(newUser);
+            return !alreadyExists;
         }
 
         public void AddGame(Game newGame)

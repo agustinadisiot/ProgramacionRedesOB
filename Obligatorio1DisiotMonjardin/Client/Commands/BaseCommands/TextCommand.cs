@@ -25,7 +25,6 @@ namespace Client
             return parsedData;
         } // TODO poner en common(el server tambien la tiene)
 
-        public abstract void ParsedRequestHandler(string[] req); // TODO sacar si no lo usamos en el cliente
 
         protected void SendData(string data)
         {

@@ -2,6 +2,7 @@
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Server.Commands;
+using Server.Commands.BaseCommands;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,6 +21,7 @@ namespace Server
                 case Command.CREATE_USER:
                 case Command.MODIFY_GAME:
                 case Command.LOGIN:
+                    return new Login(nwsh);
                 default:
                     throw new NotImplementedException();
 
