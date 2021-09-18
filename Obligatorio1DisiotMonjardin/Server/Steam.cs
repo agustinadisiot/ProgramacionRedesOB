@@ -54,6 +54,12 @@ namespace Server
             return !alreadyExists;
         }
 
+        public bool Logout(INetworkStreamHandler nwsh) { 
+            connections.Remove(nwsh);
+            // TODO ver que retornamos
+            return true;
+        }
+
         private string GetUsername(INetworkStreamHandler nwsh)
         {
             string username;

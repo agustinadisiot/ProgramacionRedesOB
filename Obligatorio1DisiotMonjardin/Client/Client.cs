@@ -36,6 +36,7 @@ namespace Client
             opciones.Add("Publicar Juego", () => Publish());
             opciones.Add("Buscar por titulo", () => SearchByTitle());
             opciones.Add("Iniciar Sesión", () => Login()); 
+            opciones.Add("Logout", () => Logout());
             opciones.Add("Comprar Juego (sacar)", () => ShowBuyGameMenu());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
@@ -52,6 +53,13 @@ namespace Client
             var commandHandler = (Login)CommandFactory.GetCommandHandler(Command.LOGIN, networkStreamHandler);
             commandHandler.SendRequest(username);
             // TODO separar createUser y log in
+            MainMenu();
+        }
+
+        private void Logout()
+        {
+            var commandHandler = (Logout)CommandFactory.GetCommandHandler(Command.LOGOUT, networkStreamHandler);
+            commandHandler.SendRequest();
             MainMenu();
         }
 

@@ -26,6 +26,8 @@ namespace Client
                     return new SearchByTitle(nwsh);
                 case Command.LOGIN:
                     return new Login(nwsh);
+                case Command.LOGOUT:
+                    return new Logout(nwsh);
                 default:
                     throw new NotImplementedException();
 
