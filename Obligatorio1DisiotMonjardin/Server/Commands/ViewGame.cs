@@ -30,7 +30,7 @@ namespace Server
 
             // TODO usar stringStream
             string dataString = "";
-            dataString += gameView.Game.Title;/*
+            dataString += gameView.Game.Title;
             dataString += Specification.delimiter;
             dataString += gameView.Game.Synopsis;
             dataString += Specification.delimiter;
@@ -38,7 +38,7 @@ namespace Server
             dataString += Specification.delimiter;
             dataString += gameView.Game.ESRBRating;
             dataString += Specification.delimiter;
-            dataString += gameView.Game.Genre;*/
+            dataString += gameView.Game.Genre;
             dataString += Specification.delimiter;
             dataString += Convert.ToInt32(gameView.CanBuy);
             dataString += Specification.delimiter;

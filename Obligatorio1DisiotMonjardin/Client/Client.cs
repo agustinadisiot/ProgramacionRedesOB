@@ -71,7 +71,7 @@ namespace Client
             StartMenu();
         }
 
-        private  void BrowseCatalogue(int pageNumber = 1)
+        private void BrowseCatalogue(int pageNumber = 1)
         {
             BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
             GamePage newGamePage = commandHandler.SendRequest(pageNumber);
@@ -84,6 +84,7 @@ namespace Client
             // TODO pedir titulo devuelta si es vacio
             ShowSearchByTitlePage(title);
         }
+
         public void ShowSearchByTitlePage(string title, int pageNumber = 1) {
             var commandHandler = (SearchByTitle)CommandFactory.GetCommandHandler(Command.SEARCH_BY_TITLE, networkStreamHandler);
             GamePage newGamePage = commandHandler.SendRequest(pageNumber, title);
@@ -154,7 +155,7 @@ namespace Client
             string TextId = Console.ReadLine();
             gameID = int.Parse(TextId);
 
-            Console.WriteLine("Escriba una puntuación: (del 1 al 5");
+            Console.WriteLine("Escriba una puntuación: (del 1 al 5)");
             string Text
                 = Console.ReadLine();
             int rating = int.Parse(TextId);
@@ -203,15 +204,21 @@ namespace Client
         {
             PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
 
-            Console.WriteLine("Escriba el Titulo del juego:");
-            var word = Console.ReadLine();
-            // TODO agregar el resto de los datos y validarlos 
-
+            Console.WriteLine("Escriba el titulo del juego:");
+            var stringTitle = Console.ReadLine();
+            Console.WriteLine("Escriba la sinopsis del juego:");
+            var stringSyn = Console.ReadLine();
+            Console.WriteLine("Escriba el ESRBrating del juego:");
+            var stringESRB = Console.ReadLine();
+            Console.WriteLine("Escriba el genero del juego:");
+            var stringGenre = Console.ReadLine();
 
             Game newGame = new Game
             {
-                Title = word
-                // todo agregar los nuevos datos
+                Title = stringTitle, //todo validar todo
+                Synopsis = stringSyn,
+                ESRBRating = (Common.ESRBRating)int.Parse(stringESRB), //todo hacer que el usuario seleccione de una lista
+                Genre = stringGenre
             }; 
             string returnMessage = commandHandler.SendRequest(newGame);
             ShowServerMessage(returnMessage);
@@ -222,8 +229,13 @@ namespace Client
             Console.WriteLine("Escriba el id del juego: ");
             string id = Console.ReadLine();
             ViewGame commandHandler = (ViewGame)CommandFactory.GetCommandHandler(Command.VIEW_GAME, networkStreamHandler);
-            commandHandler.SendRequest(id);
-            ShowServerMessage("This is the game info");
+            GameView gameInfo = commandHandler.SendRequest(id);
+            Console.WriteLine(gameInfo.Game.Title);
+            Console.WriteLine(gameInfo.Game.Synopsis);
+            Console.WriteLine(gameInfo.Game.ReviewsRating);
+            Console.WriteLine(gameInfo.Game.ESRBRating);
+            Console.WriteLine(gameInfo.Game.Genre);
+            //publisher y review tambein
 
         }
 

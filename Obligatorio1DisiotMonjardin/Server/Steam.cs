@@ -106,6 +106,7 @@ namespace Server
                 throw new Exception(); //TODO hacer la exception
             newGame.Id = this.gameId;
             gameId++;
+            newGame.ReviewsRating = 0; //hacer funcion que calcule el promedio de los ratings
             newGame.Publisher = GetUser(GetUsername(nwsh));
             newGame.Reviews = new List<Review>();
             games.Add(newGame);
