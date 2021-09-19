@@ -173,31 +173,32 @@ namespace Client
         }
         private void ShowBrowseReviewsMenu(int pageNumber = 1)
         {
-            BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
-            GamePage newGamePage = commandHandler.SendRequest(pageNumber);
-            ShowCataloguePage(newGamePage);
+            var commandHandler = (BrowseReviews)CommandFactory.GetCommandHandler(Command.BROWSE_REVIEWS, networkStreamHandler);
+            ReviewPage newReviewPage = commandHandler.SendRequest(pageNumber);
+            ShowReviewPage(newReviewPage);
         }
 
-        /*private void ShowReviewPage(ReviewPage reviewPage)
+        private void ShowReviewPage(ReviewPage reviewPage)
         {
+            Console.Write( $"Clasificaciones - Página {reviewPage.CurrentPage}"); // TODO capaz poner el nombre del juego
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
 
-            for (int i = 0; i < reviewPage.GamesTitles.Count; i++)
+            foreach(Review review in reviewPage.Reviews)
             {
-                int idIndex = i;
-                opciones.Add(reviewPage.GamesTitles[i], () => ShowGameInfo(gamePage.GamesIDs[idIndex]));
+                Console.WriteLine($" ({review.Rating}/10) {review.User.Name}:"); // TODO el 10 que sea una constante, en Common, pero no parte del protocolo
+                Console.WriteLine($"{review.Text}"); // TODO ver si implementamos un "Ver mas" si es muy larga 
             }
 
-            if (gamePage.HasNextPage)
-                opciones.Add("Siguiene Página", () => BrowseCatalogue(gamePage.CurrentPage + 1));
+            if (reviewPage.HasNextPage)
+                opciones.Add("Siguiene Página", () => BrowseCatalogue(reviewPage.CurrentPage + 1));
 
-            if (gamePage.HasPreviousPage)
-                opciones.Add("Página Anterior", () => BrowseCatalogue(gamePage.CurrentPage - 1));
+            if (reviewPage.HasPreviousPage)
+                opciones.Add("Página Anterior", () => BrowseCatalogue(reviewPage.CurrentPage - 1));
 
             opciones.Add("Volver al Menu Principal", () => MainMenu());
 
-            CliMenu.showMenu(opciones, $"Catalogo de Juegos Pagina {gamePage.CurrentPage}");
-        }*/
+            CliMenu.showMenu(opciones,"");
+        }
 
         private  void Publish()
         {

@@ -7,9 +7,10 @@ namespace Client
 {
     public static class CliMenu
     {
-        public static void showMenu(Dictionary<string,Action> options, string message) {
+        public static void showMenu(Dictionary<string,Action> options, string message = "") {
            // Console.Clear();
-            Console.WriteLine(message);
+           if(message.Length > 0)
+                Console.WriteLine(message);
             for (int i = 0; i < options.Count; i++)
             {
                 var option = options.ElementAt(i);
