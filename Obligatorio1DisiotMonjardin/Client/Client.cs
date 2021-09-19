@@ -43,6 +43,7 @@ namespace Client
             opciones.Add("Logout", () => Logout());
             opciones.Add("Comprar Juego (sacar)", () => ShowBuyGameMenu());
             opciones.Add("Ver Juego", () => ShowGameInfo());
+            opciones.Add("Escribir review", () => ShowWriteReviewMenu());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
             while (true) // TODO sacar
@@ -143,6 +144,31 @@ namespace Client
             gameID = int.Parse(TextId);
             var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
             string message = commandHandler.SendRequest(gameID);
+            ShowServerMessage(message);
+        }
+
+        private void ShowWriteReviewMenu(int gameID = 1)
+        {
+            // TODO poner adentro de showGame
+            Console.WriteLine("ID del juego: ");
+            string TextId = Console.ReadLine();
+            gameID = int.Parse(TextId);
+
+            Console.WriteLine("Escriba una puntuación: (del 1 al 5");
+            string Text
+                = Console.ReadLine();
+            int rating = int.Parse(TextId);
+
+            Console.WriteLine("Escriba un comentario ");
+            string comment = Console.ReadLine();
+
+            Review newReview = new Review()
+            {
+                Text = comment,
+                Rating = rating
+            };
+            var commandHandler = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            string message = commandHandler.SendRequest(newReview, gameID);
             ShowServerMessage(message);
         }
 

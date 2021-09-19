@@ -24,6 +24,8 @@ namespace Server
                     return new BuyGame(nwsh);
                 case Command.SEARCH_BY_TITLE:
                     return new SearchByTitle(nwsh);
+                case Command.WRITE_REVIEW:
+                    return new WriteReview(nwsh);
                 case Command.LOGIN:
                     return new Login(nwsh);
                 case Command.LOGOUT:

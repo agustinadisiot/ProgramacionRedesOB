@@ -1,7 +1,6 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
-using Server.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,6 +30,14 @@ namespace Server
             users = new List<User>();
             gameId = 0;
             connections = new Dictionary<INetworkStreamHandler, string>();
+        }
+
+        internal void WriteReview(Review newReview, int gameId, INetworkStreamHandler nwsh)
+        {
+            newReview.User = GetUser(GetUsername(nwsh));
+            games[gameId].Reviews.Add(newReview);
+            Console.WriteLine($"Review by {newReview.User.Name} has been published");
+
         }
 
         internal void BuyGame(int gameID, INetworkStreamHandler nwsh )
@@ -98,8 +105,9 @@ namespace Server
             if (gameWithSameTitle != null)
                 throw new Exception(); //TODO hacer la exception
             newGame.Id = this.gameId;
-            newGame.Publisher = GetUser(GetUsername(nwsh));
             gameId++;
+            newGame.Publisher = GetUser(GetUsername(nwsh));
+            newGame.Reviews = new List<Review>();
             games.Add(newGame);
             Console.WriteLine("Game has been published with title: " + newGame.Title + " and id: " + newGame.Id);
 

@@ -8,19 +8,20 @@ using System.Text;
 
 namespace Server.Commands
 {
-    public class PublishGame : TextCommand
+    public class WriteReview : TextCommand
     {
-        public PublishGame(INetworkStreamHandler nwsh) : base(nwsh) { }
+        public WriteReview(INetworkStreamHandler nwsh) : base(nwsh) { }
         public override void ParsedRequestHandler(string[] req)
         {
-            Game newGame = new Game
+            int gameId = int.Parse(req[0]);
+            Review newReview = new Review
             {
-                Title = req[0]
-                // TODO agregar los parametros de Game que faltan
+                Rating = int.Parse(req[0]),
+                Text = req[1]
             };
             Steam SteamInstance = Steam.GetInstance();
-            SteamInstance.PublishGame(newGame, networkStreamHandler);
-            string message = "Game added succesfully"; // TODO agregar catch para cuando tira error
+            SteamInstance.WriteReview(newReview, gameId, networkStreamHandler);
+            string message = "Review added succesfully"; // TODO agregar catch para cuando tira error
             Respond(message);
         }
 
@@ -28,7 +29,7 @@ namespace Server.Commands
         {
             
             networkStreamHandler.WriteString(Specification.responseHeader);
-            networkStreamHandler.WriteCommand(Command.PUBLISH_GAME);
+            networkStreamHandler.WriteCommand(Command.WRITE_REVIEW);
             networkStreamHandler.WriteInt(message.Length);
             networkStreamHandler.WriteString(message);
 

@@ -21,5 +21,6 @@ namespace Common.Protocol
         BROWSE_REVIEWS,
         DOWNLOAD_COVER,
         BROWSE_CATALOGUE // si ponele
+        // view_my_games ? asumo que hay que hacerla si TODO
     }
 }

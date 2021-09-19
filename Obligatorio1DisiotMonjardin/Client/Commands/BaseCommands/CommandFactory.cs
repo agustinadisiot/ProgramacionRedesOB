@@ -22,6 +22,8 @@ namespace Client
                 case Command.MODIFY_GAME:
                 case Command.BUY_GAME:
                     return new BuyGame(nwsh);
+                case Command.WRITE_REVIEW:
+                    return new WriteReview(nwsh);
                 case Command.SEARCH_BY_TITLE:
                     return new SearchByTitle(nwsh);
                 case Command.LOGIN:
