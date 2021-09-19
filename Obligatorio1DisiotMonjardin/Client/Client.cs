@@ -44,6 +44,7 @@ namespace Client
             opciones.Add("Comprar Juego (sacar)", () => ShowBuyGameMenu());
             opciones.Add("Ver Juego", () => ShowGameInfo());
             opciones.Add("Escribir review", () => ShowWriteReviewMenu());
+            opciones.Add("Ver review", () => ShowBrowseReviewsMenu()); 
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
             while (true) // TODO sacar
@@ -52,7 +53,6 @@ namespace Client
             }
         }
 
-       
 
         private void Login()
         {
@@ -171,6 +171,33 @@ namespace Client
             string message = commandHandler.SendRequest(newReview, gameID);
             ShowServerMessage(message);
         }
+        private void ShowBrowseReviewsMenu(int pageNumber = 1)
+        {
+            BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
+            GamePage newGamePage = commandHandler.SendRequest(pageNumber);
+            ShowCataloguePage(newGamePage);
+        }
+
+        /*private void ShowReviewPage(ReviewPage reviewPage)
+        {
+            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
+
+            for (int i = 0; i < reviewPage.GamesTitles.Count; i++)
+            {
+                int idIndex = i;
+                opciones.Add(reviewPage.GamesTitles[i], () => ShowGameInfo(gamePage.GamesIDs[idIndex]));
+            }
+
+            if (gamePage.HasNextPage)
+                opciones.Add("Siguiene Página", () => BrowseCatalogue(gamePage.CurrentPage + 1));
+
+            if (gamePage.HasPreviousPage)
+                opciones.Add("Página Anterior", () => BrowseCatalogue(gamePage.CurrentPage - 1));
+
+            opciones.Add("Volver al Menu Principal", () => MainMenu());
+
+            CliMenu.showMenu(opciones, $"Catalogo de Juegos Pagina {gamePage.CurrentPage}");
+        }*/
 
         private  void Publish()
         {
