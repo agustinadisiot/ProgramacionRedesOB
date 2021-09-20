@@ -1,9 +1,12 @@
 ﻿using Client.Commands;
+using Common;
 using Common.Domain;
 using Common.NetworkUtils;
 using Common.Protocol;
+using Server;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -43,8 +46,6 @@ namespace Client
             opciones.Add("Publicar Juego", () => Publish());
             opciones.Add("Buscar por titulo", () => SearchByTitle());
             opciones.Add("Logout", () => Logout());
-            opciones.Add("Comprar Juego (sacar)", () => ShowBuyGameMenu());
-            opciones.Add("Ver Juego", () => ShowGameInfo());
             opciones.Add("Escribir review", () => ShowWriteReviewMenu());
             opciones.Add("Ver review", () => ShowBrowseReviewsMenu());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
@@ -87,6 +88,7 @@ namespace Client
             // TODO pedir titulo devuelta si es vacio
             ShowSearchByTitlePage(title);
         }
+      
         public void ShowSearchByTitlePage(string title, int pageNumber = 1)
         {
             var commandHandler = (SearchByTitle)CommandFactory.GetCommandHandler(Command.SEARCH_BY_TITLE, networkStreamHandler);
@@ -137,16 +139,29 @@ namespace Client
 
         private void ShowGameInfo(int id)
         {
-            Console.WriteLine($"ID del juego {id}");
-            MainMenu();
-        }
-        public static void DoSomething()
-        {
-            for (int i = 0; i < 4; i++)  // Noncompliant, 4 is a magic number
-            {
-                Console.WriteLine();
+            ViewGame commandHandler = (ViewGame)CommandFactory.GetCommandHandler(Command.VIEW_GAME, networkStreamHandler);
+            string gameID = id.ToString();
+            GameView gameInfo = commandHandler.SendRequest(gameID);
+            Console.WriteLine($"Titulo: {gameInfo.Game.Title}");
+            Console.WriteLine($"Sinopsis: {gameInfo.Game.Synopsis}");
+            if (gameInfo.Game.ReviewsRating == 0) { Console.WriteLine($"Calificacion: -"); }
+            else { Console.WriteLine($"Calificacion: {gameInfo.Game.ReviewsRating}"); }
+            Console.WriteLine($"Clasificacion ESRB: {gameInfo.Game.ESRBRating}");
+            Console.WriteLine($"Genero: {gameInfo.Game.Genre}");
+            Console.WriteLine($"Publicado por: {gameInfo.Game.Publisher}");
+            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
+            if (!gameInfo.IsOwned) opciones.Add("Comprar Juego", () => ShowBuyGameMenu(id));
+            opciones.Add("Ver Reviews", () => MainMenu()); //todooooo
+            if (gameInfo.IsOwned) opciones.Add("Escribir Review", () => ShowWriteReviewMenu(id));
+            if (gameInfo.IsPublisher) {
+                opciones.Add("Modificar Juego", () => MainMenu()); //todo
+                opciones.Add("Eliminar Juego", () => MainMenu()); //todo
             }
+            opciones.Add("Volver al Menu Principal", () => MainMenu());
+
+            CliMenu.showMenu(opciones, "");
         }
+      
         private void ShowBuyGameMenu(int gameID = 1)
         {
             // TODO sacar writeLine y poner adentro de showGame
@@ -160,6 +175,10 @@ namespace Client
 
         private void ShowWriteReviewMenu(int gameID = 1)
         {
+            Console.WriteLine("Escriba una puntuación: (del 1 al 5)");
+            string Text = Console.ReadLine();
+            int rating = int.Parse(Text);
+          
             // TODO poner adentro de showGame
             Console.WriteLine("ID del juego: ");
             string TextId = Console.ReadLine();
@@ -181,6 +200,7 @@ namespace Client
             string message = commandHandler.SendRequest(newReview, gameID);
             ShowServerMessage(message);
         }
+
         private void ShowBrowseReviewsMenu(int pageNumber = 1)
         {
             BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
@@ -213,28 +233,63 @@ namespace Client
         {
             PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
 
-            Console.WriteLine("Escriba el Titulo del juego:");
-            var word = Console.ReadLine();
-            // TODO agregar el resto de los datos y validarlos 
-
+            Console.WriteLine("Escriba el titulo del juego:");
+            string stringTitle = Console.ReadLine();
+            bool isValidTitle = stringTitle.Length > 0; //y que no incluya '/'
+            while (!isValidTitle)
+            {
+                Console.WriteLine("Escriba un titulo valido");
+                stringTitle = Console.ReadLine();
+                isValidTitle = stringTitle.Length > 0;
+            }
+            Console.WriteLine("Escriba la sinopsis del juego:");
+            string stringSyn = Console.ReadLine();
+            bool isValidSyn = stringSyn.Length > 0;
+            while (!isValidSyn)
+            {
+                Console.WriteLine("Escriba una sinopsis valida");
+                stringSyn = Console.ReadLine();
+                isValidSyn = stringSyn.Length > 0;
+            }
+            Console.WriteLine("Elija el ESRBrating del juego:");
+            var possibleESRB = Enum.GetValues(typeof(ESRBRating)).Cast<ESRBRating>().ToList();
+            for (int i = 0; i < possibleESRB.Count; i++)
+            {
+                Console.WriteLine($"{ i + 1}.{ possibleESRB.ElementAt(i)}");
+            }
+            int intESRB = 0;
+            bool isANumber = int.TryParse(Console.ReadLine(), out intESRB);
+            while (!isANumber)
+            {
+                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
+                isANumber = int.TryParse(Console.ReadLine(), out intESRB);
+            }
+            bool isValidESRB = intESRB > 0 && intESRB <= possibleESRB.Count;
+            while (!isValidESRB)
+            {
+                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
+                isANumber = int.TryParse(Console.ReadLine(), out intESRB);
+                isValidESRB = intESRB > 0 && intESRB <=  possibleESRB.Count;
+            }
+            Console.WriteLine("Escriba el genero del juego:");
+            var stringGenre = Console.ReadLine();
+            bool isValidGenre = stringGenre.Length > 0;
+            while (!isValidGenre)
+            {
+                Console.WriteLine("Escriba un titulo valido");
+                stringGenre = Console.ReadLine();
+                isValidGenre = stringGenre.Length > 0;
+            }
 
             Game newGame = new Game
             {
-                Title = word
-                // todo agregar los nuevos datos
+                Title = stringTitle, 
+                Synopsis = stringSyn,
+                ESRBRating = (Common.ESRBRating)intESRB, 
+                Genre = stringGenre
             };
             string returnMessage = commandHandler.SendRequest(newGame);
             ShowServerMessage(returnMessage);
-        }
-
-        private void ShowGameInfo()
-        {
-            Console.WriteLine("Escriba el id del juego: ");
-            string id = Console.ReadLine();
-            ViewGame commandHandler = (ViewGame)CommandFactory.GetCommandHandler(Command.VIEW_GAME, networkStreamHandler);
-            commandHandler.SendRequest(id);
-            ShowServerMessage("This is the game info");
-
         }
 
         public void ShowServerMessage(string message)

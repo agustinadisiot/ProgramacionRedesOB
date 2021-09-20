@@ -15,8 +15,10 @@ namespace Server.Commands
         {
             Game newGame = new Game
             {
-                Title = req[0]
-                // TODO agregar los parametros de Game que faltan
+                Title = req[0],
+                Synopsis = req[1],
+                ESRBRating = (Common.ESRBRating)int.Parse(req[2]),
+                Genre = req[3]
             };
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.PublishGame(newGame, networkStreamHandler);
