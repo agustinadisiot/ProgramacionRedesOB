@@ -46,8 +46,6 @@ namespace Client
             opciones.Add("Publicar Juego", () => Publish());
             opciones.Add("Buscar por titulo", () => SearchByTitle());
             opciones.Add("Logout", () => Logout());
-            opciones.Add("Escribir review", () => ShowWriteReviewMenu());
-            opciones.Add("Ver review", () => ShowBrowseReviewsMenu());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
             while (true) // TODO sacar
@@ -164,10 +162,6 @@ namespace Client
       
         private void ShowBuyGameMenu(int gameID = 1)
         {
-            // TODO sacar writeLine y poner adentro de showGame
-            Console.WriteLine("ID del juego: ");
-            string TextId = Console.ReadLine();
-            gameID = int.Parse(TextId);
             var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
             string message = commandHandler.SendRequest(gameID);
             ShowServerMessage(message);
@@ -179,15 +173,6 @@ namespace Client
             string Text = Console.ReadLine();
             int rating = int.Parse(Text);
           
-            // TODO poner adentro de showGame
-            Console.WriteLine("ID del juego: ");
-            string TextId = Console.ReadLine();
-            gameID = int.Parse(TextId);
-
-            Console.WriteLine("Escriba una puntuación: (del 1 al 5");
-            string Text = Console.ReadLine();
-            int rating = int.Parse(TextId);
-
             Console.WriteLine("Escriba un comentario ");
             string comment = Console.ReadLine();
 
