@@ -23,9 +23,7 @@ namespace Client.Commands
             data += Specification.delimiter;
             data += newGame.Synopsis;
             data += Specification.delimiter;
-            data += newGame.ReviewsRating;
-            data += Specification.delimiter;
-            data += newGame.ESRBRating;
+            data += (int)newGame.ESRBRating;
             data += Specification.delimiter;
             data += newGame.Genre;
 

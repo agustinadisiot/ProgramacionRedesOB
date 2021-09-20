@@ -1,9 +1,11 @@
 ﻿using Client.Commands;
+using Common;
 using Common.Domain;
 using Common.NetworkUtils;
 using Common.Protocol;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -205,24 +207,64 @@ namespace Client
             PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
 
             Console.WriteLine("Escriba el titulo del juego:");
-            var stringTitle = Console.ReadLine();
+            string stringTitle = Console.ReadLine();
+            bool isValidTitle = stringTitle.Length > 0; //y que no incluya '/'
+            while (!isValidTitle)
+            {
+                Console.WriteLine("Escriba un titulo valido");
+                stringTitle = Console.ReadLine();
+                isValidTitle = stringTitle.Length > 0;
+            }
             Console.WriteLine("Escriba la sinopsis del juego:");
-            var stringSyn = Console.ReadLine();
-            Console.WriteLine("Escriba el ESRBrating del juego:");
-            var stringESRB = Console.ReadLine();
+            string stringSyn = Console.ReadLine();
+            bool isValidSyn = stringSyn.Length > 0;
+            while (!isValidSyn)
+            {
+                Console.WriteLine("Escriba una sinopsis valida");
+                stringSyn = Console.ReadLine();
+                isValidSyn = stringSyn.Length > 0;
+            }
+            Console.WriteLine("Elija el ESRBrating del juego:");
+            var possibleESRB = Enum.GetValues(typeof(ESRBRating)).Cast<ESRBRating>().ToList();
+            for (int i = 0; i < possibleESRB.Count; i++)
+            {
+                Console.WriteLine($"{ i + 1}.{ possibleESRB.ElementAt(i)}");
+            }
+            int intESRB = 0;
+            bool isANumber = int.TryParse(Console.ReadLine(), out intESRB);
+            while (!isANumber)
+            {
+                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
+                isANumber = int.TryParse(Console.ReadLine(), out intESRB);
+            }
+            bool isValidESRB = intESRB > 0 && intESRB <= possibleESRB.Count;
+            while (!isValidESRB)
+            {
+                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
+                isANumber = int.TryParse(Console.ReadLine(), out intESRB);
+                isValidESRB = intESRB > 0 && intESRB <=  possibleESRB.Count;
+            }
             Console.WriteLine("Escriba el genero del juego:");
             var stringGenre = Console.ReadLine();
+            bool isValidGenre = stringGenre.Length > 0;
+            while (!isValidGenre)
+            {
+                Console.WriteLine("Escriba un titulo valido");
+                stringGenre = Console.ReadLine();
+                isValidGenre = stringGenre.Length > 0;
+            }
 
             Game newGame = new Game
             {
-                Title = stringTitle, //todo validar todo
+                Title = stringTitle, 
                 Synopsis = stringSyn,
-                ESRBRating = (Common.ESRBRating)int.Parse(stringESRB), //todo hacer que el usuario seleccione de una lista
+                ESRBRating = (Common.ESRBRating)intESRB, 
                 Genre = stringGenre
             }; 
             string returnMessage = commandHandler.SendRequest(newGame);
             ShowServerMessage(returnMessage);
         }
+
 
         private void ShowGameInfo()
         {

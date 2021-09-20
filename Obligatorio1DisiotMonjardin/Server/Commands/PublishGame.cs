@@ -17,9 +17,8 @@ namespace Server.Commands
             {
                 Title = req[0],
                 Synopsis = req[1],
-                ReviewsRating = int.Parse(req[2]),
-                ESRBRating = (Common.ESRBRating)int.Parse(req[3]),
-                Genre = req[4]
+                ESRBRating = (Common.ESRBRating)int.Parse(req[2]),
+                Genre = req[3]
             };
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.PublishGame(newGame, networkStreamHandler);
