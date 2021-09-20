@@ -34,9 +34,7 @@ namespace Server
             dataString += Specification.delimiter;
             dataString += gameView.Game.Synopsis;
             dataString += Specification.delimiter;
-            dataString += gameView.Game.ReviewsRating;
-            dataString += Specification.delimiter;
-            dataString += gameView.Game.ESRBRating;
+            dataString += (int)gameView.Game.ESRBRating;
             dataString += Specification.delimiter;
             dataString += gameView.Game.Genre;
             dataString += Specification.delimiter;

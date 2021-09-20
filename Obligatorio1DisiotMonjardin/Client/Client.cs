@@ -3,6 +3,7 @@ using Common;
 using Common.Domain;
 using Common.NetworkUtils;
 using Common.Protocol;
+using Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,8 +44,6 @@ namespace Client
             opciones.Add("Publicar Juego", () => Publish());
             opciones.Add("Buscar por titulo", () => SearchByTitle());
             opciones.Add("Logout", () => Logout());
-            opciones.Add("Comprar Juego (sacar)", () => ShowBuyGameMenu());
-            opciones.Add("Ver Juego", () => ShowGameInfo());
             opciones.Add("Escribir review", () => ShowWriteReviewMenu());
             opciones.Add("Ver review", () => ShowBrowseReviewsMenu()); 
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
@@ -137,14 +136,31 @@ namespace Client
         private void ShowGameInfo(int id)
         {
             Console.WriteLine($"ID del juego {id}");
-            MainMenu();
+            ViewGame commandHandler = (ViewGame)CommandFactory.GetCommandHandler(Command.VIEW_GAME, networkStreamHandler);
+            string gameID = id.ToString();
+            GameView gameInfo = commandHandler.SendRequest(gameID);
+            Console.WriteLine(gameInfo.Game.Title);
+            Console.WriteLine(gameInfo.Game.Synopsis);
+            Console.WriteLine(gameInfo.Game.ReviewsRating);
+            Console.WriteLine(gameInfo.Game.ESRBRating);
+            Console.WriteLine(gameInfo.Game.Genre);
+            Console.WriteLine(gameInfo.Game.Publisher);
+            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
+            if (gameInfo.CanBuy) opciones.Add("Comprar Juego", () => ShowBuyGameMenu(id));
+            opciones.Add("Ver Reviews", () => MainMenu()); //todooooo
+
+            // if (actualUser.GamesOwned.Contains(gameInfo.Game)) opciones.Add("Escribir Review", () => ShowWriteReviewMenu());
+            //Como consigo el usuario actual?
+            if (gameInfo.IsPublisher) {
+                opciones.Add("Modificar Juego", () => MainMenu()); //todo
+                opciones.Add("Eliminar Juego", () => MainMenu()); //todo
+            }
+            opciones.Add("Volver al Menu Principal", () => MainMenu());
+
+            CliMenu.showMenu(opciones, "");
         }
 
         private void ShowBuyGameMenu(int gameID = 1) {
-            // TODO sacar writeLine y poner adentro de showGame
-            Console.WriteLine("ID del juego: ");
-            string TextId = Console.ReadLine();
-            gameID = int.Parse(TextId);
             var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
             string message = commandHandler.SendRequest(gameID);
             ShowServerMessage(message);
@@ -266,20 +282,6 @@ namespace Client
         }
 
 
-        private void ShowGameInfo()
-        {
-            Console.WriteLine("Escriba el id del juego: ");
-            string id = Console.ReadLine();
-            ViewGame commandHandler = (ViewGame)CommandFactory.GetCommandHandler(Command.VIEW_GAME, networkStreamHandler);
-            GameView gameInfo = commandHandler.SendRequest(id);
-            Console.WriteLine(gameInfo.Game.Title);
-            Console.WriteLine(gameInfo.Game.Synopsis);
-            Console.WriteLine(gameInfo.Game.ReviewsRating);
-            Console.WriteLine(gameInfo.Game.ESRBRating);
-            Console.WriteLine(gameInfo.Game.Genre);
-            //publisher y review tambein
-
-        }
 
         public void ShowServerMessage(string message)
         {
