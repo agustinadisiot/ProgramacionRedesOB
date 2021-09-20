@@ -38,7 +38,7 @@ namespace Server
             dataString += Specification.delimiter;
             dataString += gameView.Game.Genre;
             dataString += Specification.delimiter;
-            dataString += Convert.ToInt32(gameView.CanBuy);
+            dataString += Convert.ToInt32(gameView.IsOwned);
             dataString += Specification.delimiter;
             dataString += Convert.ToInt32(gameView.IsPublisher);
 

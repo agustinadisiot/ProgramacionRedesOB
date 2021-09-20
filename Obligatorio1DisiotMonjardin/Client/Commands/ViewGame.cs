@@ -40,7 +40,7 @@ namespace Client
             GameView gameView = new GameView()
             {
                 Game = game,
-                CanBuy = ToBooleanFromString(parsedData[parsedData.Length - 2]),
+                IsOwned = ToBooleanFromString(parsedData[parsedData.Length - 2]),
                 IsPublisher = ToBooleanFromString(parsedData[parsedData.Length - 1])
             };
 

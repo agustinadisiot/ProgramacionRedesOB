@@ -86,7 +86,7 @@ namespace Server
             GameView gameView = new GameView()
             {
                 Game = games.Find(i => i.Id == gameID),
-                CanBuy = !actualUser.GamesOwned.Contains(game),
+                IsOwned = actualUser.GamesOwned.Contains(game),
                 IsPublisher = actualUser.Equals(game.Publisher),
             };
 
