@@ -157,21 +157,21 @@ namespace Client
             }
             opciones.Add("Volver al Menu Principal", () => MainMenu());
 
-            CliMenu.showMenu(opciones, "");
-        }
       
-        private void ShowBuyGameMenu(int gameID = 1)
+      
+        private void ShowBuyGameMenu(int gameID)
         {
             var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
             string message = commandHandler.SendRequest(gameID);
             ShowServerMessage(message);
         }
 
-        private void ShowWriteReviewMenu(int gameID = 1)
+        private void ShowWriteReviewMenu(int gameID)
         {
             Console.WriteLine("Escriba una puntuación: (del 1 al 5)");
-            string Text = Console.ReadLine();
-            int rating = int.Parse(Text);
+            string textRating = Console.ReadLine();
+            int rating = int.Parse(textRating);
+
           
             Console.WriteLine("Escriba un comentario ");
             string comment = Console.ReadLine();
@@ -185,34 +185,37 @@ namespace Client
             string message = commandHandler.SendRequest(newReview, gameID);
             ShowServerMessage(message);
         }
-
-        private void ShowBrowseReviewsMenu(int pageNumber = 1)
+          
+        private void ShowBrowseReviewsMenu(int pageNumber = 1, int gameId = 0)
         {
-            BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
-            GamePage newGamePage = commandHandler.SendRequest(pageNumber);
-            ShowCataloguePage(newGamePage);
+            var commandHandler = (BrowseReviews)CommandFactory.GetCommandHandler(Command.BROWSE_REVIEWS, networkStreamHandler);
+            ReviewPage newReviewPage = commandHandler.SendRequest(pageNumber, gameId);
+            ShowReviewPage(newReviewPage, gameId);
         }
 
-        /*private void ShowReviewPage(ReviewPage reviewPage)
+        private void ShowReviewPage(ReviewPage reviewPage, int gameId)
         {
+            Console.WriteLine($"Calificaciones - Página {reviewPage.CurrentPage}");
+            Console.WriteLine();// TODO capaz poner el nombre del juego
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
 
-            for (int i = 0; i < reviewPage.GamesTitles.Count; i++)
+            foreach (Review review in reviewPage.Reviews)
             {
-                int idIndex = i;
-                opciones.Add(reviewPage.GamesTitles[i], () => ShowGameInfo(gamePage.GamesIDs[idIndex]));
+                Console.WriteLine($"{review.User.Name} ({review.Rating}/5):"); // TODO el 10 que sea una constante, en Common, pero no parte del protocolo
+                Console.WriteLine($"{review.Text}"); // TODO ver si implementamos un "Ver mas" si es muy larga 
+                Console.WriteLine();
             }
 
-            if (gamePage.HasNextPage)
-                opciones.Add("Siguiene Página", () => BrowseCatalogue(gamePage.CurrentPage + 1));
+            if (reviewPage.HasNextPage)
+                opciones.Add("Siguiene Página", () => ShowBrowseReviewsMenu(reviewPage.CurrentPage + 1, gameId));
 
-            if (gamePage.HasPreviousPage)
-                opciones.Add("Página Anterior", () => BrowseCatalogue(gamePage.CurrentPage - 1));
+            if (reviewPage.HasPreviousPage)
+                opciones.Add("Página Anterior", () => ShowBrowseReviewsMenu(reviewPage.CurrentPage - 1, gameId));
 
             opciones.Add("Volver al Menu Principal", () => MainMenu());
 
-            CliMenu.showMenu(opciones, $"Catalogo de Juegos Pagina {gamePage.CurrentPage}");
-        }*/
+            CliMenu.showMenu(opciones, "");
+        }
 
         private void Publish()
         {
