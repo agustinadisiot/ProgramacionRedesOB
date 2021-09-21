@@ -9,18 +9,19 @@ namespace Common.Protocol
         LOGIN, // maso
         LOGOUT, // maso
         CREATE_USER, 
-        PUBLISH_GAME, //hecho
+        PUBLISH_GAME, //hecho 
         MODIFY_GAME, 
-        BUY_GAME, 
+        DELETE_GAME,
+        BUY_GAME, //hecho
         VIEW_GAME, // hecho
         SEARCH_BY_TITLE, // si - hacer refactor para juntar con browse games
         SEARCH_BY_RATING,
         SEARCH_BY_GENRE,
         VIEW_GENRES, 
-        WRITE_REVIEW,
-        BROWSE_REVIEWS,
+        WRITE_REVIEW, // faltan verificaciones
+        BROWSE_REVIEWS, // hecho
         DOWNLOAD_COVER,
-        BROWSE_CATALOGUE // si ponele
-        // view_my_games ? asumo que hay que hacerla si TODO
+        BROWSE_CATALOGUE, // si ponele
+        VIEW_MY_GAME
     }
 }

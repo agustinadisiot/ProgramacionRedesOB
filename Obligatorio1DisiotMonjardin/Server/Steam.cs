@@ -51,7 +51,6 @@ namespace Server
                 pageSize = Specification.pageSize;
 
 
-            // 0 / 1 / 2 / 3
             List<Review> reviewsInPage = allReviews.GetRange(firstReviewPos, pageSize); // TODO usar esto para BrowseCatalogue y search
 
             ReviewPage ret = new ReviewPage()

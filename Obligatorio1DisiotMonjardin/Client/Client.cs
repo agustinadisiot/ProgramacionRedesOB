@@ -34,23 +34,23 @@ namespace Client
 
         public void StartMenu()
         {
-            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
-            opciones.Add("Iniciar Sesión", () => Login());
-            CliMenu.showMenu(opciones, "Menu Inicial");
+            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
+            menuOptions.Add("Iniciar Sesión", () => Login());
+            CliMenu.showMenu(menuOptions, "Menu Inicial");
 
         }
         public void MainMenu()
         {
-            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
-            opciones.Add("Ver catalogo", () => BrowseCatalogue());
-            opciones.Add("Publicar Juego", () => Publish());
-            opciones.Add("Buscar por titulo", () => SearchByTitle());
-            opciones.Add("Logout", () => Logout());
-            opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
-            opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
+            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
+            menuOptions.Add("Ver catalogo", () => BrowseCatalogue());
+            menuOptions.Add("Publicar Juego", () => Publish());
+            menuOptions.Add("Buscar por titulo", () => SearchByTitle());
+            menuOptions.Add("Logout", () => Logout());
+            menuOptions.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
+            menuOptions.Add("reimprimir", () => CliMenu.showMenu(menuOptions, "menucito"));
             while (true) // TODO sacar
             {
-                CliMenu.showMenu(opciones, "Menuuuu");
+                CliMenu.showMenu(menuOptions, "Menu");
             }
         }
 
@@ -96,43 +96,43 @@ namespace Client
 
         private void ShowSearchByTitlePage(GamePage gamePage, string title)
         {
-            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
+            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
 
             foreach (string gameTitle in gamePage.GamesTitles)
             {
-                opciones.Add(gameTitle, () => MainMenu());
+                menuOptions.Add(gameTitle, () => MainMenu());
             }
 
             if (gamePage.HasNextPage)
-                opciones.Add("Siguiene Página", () => ShowSearchByTitlePage(title, gamePage.CurrentPage + 1));
+                menuOptions.Add("Siguiene Página", () => ShowSearchByTitlePage(title, gamePage.CurrentPage + 1));
 
             if (gamePage.HasPreviousPage)
-                opciones.Add("Página Anterior", () => ShowSearchByTitlePage(title, gamePage.CurrentPage - 1));
+                menuOptions.Add("Página Anterior", () => ShowSearchByTitlePage(title, gamePage.CurrentPage - 1));
 
-            opciones.Add("Volver al Menu Principal", () => MainMenu());
+            menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
-            CliMenu.showMenu(opciones, $"Juegos con \"{title}\" - Página {gamePage.CurrentPage}");
+            CliMenu.showMenu(menuOptions, $"Juegos con \"{title}\" - Página {gamePage.CurrentPage}");
         }
 
         private void ShowCataloguePage(GamePage gamePage)
         {
-            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
+            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
 
             for (int i = 0; i < gamePage.GamesTitles.Count; i++)
             {
                 int idIndex = i;
-                opciones.Add(gamePage.GamesTitles[i], () => ShowGameInfo(gamePage.GamesIDs[idIndex]));
+                menuOptions.Add(gamePage.GamesTitles[i], () => ShowGameInfo(gamePage.GamesIDs[idIndex]));
             }
 
             if (gamePage.HasNextPage)
-                opciones.Add("Siguiene Página", () => BrowseCatalogue(gamePage.CurrentPage + 1));
+                menuOptions.Add("Siguiene Página", () => BrowseCatalogue(gamePage.CurrentPage + 1));
 
             if (gamePage.HasPreviousPage)
-                opciones.Add("Página Anterior", () => BrowseCatalogue(gamePage.CurrentPage - 1));
+                menuOptions.Add("Página Anterior", () => BrowseCatalogue(gamePage.CurrentPage - 1));
 
-            opciones.Add("Volver al Menu Principal", () => MainMenu());
+            menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
-            CliMenu.showMenu(opciones, $"Catalogo de Juegos Pagina {gamePage.CurrentPage}");
+            CliMenu.showMenu(menuOptions, $"Catalogo de Juegos Pagina {gamePage.CurrentPage}");
         }
 
         private void ShowGameInfo(int id)
@@ -146,18 +146,22 @@ namespace Client
             else { Console.WriteLine($"Calificacion: {gameInfo.Game.ReviewsRating}"); }
             Console.WriteLine($"Clasificacion ESRB: {gameInfo.Game.ESRBRating}");
             Console.WriteLine($"Genero: {gameInfo.Game.Genre}");
-            Console.WriteLine($"Publicado por: {gameInfo.Game.Publisher}");
-            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
-            if (!gameInfo.IsOwned) opciones.Add("Comprar Juego", () => ShowBuyGameMenu(id));
-            opciones.Add("Ver Reviews", () => MainMenu()); //todooooo
-            if (gameInfo.IsOwned) opciones.Add("Escribir Review", () => ShowWriteReviewMenu(id));
-            if (gameInfo.IsPublisher) {
-                opciones.Add("Modificar Juego", () => MainMenu()); //todo
-                opciones.Add("Eliminar Juego", () => MainMenu()); //todo
+            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
+            if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(id));
+            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, id)); //todooooo
+            if (gameInfo.IsOwned) menuOptions.Add("Escribir Review", () => ShowWriteReviewMenu(id));
+            if (gameInfo.IsPublisher)
+            {
+                menuOptions.Add("Modificar Juego", () => MainMenu()); //todo
+                menuOptions.Add("Eliminar Juego", () => MainMenu()); //todo
             }
-            opciones.Add("Volver al Menu Principal", () => MainMenu());
+            menuOptions.Add("Desgargar Caratula", () => MainMenu());
+            menuOptions.Add("Volver al Menu Del Juego", () => ShowGameInfo(id));
+            menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
-      
+            CliMenu.showMenu(menuOptions, "");
+
+        }
       
         private void ShowBuyGameMenu(int gameID)
         {
@@ -186,7 +190,7 @@ namespace Client
             ShowServerMessage(message);
         }
           
-        private void ShowBrowseReviewsMenu(int pageNumber = 1, int gameId = 0)
+        private void ShowBrowseReviewsMenu(int pageNumber, int gameId)
         {
             var commandHandler = (BrowseReviews)CommandFactory.GetCommandHandler(Command.BROWSE_REVIEWS, networkStreamHandler);
             ReviewPage newReviewPage = commandHandler.SendRequest(pageNumber, gameId);
@@ -197,7 +201,7 @@ namespace Client
         {
             Console.WriteLine($"Calificaciones - Página {reviewPage.CurrentPage}");
             Console.WriteLine();// TODO capaz poner el nombre del juego
-            Dictionary<string, Action> opciones = new Dictionary<string, Action>();
+            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
 
             foreach (Review review in reviewPage.Reviews)
             {
@@ -207,14 +211,14 @@ namespace Client
             }
 
             if (reviewPage.HasNextPage)
-                opciones.Add("Siguiene Página", () => ShowBrowseReviewsMenu(reviewPage.CurrentPage + 1, gameId));
+                menuOptions.Add("Siguiene Página", () => ShowBrowseReviewsMenu(reviewPage.CurrentPage + 1, gameId));
 
             if (reviewPage.HasPreviousPage)
-                opciones.Add("Página Anterior", () => ShowBrowseReviewsMenu(reviewPage.CurrentPage - 1, gameId));
+                menuOptions.Add("Página Anterior", () => ShowBrowseReviewsMenu(reviewPage.CurrentPage - 1, gameId));
 
-            opciones.Add("Volver al Menu Principal", () => MainMenu());
+            menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
-            CliMenu.showMenu(opciones, "");
+            CliMenu.showMenu(menuOptions, "");
         }
 
         private void Publish()
