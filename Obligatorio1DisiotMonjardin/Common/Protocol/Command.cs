@@ -9,10 +9,10 @@ namespace Common.Protocol
         LOGIN, // maso
         LOGOUT, // maso
         CREATE_USER, 
-        PUBLISH_GAME, // maso - solo hay titulo
+        PUBLISH_GAME, //hecho
         MODIFY_GAME, 
         BUY_GAME, 
-        VIEW_GAME, 
+        VIEW_GAME, // hecho
         SEARCH_BY_TITLE, // si - hacer refactor para juntar con browse games
         SEARCH_BY_RATING,
         SEARCH_BY_GENRE,

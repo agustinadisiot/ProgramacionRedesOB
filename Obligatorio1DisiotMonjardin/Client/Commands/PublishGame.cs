@@ -20,13 +20,14 @@ namespace Client.Commands
 
             string data = "";
             data += newGame.Title;
-            // TODO agregar el resto
-            // data += Specification.delimiter;
-            /*data += newGame.Title;
-            data += newGame.Title;
-            data += newGame.Title;*/
+            data += Specification.delimiter;
+            data += newGame.Synopsis;
+            data += Specification.delimiter;
+            data += (int)newGame.ESRBRating;
+            data += Specification.delimiter;
+            data += newGame.Genre;
 
-            SendData(data);
+             SendData(data);
             return ResponseHandler();
         }
 

@@ -118,7 +118,7 @@ namespace Server
             GameView gameView = new GameView()
             {
                 Game = games.Find(i => i.Id == gameID),
-                CanBuy = !actualUser.GamesOwned.Contains(game),
+                IsOwned = actualUser.GamesOwned.Contains(game),
                 IsPublisher = actualUser.Equals(game.Publisher),
             };
 
@@ -138,12 +138,14 @@ namespace Server
                 throw new Exception(); //TODO hacer la exception
             newGame.Id = this.gameId;
             gameId++;
+            newGame.ReviewsRating = 0; //hacer funcion que calcule el promedio de los ratings
             newGame.Publisher = GetUser(GetUsername(nwsh));
             newGame.Reviews = new List<Review>();
             games.Add(newGame);
             Console.WriteLine("Game has been published with title: " + newGame.Title + " and id: " + newGame.Id);
 
         }
+
 
         public string FirstGame() // TODO eliminar cuando no se use mas- era para una prueba
         {
