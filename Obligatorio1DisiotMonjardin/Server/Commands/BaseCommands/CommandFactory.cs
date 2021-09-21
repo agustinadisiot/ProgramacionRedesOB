@@ -13,11 +13,14 @@ namespace Server
     {
         public static CommandHandler GetCommandHandler(Command cmd, INetworkStreamHandler nwsh)
         {
-            switch(cmd){
+            switch (cmd)
+            {
                 case Command.PUBLISH_GAME:
                     return new PublishGame(nwsh);
                 case Command.BROWSE_CATALOGUE:
                     return new BrowseCatalogue(nwsh);
+                case Command.BROWSE_REVIEWS:
+                    return new BrowseReviews(nwsh);
                 case Command.CREATE_USER:
                 case Command.MODIFY_GAME:
                 case Command.BUY_GAME:

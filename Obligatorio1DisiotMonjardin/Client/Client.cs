@@ -12,15 +12,16 @@ namespace Client
 {
     public class Client
     {
-        private  NetworkStreamHandler networkStreamHandler;
+        private NetworkStreamHandler networkStreamHandler;
         private readonly TcpClient tcpClient;
         private readonly IPEndPoint serverIpEndPoint;
 
-        public Client() { 
+        public Client()
+        {
             var clientIpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 0); // Puerto 0 -> usa el primer puerto disponible
             tcpClient = new TcpClient(clientIpEndPoint);
             serverIpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6000); // TODO usar config files
-        
+
         }
         public void StartConnection()
         {
@@ -28,7 +29,8 @@ namespace Client
             networkStreamHandler = new NetworkStreamHandler(tcpClient.GetStream());
         }
 
-        public void StartMenu() {
+        public void StartMenu()
+        {
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
             opciones.Add("Iniciar Sesión", () => Login());
             CliMenu.showMenu(opciones, "Menu Inicial");
@@ -44,7 +46,7 @@ namespace Client
             opciones.Add("Comprar Juego (sacar)", () => ShowBuyGameMenu());
             opciones.Add("Ver Juego", () => ShowGameInfo());
             opciones.Add("Escribir review", () => ShowWriteReviewMenu());
-            opciones.Add("Ver review", () => ShowBrowseReviewsMenu()); 
+            opciones.Add("Ver review", () => ShowBrowseReviewsMenu());
             opciones.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             opciones.Add("reimprimir", () => CliMenu.showMenu(opciones, "menucito"));
             while (true) // TODO sacar
@@ -71,26 +73,28 @@ namespace Client
             StartMenu();
         }
 
-        private  void BrowseCatalogue(int pageNumber = 1)
+        private void BrowseCatalogue(int pageNumber = 1)
         {
             BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
             GamePage newGamePage = commandHandler.SendRequest(pageNumber);
             ShowCataloguePage(newGamePage);
         }
 
-        private void SearchByTitle() {
+        private void SearchByTitle()
+        {
             Console.WriteLine("Escriba el titulo del juego: ");
             string title = Console.ReadLine();
             // TODO pedir titulo devuelta si es vacio
             ShowSearchByTitlePage(title);
         }
-        public void ShowSearchByTitlePage(string title, int pageNumber = 1) {
+        public void ShowSearchByTitlePage(string title, int pageNumber = 1)
+        {
             var commandHandler = (SearchByTitle)CommandFactory.GetCommandHandler(Command.SEARCH_BY_TITLE, networkStreamHandler);
             GamePage newGamePage = commandHandler.SendRequest(pageNumber, title);
             ShowSearchByTitlePage(newGamePage, title);
         }
 
-        private void ShowSearchByTitlePage(GamePage gamePage,string title)
+        private void ShowSearchByTitlePage(GamePage gamePage, string title)
         {
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
 
@@ -110,11 +114,11 @@ namespace Client
             CliMenu.showMenu(opciones, $"Juegos con \"{title}\" - Página {gamePage.CurrentPage}");
         }
 
-        private  void ShowCataloguePage(GamePage gamePage)
+        private void ShowCataloguePage(GamePage gamePage)
         {
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
 
-            for(int i = 0; i < gamePage.GamesTitles.Count; i++)
+            for (int i = 0; i < gamePage.GamesTitles.Count; i++)
             {
                 int idIndex = i;
                 opciones.Add(gamePage.GamesTitles[i], () => ShowGameInfo(gamePage.GamesIDs[idIndex]));
@@ -137,7 +141,8 @@ namespace Client
             MainMenu();
         }
 
-        private void ShowBuyGameMenu(int gameID = 1) {
+        private void ShowBuyGameMenu(int gameID = 1)
+        {
             // TODO sacar writeLine y poner adentro de showGame
             Console.WriteLine("ID del juego: ");
             string TextId = Console.ReadLine();
@@ -151,13 +156,12 @@ namespace Client
         {
             // TODO poner adentro de showGame
             Console.WriteLine("ID del juego: ");
-            string TextId = Console.ReadLine();
-            gameID = int.Parse(TextId);
+            string textId = Console.ReadLine();
+            gameID = int.Parse(textId);
 
-            Console.WriteLine("Escriba una puntuación: (del 1 al 5");
-            string Text
-                = Console.ReadLine();
-            int rating = int.Parse(TextId);
+            Console.WriteLine("Escriba una puntuación: (del 1 al 5)");
+            string textRating = Console.ReadLine();
+            int rating = int.Parse(textRating);
 
             Console.WriteLine("Escriba un comentario ");
             string comment = Console.ReadLine();
@@ -171,36 +175,38 @@ namespace Client
             string message = commandHandler.SendRequest(newReview, gameID);
             ShowServerMessage(message);
         }
-        private void ShowBrowseReviewsMenu(int pageNumber = 1)
+        private void ShowBrowseReviewsMenu(int pageNumber = 1, int gameId = 0)
         {
             var commandHandler = (BrowseReviews)CommandFactory.GetCommandHandler(Command.BROWSE_REVIEWS, networkStreamHandler);
-            ReviewPage newReviewPage = commandHandler.SendRequest(pageNumber);
-            ShowReviewPage(newReviewPage);
+            ReviewPage newReviewPage = commandHandler.SendRequest(pageNumber, gameId);
+            ShowReviewPage(newReviewPage, gameId);
         }
 
-        private void ShowReviewPage(ReviewPage reviewPage)
+        private void ShowReviewPage(ReviewPage reviewPage, int gameId)
         {
-            Console.Write( $"Clasificaciones - Página {reviewPage.CurrentPage}"); // TODO capaz poner el nombre del juego
+            Console.WriteLine($"Calificaciones - Página {reviewPage.CurrentPage}");
+            Console.WriteLine();// TODO capaz poner el nombre del juego
             Dictionary<string, Action> opciones = new Dictionary<string, Action>();
 
-            foreach(Review review in reviewPage.Reviews)
+            foreach (Review review in reviewPage.Reviews)
             {
-                Console.WriteLine($" ({review.Rating}/10) {review.User.Name}:"); // TODO el 10 que sea una constante, en Common, pero no parte del protocolo
+                Console.WriteLine($"{review.User.Name} ({review.Rating}/5):"); // TODO el 10 que sea una constante, en Common, pero no parte del protocolo
                 Console.WriteLine($"{review.Text}"); // TODO ver si implementamos un "Ver mas" si es muy larga 
+                Console.WriteLine();
             }
 
             if (reviewPage.HasNextPage)
-                opciones.Add("Siguiene Página", () => BrowseCatalogue(reviewPage.CurrentPage + 1));
+                opciones.Add("Siguiene Página", () => ShowBrowseReviewsMenu(reviewPage.CurrentPage + 1, gameId));
 
             if (reviewPage.HasPreviousPage)
-                opciones.Add("Página Anterior", () => BrowseCatalogue(reviewPage.CurrentPage - 1));
+                opciones.Add("Página Anterior", () => ShowBrowseReviewsMenu(reviewPage.CurrentPage - 1, gameId));
 
             opciones.Add("Volver al Menu Principal", () => MainMenu());
 
-            CliMenu.showMenu(opciones,"");
+            CliMenu.showMenu(opciones, "");
         }
 
-        private  void Publish()
+        private void Publish()
         {
             PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
 
@@ -213,7 +219,7 @@ namespace Client
             {
                 Title = word
                 // todo agregar los nuevos datos
-            }; 
+            };
             string returnMessage = commandHandler.SendRequest(newGame);
             ShowServerMessage(returnMessage);
         }

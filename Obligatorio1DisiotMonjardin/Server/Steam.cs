@@ -22,7 +22,6 @@ namespace Server
             return instance;
         }
 
-       
 
         public Steam()
         {
@@ -39,8 +38,40 @@ namespace Server
             Console.WriteLine($"Review by {newReview.User.Name} has been published");
 
         }
+        internal ReviewPage BrowseReviews(int pageNumber, int gameId) // TODO ver si usamos public o internal en cada uno
+        {
+            Game gameToGetReviews = games.Find(game => game.Id == gameId);
+            List<Review> allReviews = gameToGetReviews.Reviews;
 
-        internal void BuyGame(int gameID, INetworkStreamHandler nwsh )
+            int firstReviewPos = (pageNumber - 1) * Specification.pageSize;
+            int pageSize;
+            if (firstReviewPos + Specification.pageSize > allReviews.Count)
+                pageSize = allReviews.Count - firstReviewPos;
+            else
+                pageSize = Specification.pageSize;
+
+
+            // 0 / 1 / 2 / 3
+            List<Review> reviewsInPage = allReviews.GetRange(firstReviewPos, pageSize); // TODO usar esto para BrowseCatalogue y search
+
+            ReviewPage ret = new ReviewPage()
+            {
+                Reviews = reviewsInPage,
+                HasNextPage = ExistsNextReviewPage(allReviews, pageNumber), // TODO podria usar el if del PageSize
+                HasPreviousPage = pageNumber > 1
+            };
+            return ret;
+        }
+        public bool ExistsNextReviewPage(List<Review> reviews, int pageNumber) // TODO usar la misma funcion que para ExistsNextGamePage
+        {
+            int maxPageNumber = reviews.Count / Specification.pageSize;
+            if (reviews.Count % Specification.pageSize != 0)
+                maxPageNumber++;
+
+            return pageNumber < maxPageNumber;
+        }
+
+        internal void BuyGame(int gameID, INetworkStreamHandler nwsh)
         {
             // TODO tirar error si el juego ya esta comprado / si la id no es valida
             Game gameToBuy = games.Find(game => game.Id == gameID);
@@ -57,13 +88,14 @@ namespace Server
             if (!alreadyExists)
             {
                 users.Add(newUser);
-                connections.Add(nwsh, newUserName);
             }
+            connections.Add(nwsh, newUserName);
 
             return !alreadyExists;
         }
 
-        public bool Logout(INetworkStreamHandler nwsh) { 
+        public bool Logout(INetworkStreamHandler nwsh)
+        {
             connections.Remove(nwsh);
             // TODO ver que retornamos
             return true;
@@ -124,12 +156,12 @@ namespace Server
             int firstGamePos = (pageNumber - 1) * Specification.pageSize;
             int lastGamePos = firstGamePos + Specification.pageSize;
             List<string> gameTitles = new List<string>();
-            List<int> gamesIDs = new List<int>(); 
+            List<int> gamesIDs = new List<int>();
 
             for (int i = firstGamePos; (i < games.Count) && (i < lastGamePos); i++)
             {
                 gameTitles.Add(games[i].Title); //Todo checkear pagenumber > 0
-                gamesIDs.Add(games[i].Id); 
+                gamesIDs.Add(games[i].Id);
             }
             GamePage ret = new GamePage()
             {
@@ -161,7 +193,8 @@ namespace Server
             return ret;
         }
 
-        bool textSearchIsMatch(string real, string search) { 
+        bool textSearchIsMatch(string real, string search)
+        {
             return (real.ToLower().Contains(search.ToLower()));
         }
         public bool ExistsNextGamePage(List<Game> games, int pageNumber)

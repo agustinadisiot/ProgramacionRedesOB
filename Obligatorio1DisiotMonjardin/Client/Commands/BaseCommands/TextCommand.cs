@@ -19,12 +19,17 @@ namespace Client
             return unParsedData;
         }
 
-        public string[] Parse(string unparsedData)
+        public string[] Parse(string unparsedData) // TODO capaz renombrar a ParsedByFirstDelimiter y cambiarle el nombre a delimiter
         {
             string[] parsedData = unparsedData.Split(Specification.delimiter);
             return parsedData;
         } // TODO poner en common(el server tambien la tiene)
 
+        public string[] ParseBySecondDelimiter(string unparsedData)
+        {
+            string[] parsedData = unparsedData.Split(Specification.secondDelimiter);
+            return parsedData;
+        } // TODO poner en common(el server tambien la tiene)?
 
         protected void SendData(string data)
         {
@@ -32,7 +37,8 @@ namespace Client
             networkStreamHandler.WriteString(data);
         }
 
-        protected string[] GetData() {
+        protected string[] GetData()
+        {
             ReadHeader();
             ReadCommand(); // TODO ver si hacemos algo mas con estos 
 

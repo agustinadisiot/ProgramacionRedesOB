@@ -16,8 +16,8 @@ namespace Server.Commands
             int gameId = int.Parse(req[0]);
             Review newReview = new Review
             {
-                Rating = int.Parse(req[0]),
-                Text = req[1]
+                Rating = int.Parse(req[1]),
+                Text = req[2]
             };
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.WriteReview(newReview, gameId, networkStreamHandler);

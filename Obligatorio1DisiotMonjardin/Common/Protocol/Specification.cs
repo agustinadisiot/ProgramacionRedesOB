@@ -7,6 +7,7 @@ namespace Common.Protocol
         public const int CmdLength = 2;
         public const int dataSizeLength = 4;
         public const string delimiter = "/";
+        public const string secondDelimiter = "#";
         public const int pageSize = 2;
         public const string responseHeader = "RES";
         public const string requestHeader = "REQ";
