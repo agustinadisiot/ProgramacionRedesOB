@@ -86,7 +86,7 @@ namespace Client
             // TODO pedir titulo devuelta si es vacio
             ShowSearchByTitlePage(title);
         }
-      
+
         public void ShowSearchByTitlePage(string title, int pageNumber = 1)
         {
             var commandHandler = (SearchByTitle)CommandFactory.GetCommandHandler(Command.SEARCH_BY_TITLE, networkStreamHandler);
@@ -156,13 +156,12 @@ namespace Client
                 menuOptions.Add("Eliminar Juego", () => MainMenu()); //todo
             }
             menuOptions.Add("Desgargar Caratula", () => MainMenu());
-            menuOptions.Add("Volver al Menu Del Juego", () => ShowGameInfo(id));
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
             CliMenu.showMenu(menuOptions, "");
 
         }
-      
+
         private void ShowBuyGameMenu(int gameID)
         {
             var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
@@ -172,11 +171,11 @@ namespace Client
 
         private void ShowWriteReviewMenu(int gameID)
         {
-            Console.WriteLine("Escriba una puntuación: (del 1 al 5)");
+            Console.WriteLine("Escriba una puntuación: (del 1 al 10)");
             string textRating = Console.ReadLine();
             int rating = int.Parse(textRating);
 
-          
+
             Console.WriteLine("Escriba un comentario ");
             string comment = Console.ReadLine();
 
@@ -189,7 +188,7 @@ namespace Client
             string message = commandHandler.SendRequest(newReview, gameID);
             ShowServerMessage(message);
         }
-          
+
         private void ShowBrowseReviewsMenu(int pageNumber, int gameId)
         {
             var commandHandler = (BrowseReviews)CommandFactory.GetCommandHandler(Command.BROWSE_REVIEWS, networkStreamHandler);
@@ -205,7 +204,7 @@ namespace Client
 
             foreach (Review review in reviewPage.Reviews)
             {
-                Console.WriteLine($"{review.User.Name} ({review.Rating}/5):"); // TODO el 10 que sea una constante, en Common, pero no parte del protocolo
+                Console.WriteLine($"{review.User.Name} ({review.Rating}/10):"); // TODO el 10 que sea una constante, en Common, pero no parte del protocolo
                 Console.WriteLine($"{review.Text}"); // TODO ver si implementamos un "Ver mas" si es muy larga 
                 Console.WriteLine();
             }
@@ -216,6 +215,7 @@ namespace Client
             if (reviewPage.HasPreviousPage)
                 menuOptions.Add("Página Anterior", () => ShowBrowseReviewsMenu(reviewPage.CurrentPage - 1, gameId));
 
+            menuOptions.Add("Volver al Menu Del Juego", () => ShowGameInfo(gameId));
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
             CliMenu.showMenu(menuOptions, "");
@@ -261,7 +261,7 @@ namespace Client
             {
                 Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
                 isANumber = int.TryParse(Console.ReadLine(), out intESRB);
-                isValidESRB = intESRB > 0 && intESRB <=  possibleESRB.Count;
+                isValidESRB = intESRB > 0 && intESRB <= possibleESRB.Count;
             }
             Console.WriteLine("Escriba el genero del juego:");
             var stringGenre = Console.ReadLine();
@@ -275,9 +275,9 @@ namespace Client
 
             Game newGame = new Game
             {
-                Title = stringTitle, 
+                Title = stringTitle,
                 Synopsis = stringSyn,
-                ESRBRating = (Common.ESRBRating)intESRB, 
+                ESRBRating = (Common.ESRBRating)intESRB,
                 Genre = stringGenre
             };
             string returnMessage = commandHandler.SendRequest(newGame);

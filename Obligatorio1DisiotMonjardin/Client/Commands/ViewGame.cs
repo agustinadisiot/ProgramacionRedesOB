@@ -33,7 +33,8 @@ namespace Client
             {
                 Title = parsedData[0],
                 Synopsis = parsedData[1],
-                ESRBRating = (Common.ESRBRating)int.Parse(parsedData[2]),
+                ReviewsRating = int.Parse(parsedData[2]),
+                ESRBRating = (Common.ESRBRating)int.Parse(parsedData[3]),
                 Genre = parsedData[3]
             };
 
