@@ -28,19 +28,20 @@ namespace Server
             ushort command = (ushort)Command.BROWSE_CATALOGUE;
             byte[] cmd = BitConverter.GetBytes(command);
 
-            // TODO usar stringStream
-            string dataString = "";
-            dataString += gameView.Game.Title;
+            string dataString = ""; // TODO sacar los indices y ponerlo en specification
+            dataString += gameView.Game.Title; // 0
             dataString += Specification.delimiter;
-            dataString += gameView.Game.Synopsis;
+            dataString += gameView.Game.Synopsis; // 1
             dataString += Specification.delimiter;
-            dataString += (int)gameView.Game.ESRBRating;
+            dataString += gameView.Game.ReviewsRating; // 2
+            dataString += Specification.delimiter;
+            dataString += (int)gameView.Game.ESRBRating; // 3
             dataString += Specification.delimiter;
             dataString += gameView.Game.Genre;
             dataString += Specification.delimiter;
-            dataString += Convert.ToInt32(gameView.IsOwned);
+            dataString += Convert.ToInt32(gameView.IsOwned); // 4
             dataString += Specification.delimiter;
-            dataString += Convert.ToInt32(gameView.IsPublisher);
+            dataString += Convert.ToInt32(gameView.IsPublisher); // 5
 
             byte[] data = Encoding.UTF8.GetBytes(dataString);
             byte[] dataLength = BitConverter.GetBytes(data.Length);

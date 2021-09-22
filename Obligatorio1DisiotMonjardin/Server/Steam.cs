@@ -110,18 +110,35 @@ namespace Server
                 throw new Exception(); // TODO cambiar excepction
         }
 
-        public GameView ViewGame(int gameID, INetworkStreamHandler nwsh)
+        public GameView ViewGame(int gameId, INetworkStreamHandler nwsh)
         {
-            Game game = games.Find(i => i.Id == gameID);
+            Game game = games.Find(i => i.Id == gameId);
             User actualUser = GetUser(GetUsername(nwsh));
+            game.ReviewsRating = GetReviewsAvarageRating(game);
             GameView gameView = new GameView()
             {
-                Game = games.Find(i => i.Id == gameID),
+                Game = game,
                 IsOwned = actualUser.GamesOwned.Contains(game),
                 IsPublisher = actualUser.Equals(game.Publisher),
             };
 
             return gameView;
+        }
+        private int GetReviewsAvarageRating(Game game)
+        {
+            // TODO lock
+            decimal total = 0;
+            decimal count = game.Reviews.Count;
+            foreach (Review review in game.Reviews)
+            {
+                total += review.Rating;
+            }
+            decimal result;
+            if (count > 0)
+                result = total / count;
+            else
+                result = 0;
+            return (int)Math.Ceiling(result);
         }
 
         private User GetUser(string username)
@@ -137,7 +154,7 @@ namespace Server
                 throw new Exception(); //TODO hacer la exception
             newGame.Id = this.gameId;
             gameId++;
-            newGame.ReviewsRating = 0; //hacer funcion que calcule el promedio de los ratings
+            newGame.ReviewsRating = 0;
             newGame.Publisher = GetUser(GetUsername(nwsh));
             newGame.Reviews = new List<Review>();
             games.Add(newGame);
