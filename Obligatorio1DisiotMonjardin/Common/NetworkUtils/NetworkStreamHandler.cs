@@ -44,6 +44,12 @@ namespace Common.NetworkUtils
             return BitConverter.ToInt32(number);
         }
 
+        public long ReadFileSize()
+        {
+            byte[] number = Read(Specification.FixedFileSizeLength);
+            return BitConverter.ToInt64(number);
+        }
+
         public string ReadString(int length)
         {
             byte[] text = Read(length);
@@ -63,6 +69,12 @@ namespace Common.NetworkUtils
         }
 
         public void WriteInt(int data)
+        {
+            byte[] number = BitConverter.GetBytes(data);
+            Write(number);
+        }
+
+        public void WriteFileSize(long data)
         {
             byte[] number = BitConverter.GetBytes(data);
             Write(number);
