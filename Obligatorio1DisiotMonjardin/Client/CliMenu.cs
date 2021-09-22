@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,23 +17,11 @@ namespace Client
                 var option = options.ElementAt(i);
                 Console.WriteLine($"{i+1}.{option.Key}");
             }
-            bool isCorrectNumber = false;
-            int input = 1;
-            while (!isCorrectNumber)
-            {
-                bool isANumber = int.TryParse(Console.ReadLine(), out input);
-                int min = 1;
-                int max = options.Count;
-                if (isANumber)
-                {
-                    bool inRange = input >= min && input <= max;
-                    if (inRange) isCorrectNumber = true;
-                }
-                if (!isCorrectNumber)
-                {
-                    Console.WriteLine($"Elija un numero entre {min} y {max}");
-                }
-            }
+
+            int min = 1;
+            int max = options.Count;
+            int input = Validation.ReadValidNumber($"Eliga un numero entre {min} y {max}", min, max);
+
             var selectedOption = options.ElementAt(input - 1);
             var selectedAction = selectedOption.Value;
             selectedAction();

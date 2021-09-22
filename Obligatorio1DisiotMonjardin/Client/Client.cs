@@ -4,6 +4,7 @@ using Common.Domain;
 using Common.FileHandler;
 using Common.NetworkUtils;
 using Common.Protocol;
+using Common.Utils;
 using Server;
 using System;
 using System.Collections.Generic;
@@ -60,10 +61,10 @@ namespace Client
         private void Login()
         {
             Console.WriteLine("Ingrese nombre de usuario: ");
-            string username = Console.ReadLine();
+            string username = Validation.ReadValidString("Reingrese un nombre de usuario valido");
+            
             var commandHandler = (Login)CommandFactory.GetCommandHandler(Command.LOGIN, networkStreamHandler);
             commandHandler.SendRequest(username);
-            // TODO separar createUser y log in
             MainMenu();
         }
 
@@ -191,12 +192,10 @@ namespace Client
         private void ShowWriteReviewMenu(int gameID)
         {
             Console.WriteLine("Escriba una puntuación: (del 1 al 10)");
-            string textRating = Console.ReadLine();
-            int rating = int.Parse(textRating);
-
+            int rating = Validation.ReadValidNumber("Escriba una puntuación: (del 1 al 10)", 1, 10);
 
             Console.WriteLine("Escriba un comentario ");
-            string comment = Console.ReadLine();
+            string comment = Validation.ReadValidString("Escriba un comentario valido");
 
             Review newReview = new Review()
             {
@@ -243,54 +242,17 @@ namespace Client
         private void Publish()
         {
             PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
-
             Console.WriteLine("Escriba el titulo del juego:");
-            string stringTitle = Console.ReadLine();
-            bool isValidTitle = stringTitle.Length > 0; //y que no incluya '/'
-            while (!isValidTitle)
-            {
-                Console.WriteLine("Escriba un titulo valido");
-                stringTitle = Console.ReadLine();
-                isValidTitle = stringTitle.Length > 0;
-            }
+            string title = Validation.ReadValidString("Escriba un titulo del juego valido");
+
             Console.WriteLine("Escriba la sinopsis del juego:");
-            string stringSyn = Console.ReadLine();
-            bool isValidSyn = stringSyn.Length > 0;
-            while (!isValidSyn)
-            {
-                Console.WriteLine("Escriba una sinopsis valida");
-                stringSyn = Console.ReadLine();
-                isValidSyn = stringSyn.Length > 0;
-            }
+            string synopsis = Validation.ReadValidString("Escriba una sinopsis del juego valida");
+
             Console.WriteLine("Elija el ESRBrating del juego:");
-            var possibleESRB = Enum.GetValues(typeof(ESRBRating)).Cast<ESRBRating>().ToList();
-            for (int i = 0; i < possibleESRB.Count; i++)
-            {
-                Console.WriteLine($"{ i + 1}.{ possibleESRB.ElementAt(i)}");
-            }
-            int intESRB = 0;
-            bool isANumber = int.TryParse(Console.ReadLine(), out intESRB);
-            while (!isANumber)
-            {
-                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
-                isANumber = int.TryParse(Console.ReadLine(), out intESRB);
-            }
-            bool isValidESRB = intESRB > 0 && intESRB <= possibleESRB.Count;
-            while (!isValidESRB)
-            {
-                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
-                isANumber = int.TryParse(Console.ReadLine(), out intESRB);
-                isValidESRB = intESRB > 0 && intESRB <= possibleESRB.Count;
-            }
+            int ESRBRating = Validation.ReadValidESRB();
+
             Console.WriteLine("Escriba el genero del juego:");
-            var stringGenre = Console.ReadLine();
-            bool isValidGenre = stringGenre.Length > 0;
-            while (!isValidGenre)
-            {
-                Console.WriteLine("Escriba un titulo valido");
-                stringGenre = Console.ReadLine();
-                isValidGenre = stringGenre.Length > 0;
-            }
+            string genre = Validation.ReadValidString("Escriba un genero del juego valido");
 
             Console.WriteLine("Escriba la dirección del archivo de la caratula:");
             string coverPath = Console.ReadLine();
@@ -304,20 +266,16 @@ namespace Client
 
             Game newGame = new Game
             {
-                Title = stringTitle,
-                Synopsis = stringSyn,
-                ESRBRating = (Common.ESRBRating)intESRB,
-                Genre = stringGenre,
+                Title = title,
+                Synopsis = synopsis,
+                ESRBRating = (Common.ESRBRating)ESRBRating,
+                Genre = genre
                 CoverFilePath = coverPath
             };
             string returnMessage = commandHandler.SendRequest(newGame);
             ShowServerMessage(returnMessage);
         }
-
-        // titulo_juego.png      juego_id1.png
-        // idJuego_caratulaId.png
-        // 23rck2j3crhk2.png
-
+      
         public void ShowServerMessage(string message)
         {
             Console.WriteLine(message);

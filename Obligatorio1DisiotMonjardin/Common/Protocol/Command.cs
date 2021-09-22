@@ -8,7 +8,6 @@ namespace Common.Protocol
     {
         LOGIN, // maso
         LOGOUT, // maso
-        CREATE_USER, 
         PUBLISH_GAME, //hecho 
         MODIFY_GAME, 
         DELETE_GAME,

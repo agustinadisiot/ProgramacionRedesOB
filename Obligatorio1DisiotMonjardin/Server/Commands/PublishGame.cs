@@ -25,7 +25,7 @@ namespace Server.Commands
             newGame.CoverFilePath = coverPath;
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.PublishGame(newGame, networkStreamHandler);
-            string message = "Game added succesfully"; // TODO agregar catch para cuando tira error
+            string message = "Juego agregado exitosamente"; // TODO agregar catch para cuando tira error
             // TODO borrar caratula si no se publico viene
             Respond(message);
         }
