@@ -18,7 +18,6 @@ namespace Client
                     return new PublishGame(nwsh);
                 case Command.BROWSE_CATALOGUE:
                     return new BrowseCatalogue(nwsh);
-                case Command.CREATE_USER:
                 case Command.MODIFY_GAME:
                 case Command.BUY_GAME:
                     return new BuyGame(nwsh);

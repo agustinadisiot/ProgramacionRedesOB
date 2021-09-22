@@ -22,7 +22,7 @@ namespace Server.Commands
             };
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.PublishGame(newGame, networkStreamHandler);
-            string message = "Game added succesfully"; // TODO agregar catch para cuando tira error
+            string message = "Juego agregado exitosamente"; // TODO agregar catch para cuando tira error
             Respond(message);
         }
 

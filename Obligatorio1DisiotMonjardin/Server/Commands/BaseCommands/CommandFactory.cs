@@ -21,7 +21,6 @@ namespace Server
                     return new BrowseCatalogue(nwsh);
                 case Command.BROWSE_REVIEWS:
                     return new BrowseReviews(nwsh);
-                case Command.CREATE_USER:
                 case Command.MODIFY_GAME:
                 case Command.BUY_GAME:
                     return new BuyGame(nwsh);

@@ -21,7 +21,7 @@ namespace Server.Commands
             };
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.WriteReview(newReview, gameId, networkStreamHandler);
-            string message = "Review added succesfully"; // TODO agregar catch para cuando tira error
+            string message = "Reseña agregada exitosamente"; // TODO agregar catch para cuando tira error
             Respond(message);
         }
 
