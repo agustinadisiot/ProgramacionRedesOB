@@ -17,23 +17,11 @@ namespace Client
                 var option = options.ElementAt(i);
                 Console.WriteLine($"{i+1}.{option.Key}");
             }
-            bool isCorrectNumber = false;
-            int input = 1;
-            string entry = "";
-            while (!isCorrectNumber)
-            {
-                int min = 1;
-                int max = options.Count;
-                entry = Console.ReadLine();
-                isCorrectNumber = Validation.IsValidNumber(entry, min, max);
-                
-                if (!isCorrectNumber)
-                {
-                    Console.WriteLine($"Elija un numero entre {min} y {max}");
-                }
-            }
 
-            input = int.Parse(entry);
+            int min = 1;
+            int max = options.Count;
+            int input = Validation.ReadValidNumber($"Eliga un numero entre {min} y {max}", min, max);
+
             var selectedOption = options.ElementAt(input - 1);
             var selectedAction = selectedOption.Value;
             selectedAction();

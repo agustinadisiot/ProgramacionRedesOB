@@ -34,8 +34,8 @@ namespace Client
                 Title = parsedData[0],
                 Synopsis = parsedData[1],
                 ReviewsRating = int.Parse(parsedData[2]),
-                ESRBRating = (Common.ESRBRating)int.Parse(parsedData[3]),
-                Genre = parsedData[3]
+                ESRBRating = (Common.ESRBRating)(int.Parse(parsedData[3])-1),
+                Genre = parsedData[4]
             };
 
             GameView gameView = new GameView()
