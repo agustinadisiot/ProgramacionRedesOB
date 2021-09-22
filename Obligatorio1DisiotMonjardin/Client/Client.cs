@@ -269,7 +269,7 @@ namespace Client
                 Title = title,
                 Synopsis = synopsis,
                 ESRBRating = (Common.ESRBRating)ESRBRating,
-                Genre = genre
+                Genre = genre,
                 CoverFilePath = coverPath
             };
             string returnMessage = commandHandler.SendRequest(newGame);

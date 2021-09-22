@@ -6,8 +6,8 @@ namespace Common.Protocol
 {
     public enum Command
     {
-        LOGIN, // maso
-        LOGOUT, // maso
+        LOGIN, // hecho
+        LOGOUT, // hecho
         PUBLISH_GAME, //hecho 
         MODIFY_GAME, 
         DELETE_GAME,
@@ -17,10 +17,10 @@ namespace Common.Protocol
         SEARCH_BY_RATING,
         SEARCH_BY_GENRE,
         VIEW_GENRES, 
-        WRITE_REVIEW, // faltan verificaciones
+        WRITE_REVIEW, // hecho
         BROWSE_REVIEWS, // hecho
-        DOWNLOAD_COVER,
+        DOWNLOAD_COVER, //hecho
         BROWSE_CATALOGUE, // si ponele
-        VIEW_MY_GAME
+        VIEW_MY_GAME 
     }
 }
