@@ -157,11 +157,28 @@ namespace Client
                 menuOptions.Add("Modificar Juego", () => MainMenu()); //todo
                 menuOptions.Add("Eliminar Juego", () => MainMenu()); //todo
             }
-            menuOptions.Add("Descargar Caratula", () => MainMenu());
+            menuOptions.Add("Descargar Caratula", () => DownloadCover(id));
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
             CliMenu.showMenu(menuOptions, "");
 
+        }
+
+        private void DownloadCover(int gameId)
+        {
+            Console.WriteLine("Escriba la carpeta donde quiere guardar la caratula");
+            string folderPath = Console.ReadLine();
+            Console.WriteLine("Escriba el nombre que quiere para el archivo");
+            string fileName = Console.ReadLine(); // TODO hacer verifiaciones
+
+            var commandHandler = (DownloadCover)CommandFactory.GetCommandHandler(Command.DOWNLOAD_COVER, networkStreamHandler);
+            string completePath = commandHandler.SendRequest(gameId, folderPath, fileName);
+
+            if (fileHandler.FileExists(completePath))
+                Console.WriteLine($"Se descargó la caratula en {completePath}");
+            else // TODO mover esta verificacion a otro lado capaz 
+                Console.WriteLine($"Se intento descragar la caratula a  {completePath} pero ocurrió un error y no se descargo");
+            ShowGameInfo(gameId);
         }
 
         private void ShowBuyGameMenu(int gameID)

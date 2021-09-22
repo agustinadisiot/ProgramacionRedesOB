@@ -35,6 +35,8 @@ namespace Server
                     return new Logout(nwsh);
                 case Command.VIEW_GAME:
                     return new ViewGame(nwsh);
+                case Command.DOWNLOAD_COVER:
+                    return new DownloadCover(nwsh);
                 default:
                     throw new NotImplementedException();
 

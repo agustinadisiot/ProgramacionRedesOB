@@ -162,7 +162,12 @@ namespace Server
 
         }
 
+        public string GetCoverPath(int gameId)
+        {
+            Game gameToGetCover = games.Find(game => game.Id == gameId);
+            return gameToGetCover.CoverFilePath;
 
+        }
         public string FirstGame() // TODO eliminar cuando no se use mas- era para una prueba
         {
             if (games.Count == 0) return "Primer Juego";

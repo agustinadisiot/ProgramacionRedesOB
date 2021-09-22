@@ -19,7 +19,7 @@ namespace Common.NetworkUtils
             fileHandler = new FileHandler.FileHandler();
 
         }
-        public string ReceiveFile(string folderPath)
+        public string ReceiveFile(string folderPath, string fileName = "")
         {
             {
                 long fileSize = networkStreamHandler.ReadFileSize();
@@ -29,7 +29,13 @@ namespace Common.NetworkUtils
                 long currentPart = 1;
 
                 // Generates a random file Name to avoid duplicates
-                string fileName = folderPath + Guid.NewGuid().ToString() + ".jpg"; // TODO ver si poner un while que cheque que el file no existe o si usar otro metodo
+                if (fileName == "")
+                    fileName = Guid.NewGuid().ToString();
+
+                if (!folderPath.Trim().EndsWith("\\"))
+                    folderPath += "\\"; // TODO ver que pasa si me pasan el folder con "/"
+
+                string completeFileName = folderPath + fileName + Specification.imageExtension; // TODO ver si poner un while que cheque que el file no existe o si usar otro metodo
 
                 while (fileSize > offset)
                 {
@@ -45,10 +51,10 @@ namespace Common.NetworkUtils
                         data = networkStreamHandler.Read(Specification.MaxPacketSize);
                         offset += Specification.MaxPacketSize;
                     }
-                    fileStreamHandler.Write(fileName, data);
+                    fileStreamHandler.Write(completeFileName, data);
                     currentPart++;
                 }
-                return fileName;
+                return completeFileName;
             }
         }
 
