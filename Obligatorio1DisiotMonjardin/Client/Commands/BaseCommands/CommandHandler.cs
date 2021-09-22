@@ -1,4 +1,6 @@
-﻿using Common.NetworkUtils;
+﻿using Common.FileHandler;
+using Common.FileHandler.Interfaces;
+using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
@@ -10,9 +12,11 @@ namespace Client
     public abstract class CommandHandler
     {
         protected INetworkStreamHandler networkStreamHandler;
+        protected IFileNetworkStreamHandler fileNetworkStreamHandler;
         public CommandHandler(INetworkStreamHandler nwsh)
         {
             networkStreamHandler = nwsh;
+            fileNetworkStreamHandler = new FileNetworkStreamHandler(nwsh);
         }
 
         protected void SendHeader()

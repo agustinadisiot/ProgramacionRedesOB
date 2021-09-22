@@ -27,11 +27,10 @@ namespace Client.Commands
             data += Specification.delimiter;
             data += newGame.Genre;
 
-             SendData(data);
+            SendData(data);
+            fileNetworkStreamHandler.SendFile(newGame.CoverFilePath);
             return ResponseHandler();
         }
-
-
         private string ResponseHandler()
         {
             string[] data = GetData();

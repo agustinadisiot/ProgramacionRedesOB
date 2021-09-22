@@ -151,7 +151,7 @@ namespace Server
 
             var gameWithSameTitle = games.Find(i => i.Title == newGame.Title);
             if (gameWithSameTitle != null)
-                throw new Exception(); //TODO hacer la exception
+                throw new Exception("Ya existe un juego con este titulo"); //TODO hacer la exception
             newGame.Id = this.gameId;
             gameId++;
             newGame.ReviewsRating = 0;

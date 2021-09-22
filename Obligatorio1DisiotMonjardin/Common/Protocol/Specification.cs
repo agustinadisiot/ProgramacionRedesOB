@@ -12,8 +12,7 @@ namespace Common.Protocol
         public const string responseHeader = "RES";
         public const string requestHeader = "REQ";
 
-        /*public const int FixedFileNameLength = 4;
-public const int FixedFileSizeLength = 8;
-public const int MaxPacketSize = 32768; // 32KB*/
+        public const int FixedFileSizeLength = 8;
+        public const int MaxPacketSize = 32768; // 32KB
     }
 }

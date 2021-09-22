@@ -1,6 +1,7 @@
 ﻿using Client.Commands;
 using Common;
 using Common.Domain;
+using Common.FileHandler;
 using Common.NetworkUtils;
 using Common.Protocol;
 using Server;
@@ -18,13 +19,14 @@ namespace Client
         private NetworkStreamHandler networkStreamHandler;
         private readonly TcpClient tcpClient;
         private readonly IPEndPoint serverIpEndPoint;
+        private readonly FileHandler fileHandler;
 
         public Client()
         {
             var clientIpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 0); // Puerto 0 -> usa el primer puerto disponible
             tcpClient = new TcpClient(clientIpEndPoint);
             serverIpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6000); // TODO usar config files
-
+            fileHandler = new FileHandler();
         }
         public void StartConnection()
         {
@@ -155,7 +157,7 @@ namespace Client
                 menuOptions.Add("Modificar Juego", () => MainMenu()); //todo
                 menuOptions.Add("Eliminar Juego", () => MainMenu()); //todo
             }
-            menuOptions.Add("Desgargar Caratula", () => MainMenu());
+            menuOptions.Add("Descargar Caratula", () => MainMenu());
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
             CliMenu.showMenu(menuOptions, "");
@@ -273,16 +275,31 @@ namespace Client
                 isValidGenre = stringGenre.Length > 0;
             }
 
+            Console.WriteLine("Escriba la dirección del archivo de la caratula:");
+            string coverPath = Console.ReadLine();
+            bool isValidPath = fileHandler.FileExists(coverPath);
+            while (!isValidPath)
+            {
+                Console.WriteLine("Escriba un archivo valido");
+                coverPath = Console.ReadLine();
+                isValidPath = fileHandler.FileExists(coverPath);
+            }
+
             Game newGame = new Game
             {
                 Title = stringTitle,
                 Synopsis = stringSyn,
                 ESRBRating = (Common.ESRBRating)intESRB,
-                Genre = stringGenre
+                Genre = stringGenre,
+                CoverFilePath = coverPath
             };
             string returnMessage = commandHandler.SendRequest(newGame);
             ShowServerMessage(returnMessage);
         }
+
+        // titulo_juego.png      juego_id1.png
+        // idJuego_caratulaId.png
+        // 23rck2j3crhk2.png
 
         public void ShowServerMessage(string message)
         {
