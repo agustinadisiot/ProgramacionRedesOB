@@ -4,9 +4,8 @@ namespace Common.Protocol
     {
         public static long GetParts(long fileSize)
         {
-            // var parts = fileSize / Specification.MaxPacketSize;
-            // return parts * Specification.MaxPacketSize == fileSize ? parts : parts + 1;
-            return 1;
+            var parts = fileSize / Specification.MaxPacketSize;
+            return parts * Specification.MaxPacketSize == fileSize ? parts : parts + 1;
         }
     }
 }

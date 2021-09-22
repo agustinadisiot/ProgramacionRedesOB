@@ -1,6 +1,7 @@
 ﻿using Client.Commands;
 using Common;
 using Common.Domain;
+using Common.FileHandler;
 using Common.NetworkUtils;
 using Common.Protocol;
 using Common.Utils;
@@ -19,13 +20,14 @@ namespace Client
         private NetworkStreamHandler networkStreamHandler;
         private readonly TcpClient tcpClient;
         private readonly IPEndPoint serverIpEndPoint;
+        private readonly FileHandler fileHandler;
 
         public Client()
         {
             var clientIpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 0); // Puerto 0 -> usa el primer puerto disponible
             tcpClient = new TcpClient(clientIpEndPoint);
             serverIpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6000); // TODO usar config files
-
+            fileHandler = new FileHandler();
         }
         public void StartConnection()
         {
@@ -156,11 +158,28 @@ namespace Client
                 menuOptions.Add("Modificar Juego", () => MainMenu()); //todo
                 menuOptions.Add("Eliminar Juego", () => MainMenu()); //todo
             }
-            menuOptions.Add("Descargar Caratula", () => MainMenu());
+            menuOptions.Add("Descargar Caratula", () => DownloadCover(id));
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
             CliMenu.showMenu(menuOptions, "");
 
+        }
+
+        private void DownloadCover(int gameId)
+        {
+            Console.WriteLine("Escriba la carpeta donde quiere guardar la caratula");
+            string folderPath = Console.ReadLine();
+            Console.WriteLine("Escriba el nombre que quiere para el archivo");
+            string fileName = Console.ReadLine(); // TODO hacer verifiaciones
+
+            var commandHandler = (DownloadCover)CommandFactory.GetCommandHandler(Command.DOWNLOAD_COVER, networkStreamHandler);
+            string completePath = commandHandler.SendRequest(gameId, folderPath, fileName);
+
+            if (fileHandler.FileExists(completePath))
+                Console.WriteLine($"Se descargó la caratula en {completePath}");
+            else // TODO mover esta verificacion a otro lado capaz 
+                Console.WriteLine($"Se intento descragar la caratula a  {completePath} pero ocurrió un error y no se descargo");
+            ShowGameInfo(gameId);
         }
 
         private void ShowBuyGameMenu(int gameID)
@@ -235,17 +254,28 @@ namespace Client
             Console.WriteLine("Escriba el genero del juego:");
             string genre = Validation.ReadValidString("Escriba un genero del juego valido");
 
+            Console.WriteLine("Escriba la dirección del archivo de la caratula:");
+            string coverPath = Console.ReadLine();
+            bool isValidPath = fileHandler.FileExists(coverPath);
+            while (!isValidPath)
+            {
+                Console.WriteLine("Escriba un archivo valido");
+                coverPath = Console.ReadLine();
+                isValidPath = fileHandler.FileExists(coverPath);
+            }
+
             Game newGame = new Game
             {
                 Title = title,
                 Synopsis = synopsis,
                 ESRBRating = (Common.ESRBRating)ESRBRating,
                 Genre = genre
+                CoverFilePath = coverPath
             };
             string returnMessage = commandHandler.SendRequest(newGame);
             ShowServerMessage(returnMessage);
         }
-
+      
         public void ShowServerMessage(string message)
         {
             Console.WriteLine(message);

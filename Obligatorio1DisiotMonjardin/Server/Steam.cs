@@ -151,7 +151,7 @@ namespace Server
 
             var gameWithSameTitle = games.Find(i => i.Title == newGame.Title);
             if (gameWithSameTitle != null)
-                throw new Exception(); //TODO hacer la exception
+                throw new Exception("Ya existe un juego con este titulo"); //TODO hacer la exception
             newGame.Id = this.gameId;
             gameId++;
             newGame.ReviewsRating = 0;
@@ -162,7 +162,12 @@ namespace Server
 
         }
 
+        public string GetCoverPath(int gameId)
+        {
+            Game gameToGetCover = games.Find(game => game.Id == gameId);
+            return gameToGetCover.CoverFilePath;
 
+        }
         public string FirstGame() // TODO eliminar cuando no se use mas- era para una prueba
         {
             if (games.Count == 0) return "Primer Juego";
