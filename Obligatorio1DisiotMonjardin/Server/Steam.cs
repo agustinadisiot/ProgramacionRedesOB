@@ -74,7 +74,7 @@ namespace Server
         {
             // TODO tirar error si el juego ya esta comprado / si la id no es valida
             Game gameToBuy = games.Find(game => game.Id == gameID);
-            User userToBuyGame = users.Find(user => user.Name == GetUsername(nwsh)); // TODO ver que pasa si no hay user logeado
+            User userToBuyGame = GetUser(GetUsername(nwsh));
             userToBuyGame.GamesOwned.Add(gameToBuy);
             //TODO eliminar
             Console.WriteLine($" {userToBuyGame.Name} bought {gameToBuy.Title} ");
@@ -95,19 +95,16 @@ namespace Server
 
         public bool Logout(INetworkStreamHandler nwsh)
         {
-            connections.Remove(nwsh);
-            // TODO ver que retornamos
-            return true;
+            return connections.Remove(nwsh);
         }
 
         private string GetUsername(INetworkStreamHandler nwsh)
         {
-            string username;
-            bool userLoggedIn = connections.TryGetValue(nwsh, out username);
+            bool userLoggedIn = connections.TryGetValue(nwsh, out string username);
             if (userLoggedIn)
                 return username;
             else
-                throw new Exception(); // TODO cambiar excepction
+                throw new Exception("No existe usuario con ese nombre"); 
         }
 
         public GameView ViewGame(int gameId, INetworkStreamHandler nwsh)
@@ -143,6 +140,8 @@ namespace Server
 
         private User GetUser(string username)
         {
+            User actualUser = users.Find(i => i.Name == username);
+            if (actualUser == null) throw new Exception("No se encontro usuario, rehacer login");
             return users.Find(i => i.Name == username);
         }
 
@@ -151,7 +150,7 @@ namespace Server
 
             var gameWithSameTitle = games.Find(i => i.Title == newGame.Title);
             if (gameWithSameTitle != null)
-                throw new Exception("Ya existe un juego con este titulo"); //TODO hacer la exception
+                throw new Exception("Ya existe un juego con este titulo"); 
             newGame.Id = this.gameId;
             gameId++;
             newGame.ReviewsRating = 0;
@@ -167,11 +166,6 @@ namespace Server
             Game gameToGetCover = games.Find(game => game.Id == gameId);
             return gameToGetCover.CoverFilePath;
 
-        }
-        public string FirstGame() // TODO eliminar cuando no se use mas- era para una prueba
-        {
-            if (games.Count == 0) return "Primer Juego";
-            return games[0].Title;
         }
 
         public GamePage BrowseGames(int pageNumber)
@@ -220,6 +214,7 @@ namespace Server
         {
             return (real.ToLower().Contains(search.ToLower()));
         }
+
         public bool ExistsNextGamePage(List<Game> games, int pageNumber)
         {
             int maxPageNumber = games.Count / Specification.pageSize;
