@@ -1,4 +1,5 @@
-﻿using Common.Protocol;
+﻿using Common.Domain;
+using Common.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,6 +56,25 @@ namespace Common.Utils
             return int.Parse(esrb);
         }
 
+        public static string ReadValidGenre()
+        {
+            int maxGenre = Game.genres.Length;
+            for (int i = 0; i < maxGenre; i++)
+            {
+                Console.WriteLine($"{ i + 1}.{ Game.genres[i] }");
+            }
+            string stringGenre = Console.ReadLine(); ;
+            bool isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
+            while (!isValidNumber)
+            {
+                Console.WriteLine($"Elija un numero entre 1 y {maxGenre}");
+                stringGenre = Console.ReadLine();
+                isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
+            }
+            int genrePos = int.Parse(stringGenre) -1;
+            return Game.genres[genrePos];
+        }
+
         public static int ReadValidNumber(string errorMessage, int min, int max)
         {
             
@@ -73,11 +93,13 @@ namespace Common.Utils
         {
             string coverPath = Console.ReadLine();
             bool isValidPath = fileHandler.FileExists(coverPath);
-            while (!isValidPath)
+            bool isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
+            while (!isValidPath && !isCorrectFormat)
             {
                 Console.WriteLine(errorMessage);
                 coverPath = Console.ReadLine();
                 isValidPath = fileHandler.FileExists(coverPath);
+                isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
             }
             return coverPath;
         }

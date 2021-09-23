@@ -250,8 +250,8 @@ namespace Client
             Console.WriteLine("Elija el ESRBrating del juego:");
             int ESRBRating = Validation.ReadValidESRB();
 
-            Console.WriteLine("Escriba el genero del juego:");
-            string genre = Validation.ReadValidString("Escriba un genero del juego valido");
+            Console.WriteLine("Elija el genero del juego:");
+            string genre = Validation.ReadValidGenre();
 
             Console.WriteLine("Escriba la dirección del archivo de la caratula:");
             string coverPath = Validation.ReadValidPath("Escriba un archivo valido", fileHandler);

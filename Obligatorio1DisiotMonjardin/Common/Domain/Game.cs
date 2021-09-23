@@ -7,7 +7,7 @@ namespace Common.Domain
 {
     public class Game
     {
-        public readonly string[] genres = { "Accion", "Aventura", "Juego de Rol", "Estrategia", "Deporte", "Carreras", "Otros"}; //todo refactor(?
+        public static readonly string[] genres = { "Accion", "Aventura", "Juego de Rol", "Estrategia", "Deporte", "Carreras", "Otros"}; //todo refactor(?
         public int Id { get; set; }
         public string Title { get; set; }
         public string Synopsis { get; set; }
