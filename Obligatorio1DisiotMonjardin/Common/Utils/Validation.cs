@@ -11,7 +11,8 @@ namespace Common.Utils
         private static bool IsValidEntry(string word)
         {
             bool isEmptyString = word.Length == 0;
-            bool containsDelimiter = word.Contains(Specification.delimiter); // agregar el otro delimiter
+            bool containsDelimiter = word.Contains(Specification.delimiter);
+            bool containsDelimiter2 = word.Contains(Specification.secondDelimiter);
             return (!isEmptyString && !containsDelimiter);
         }
 
@@ -48,7 +49,8 @@ namespace Common.Utils
             while (!isANumber)
             {
                 Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
-                isANumber = IsValidNumber(Console.ReadLine(), 1, possibleESRB.Count);
+                esrb = Console.ReadLine();
+                isANumber = IsValidNumber(esrb, 1, possibleESRB.Count);
             }
             return int.Parse(esrb);
         }
@@ -66,5 +68,40 @@ namespace Common.Utils
             }
             return int.Parse(number);
         }
+
+        public static string ReadValidPath(string errorMessage, FileHandler.FileHandler fileHandler)
+        {
+            string coverPath = Console.ReadLine();
+            bool isValidPath = fileHandler.FileExists(coverPath);
+            while (!isValidPath)
+            {
+                Console.WriteLine(errorMessage);
+                coverPath = Console.ReadLine();
+                isValidPath = fileHandler.FileExists(coverPath);
+            }
+            return coverPath;
+        }
+
+        public static string ReadValidDirectory(string errorMessage, FileHandler.FileHandler fileHandler)
+        {
+            string folderPath = Console.ReadLine();
+            bool isValidPath = fileHandler.PathExists(folderPath);
+            while (!isValidPath)
+            {
+                Console.WriteLine(errorMessage);
+                folderPath = Console.ReadLine();
+                isValidPath = fileHandler.PathExists(folderPath);
+            }
+            return folderPath;
+        }
+
+        public static void CouldDownload(string completePath, FileHandler.FileHandler fileHandler)
+        {
+            if (fileHandler.FileExists(completePath))
+                Console.WriteLine($"Se descargó la caratula en {completePath}");
+            else 
+                Console.WriteLine($"Se intento descragar la caratula a {completePath} pero ocurrió un error y no se descargo");
+        }
+
     }
 }

@@ -11,6 +11,11 @@ namespace Common.FileHandler
             return File.Exists(path);
         }
 
+        public bool PathExists(string directory)
+        {
+            return !File.Exists(directory) && Directory.Exists(directory);
+        }
+
         public string GetFileName(string path)
         {
             if (FileExists(path))
