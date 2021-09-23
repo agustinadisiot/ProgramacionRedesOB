@@ -1,4 +1,5 @@
-﻿using Common.Protocol;
+﻿using Common.Domain;
+using Common.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace Common.Utils
         private static bool IsValidEntry(string word)
         {
             bool isEmptyString = word.Length == 0;
-            bool containsDelimiter = word.Contains(Specification.delimiter); // agregar el otro delimiter
+            bool containsDelimiter = word.Contains(Specification.delimiter);
+            bool containsDelimiter2 = word.Contains(Specification.secondDelimiter);
             return (!isEmptyString && !containsDelimiter);
         }
 
@@ -48,9 +50,29 @@ namespace Common.Utils
             while (!isANumber)
             {
                 Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
-                isANumber = IsValidNumber(Console.ReadLine(), 1, possibleESRB.Count);
+                esrb = Console.ReadLine();
+                isANumber = IsValidNumber(esrb, 1, possibleESRB.Count);
             }
             return int.Parse(esrb);
+        }
+
+        public static string ReadValidGenre()
+        {
+            int maxGenre = Game.genres.Length;
+            for (int i = 0; i < maxGenre; i++)
+            {
+                Console.WriteLine($"{ i + 1}.{ Game.genres[i] }");
+            }
+            string stringGenre = Console.ReadLine(); ;
+            bool isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
+            while (!isValidNumber)
+            {
+                Console.WriteLine($"Elija un numero entre 1 y {maxGenre}");
+                stringGenre = Console.ReadLine();
+                isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
+            }
+            int genrePos = int.Parse(stringGenre) -1;
+            return Game.genres[genrePos];
         }
 
         public static int ReadValidNumber(string errorMessage, int min, int max)
@@ -66,5 +88,42 @@ namespace Common.Utils
             }
             return int.Parse(number);
         }
+
+        public static string ReadValidPath(string errorMessage, FileHandler.FileHandler fileHandler)
+        {
+            string coverPath = Console.ReadLine();
+            bool isValidPath = fileHandler.FileExists(coverPath);
+            bool isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
+            while (!isValidPath && !isCorrectFormat)
+            {
+                Console.WriteLine(errorMessage);
+                coverPath = Console.ReadLine();
+                isValidPath = fileHandler.FileExists(coverPath);
+                isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
+            }
+            return coverPath;
+        }
+
+        public static string ReadValidDirectory(string errorMessage, FileHandler.FileHandler fileHandler)
+        {
+            string folderPath = Console.ReadLine();
+            bool isValidPath = fileHandler.PathExists(folderPath);
+            while (!isValidPath)
+            {
+                Console.WriteLine(errorMessage);
+                folderPath = Console.ReadLine();
+                isValidPath = fileHandler.PathExists(folderPath);
+            }
+            return folderPath;
+        }
+
+        public static void CouldDownload(string completePath, FileHandler.FileHandler fileHandler)
+        {
+            if (fileHandler.FileExists(completePath))
+                Console.WriteLine($"Se descargó la caratula en {completePath}");
+            else 
+                Console.WriteLine($"Se intento descragar la caratula a {completePath} pero ocurrió un error y no se descargo");
+        }
+
     }
 }
