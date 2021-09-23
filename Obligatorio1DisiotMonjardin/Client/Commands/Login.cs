@@ -8,10 +8,11 @@ namespace Client
     {
         public Login(INetworkStreamHandler nwsh) : base(nwsh) { }
 
+        public override Command cmd => Command.LOGIN;
+
         public bool SendRequest(string username)
         {
             SendHeader();
-            SendCommand(Command.LOGIN);
 
             SendData(username);
             return ResponseHandler();

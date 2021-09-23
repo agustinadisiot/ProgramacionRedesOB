@@ -8,55 +8,16 @@ using System.Text;
 
 namespace Server.Commands
 {
-    public class SearchByTitle : TextCommand
+    public class SearchByTitle : CreateGamePage
     {
         public SearchByTitle(INetworkStreamHandler nwsh) : base(nwsh) { }
 
-        public override void ParsedRequestHandler(string[] req)
+        public override Command cmd => Command.SEARCH_BY_TITLE;
+
+        protected override GamePage GetGamePage(int pageNumber, string unParsedfilter)
         {
-            Steam Steam = Steam.GetInstance();
-            int pageNumber = int.Parse(req[0]);
-            string title = req[1];
-            GamePage gamePage = Steam.SearchByTitle(pageNumber,title);
-            Respond(gamePage);
-            Console.WriteLine("This is the game list");
-        }
-
-        private void Respond(GamePage gamePage)  //todo refactor
-        {
-            byte[] header = Encoding.UTF8.GetBytes(Specification.responseHeader);
-            ushort command = (ushort)Command.BROWSE_CATALOGUE;
-            byte[] cmd = BitConverter.GetBytes(command);
-
-            //byte[] data = Encoding.UTF8.GetBytes(info);
-            //byte[] dataLength = BitConverter.GetBytes(data.Length);
-
-            // TODO usar stringStream
-            string dataString = "";
-            foreach (string title in gamePage.GamesTitles)
-            {
-                dataString += title;
-                dataString += Specification.delimiter;
-            }
-            dataString += Convert.ToInt32(gamePage.HasNextPage);
-            dataString += Specification.delimiter;
-            dataString += Convert.ToInt32(gamePage.HasPreviousPage);
-
-
-
-            byte[] data = Encoding.UTF8.GetBytes(dataString);
-            byte[] dataLength = BitConverter.GetBytes(data.Length);
-
-            // debuging TODO eliminar
-            networkStreamHandler.Write(header); // Header
-            Console.WriteLine(header.Length);
-            networkStreamHandler.Write(cmd); // CMD
-            Console.WriteLine(cmd.Length);
-            networkStreamHandler.Write(dataLength); // Largo
-            Console.WriteLine(BitConverter.ToInt32(dataLength));
-            networkStreamHandler.Write(data); //data 
-            Console.WriteLine(Encoding.UTF8.GetString(data));
-
+            string titleToSearch = unParsedfilter;
+            return steamInstance.SearchByTitle(pageNumber, titleToSearch);
         }
     }
 }

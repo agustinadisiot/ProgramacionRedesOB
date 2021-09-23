@@ -26,6 +26,10 @@ namespace Server
                     return new BuyGame(nwsh);
                 case Command.SEARCH_BY_TITLE:
                     return new SearchByTitle(nwsh);
+                case Command.SEARCH_BY_GENRE:
+                    return new SearchByTitle(nwsh);
+                case Command.SEARCH_BY_RATING:
+                    return new SearchByTitle(nwsh);
                 case Command.WRITE_REVIEW:
                     return new WriteReview(nwsh);
                 case Command.LOGIN:

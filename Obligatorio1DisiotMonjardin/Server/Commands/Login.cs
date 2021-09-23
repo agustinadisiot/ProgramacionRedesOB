@@ -11,6 +11,8 @@ namespace Server.Commands.BaseCommands
 
         public Login(INetworkStreamHandler nwsh) : base(nwsh) { }
 
+        public override Command cmd => Command.LOGIN;
+
         public override void ParsedRequestHandler(string[] req)
         {
             Steam Steam = Steam.GetInstance();
@@ -22,11 +24,9 @@ namespace Server.Commands.BaseCommands
 
         private void Respond(bool resp)
         {
-            networkStreamHandler.WriteString(Specification.responseHeader);
-            networkStreamHandler.WriteCommand(Command.LOGIN);
+            SendResponseHeader();
             string stringResp = resp ? "1" : "0";
-            networkStreamHandler.WriteInt(1);
-            networkStreamHandler.WriteString(stringResp);
+            SendData(stringResp);
         }
     }
 }

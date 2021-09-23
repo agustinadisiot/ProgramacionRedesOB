@@ -9,10 +9,11 @@ namespace Client
     {
         public ViewGame(INetworkStreamHandler nwsh) : base(nwsh) { }
 
+        public override Command cmd => Command.VIEW_GAME;
+
         public GameView SendRequest(string gameID)
         {
             SendHeader();
-            SendCommand(Command.VIEW_GAME);
 
             SendData(gameID);
             return ResponseHandler();
@@ -34,7 +35,7 @@ namespace Client
                 Title = parsedData[0],
                 Synopsis = parsedData[1],
                 ReviewsRating = int.Parse(parsedData[2]),
-                ESRBRating = (Common.ESRBRating)(int.Parse(parsedData[3])-1),
+                ESRBRating = (Common.ESRBRating)(int.Parse(parsedData[3]) - 1),
                 Genre = parsedData[4]
             };
 

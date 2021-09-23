@@ -33,30 +33,32 @@ namespace Server
                 {
 
                     string header = networkStreamHandler.ReadString(Specification.HeaderLength);
-
                     Command cmd = networkStreamHandler.ReadCommand();
+
+                    //Console.WriteLine(header); TODO borrar
+                    //Console.WriteLine(cmd);
 
                     CommandHandler commandHandler = CommandFactory.GetCommandHandler(cmd, networkStreamHandler);
 
-                    Console.WriteLine("Client says (header): " + header);
-                    Console.WriteLine("Client says (CMD):" + cmd);
+                    //Console.WriteLine("Client says (header): " + header); TODO borrar
+                    //Console.WriteLine("Client says (CMD):" + cmd);
 
                     commandHandler.HandleRequest();
 
 
-                  /*  var word = parsedData; 
-                    if (word.Equals("exit"))
-                    {
-                        isClientConnected = false;
-                        Console.WriteLine("Client is leaving");
-                    }
-                    else
-                    {
-                       
-                        Console.WriteLine("Client says (length): " + parsedLength);
-                        Console.WriteLine("Client says (data): " + parsedData);
+                    /*  var word = parsedData; 
+                      if (word.Equals("exit"))
+                      {
+                          isClientConnected = false;
+                          Console.WriteLine("Client is leaving");
+                      }
+                      else
+                      {
 
-                    }*/
+                          Console.WriteLine("Client says (length): " + parsedLength);
+                          Console.WriteLine("Client says (data): " + parsedData);
+
+                      }*/
                 }
             }
             catch (SocketException se)

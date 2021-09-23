@@ -27,6 +27,10 @@ namespace Client
                     return new BrowseReviews(nwsh);
                 case Command.SEARCH_BY_TITLE:
                     return new SearchByTitle(nwsh);
+                case Command.SEARCH_BY_GENRE:
+                    return new SearchByGenre(nwsh);
+                case Command.SEARCH_BY_RATING:
+                    return new SearchByRating(nwsh);
                 case Command.LOGIN:
                     return new Login(nwsh);
                 case Command.LOGOUT:

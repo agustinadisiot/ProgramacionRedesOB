@@ -11,6 +11,9 @@ namespace Server.Commands
     public class WriteReview : TextCommand
     {
         public WriteReview(INetworkStreamHandler nwsh) : base(nwsh) { }
+
+        public override Command cmd => Command.WRITE_REVIEW;
+
         public override void ParsedRequestHandler(string[] req)
         {
             int gameId = int.Parse(req[0]);
@@ -21,18 +24,14 @@ namespace Server.Commands
             };
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.WriteReview(newReview, gameId, networkStreamHandler);
-            string message = "Reseña agregada exitosamente"; // TODO agregar catch para cuando tira error
+            string message = "Reseña agregada existosamente"; // TODO agregar catch para cuando tira error TODO cambiar mensaje
             Respond(message);
         }
 
         private void Respond(string message)
         {
-            
-            networkStreamHandler.WriteString(Specification.responseHeader);
-            networkStreamHandler.WriteCommand(Command.WRITE_REVIEW);
-            networkStreamHandler.WriteInt(message.Length);
-            networkStreamHandler.WriteString(message);
-
+            SendResponseHeader();
+            SendData(message);
         }
 
     }
