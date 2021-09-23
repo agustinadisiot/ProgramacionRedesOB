@@ -37,25 +37,27 @@ namespace Client
 
         public void StartMenu()
         {
-            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
-            menuOptions.Add("Iniciar Sesión", () => Login());
-            // TODO agregar exit
+            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>
+            {
+                { "Iniciar Sesión", () => Login() }
+            };
             CliMenu.showMenu(menuOptions, "Menu Inicial");
 
         }
         public void MainMenu()
         {
-            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
-            menuOptions.Add("Ver catalogo", () => BrowseCatalogue());
-            menuOptions.Add("Publicar Juego", () => Publish());
-            menuOptions.Add("Buscar por titulo", () => SearchByTitle());
-            menuOptions.Add("Buscar por género", () => SearchByGenre());
-            menuOptions.Add("Buscar por clasificación", () => SearchByRating());
-            menuOptions.Add("Ver mis juegos", () => BrowseMyGames());
-            menuOptions.Add("Logout", () => Logout());
-            menuOptions.Add("Datos de prueba", () => TestData());
-            menuOptions.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
-            menuOptions.Add("reimprimir", () => CliMenu.showMenu(menuOptions, "menucito"));
+            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>
+            {
+                { "Ver catalogo", () => BrowseCatalogue() },
+                { "Publicar Juego", () => Publish() },
+                { "Buscar por titulo", () => SearchByTitle() },
+                { "Buscar por género", () => SearchByGenre() },
+                { "Buscar por clasificación", () => SearchByRating() },
+                { "Ver mis juegos", () => BrowseMyGames() },
+                { "Datos de prueba", () => TestData() },
+                { "Logout", () => Logout() },
+                { "Salir", () => Console.WriteLine("seguro que quiere salir????!!") }
+            };
             while (true) // TODO sacar
             {
                 CliMenu.showMenu(menuOptions, "Menu");
@@ -105,8 +107,7 @@ namespace Client
         private void SearchByTitle()
         {
             Console.WriteLine("Escriba el titulo del juego: ");
-            string title = Console.ReadLine();
-            // TODO pedir titulo devuelta si es vacio
+            string title = Validation.ReadValidString("Escriba un titulo valido");
             ShowSearchByTitlePage(title);
         }
 
@@ -209,17 +210,14 @@ namespace Client
         private void DownloadCover(int gameId)
         {
             Console.WriteLine("Escriba la carpeta donde quiere guardar la caratula");
-            string folderPath = Console.ReadLine();
+            string folderPath = Validation.ReadValidDirectory("No se encontro tal carpeta, ingrese de nuevo", fileHandler);
             Console.WriteLine("Escriba el nombre que quiere para el archivo");
-            string fileName = Console.ReadLine(); // TODO hacer verifiaciones
+            string fileName = Validation.ReadValidString("Escriba un nombre valido para su archivo");
 
             var commandHandler = (DownloadCover)CommandFactory.GetCommandHandler(Command.DOWNLOAD_COVER, networkStreamHandler);
             string completePath = commandHandler.SendRequest(gameId, folderPath, fileName);
 
-            if (fileHandler.FileExists(completePath))
-                Console.WriteLine($"Se descargó la caratula en {completePath}");
-            else // TODO mover esta verificacion a otro lado capaz 
-                Console.WriteLine($"Se intento descragar la caratula a  {completePath} pero ocurrió un error y no se descargo");
+            Validation.CouldDownload(completePath, fileHandler);
             ShowGameInfo(gameId);
         }
 
@@ -292,18 +290,11 @@ namespace Client
             Console.WriteLine("Elija el ESRBrating del juego:");
             int ESRBRating = Validation.ReadValidESRB();
 
-            Console.WriteLine("Escriba el genero del juego:");
-            string genre = Validation.ReadValidString("Escriba un genero del juego valido");
+            Console.WriteLine("Elija el genero del juego:");
+            string genre = Validation.ReadValidGenre();
 
             Console.WriteLine("Escriba la dirección del archivo de la caratula:");
-            string coverPath = Console.ReadLine();
-            bool isValidPath = fileHandler.FileExists(coverPath);
-            while (!isValidPath)
-            {
-                Console.WriteLine("Escriba un archivo valido");
-                coverPath = Console.ReadLine();
-                isValidPath = fileHandler.FileExists(coverPath);
-            }
+            string coverPath = Validation.ReadValidPath("Escriba un archivo valido", fileHandler);
 
             Game newGame = new Game
             {
