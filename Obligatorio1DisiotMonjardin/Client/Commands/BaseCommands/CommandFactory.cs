@@ -25,6 +25,8 @@ namespace Client
                     return new WriteReview(nwsh);
                 case Command.BROWSE_REVIEWS:
                     return new BrowseReviews(nwsh);
+                case Command.BROWSE_MY_GAMES:
+                    return new BrowseMyGames(nwsh);
                 case Command.SEARCH_BY_TITLE:
                     return new SearchByTitle(nwsh);
                 case Command.SEARCH_BY_GENRE:

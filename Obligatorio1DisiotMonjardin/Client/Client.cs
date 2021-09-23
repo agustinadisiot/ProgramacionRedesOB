@@ -51,8 +51,9 @@ namespace Client
             menuOptions.Add("Buscar por titulo", () => SearchByTitle());
             menuOptions.Add("Buscar por género", () => SearchByGenre());
             menuOptions.Add("Buscar por clasificación", () => SearchByRating());
+            menuOptions.Add("Ver mis juegos", () => BrowseMyGames());
             menuOptions.Add("Logout", () => Logout());
-            menuOptions.Add("TEST DATA", () => TestData());
+            menuOptions.Add("Datos de prueba", () => TestData());
             menuOptions.Add("Salir", () => Console.WriteLine("seguro que quiere salir????!!"));
             menuOptions.Add("reimprimir", () => CliMenu.showMenu(menuOptions, "menucito"));
             while (true) // TODO sacar
@@ -87,6 +88,17 @@ namespace Client
             Action nextPageOption = () => BrowseCatalogue(pageNumber + 1);
             Action previousPageOption = () => BrowseCatalogue(pageNumber - 1);
             string title = $"Catálogo de Juegos  - Página {pageNumber}";
+            ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
+        }
+
+        private void BrowseMyGames(int pageNumber = 1)
+        {
+            BrowseMyGames commandHandler = (BrowseMyGames)CommandFactory.GetCommandHandler(Command.BROWSE_MY_GAMES, networkStreamHandler);
+            GamePage newGamePage = commandHandler.SendRequest(pageNumber);
+
+            Action nextPageOption = () => BrowseMyGames(pageNumber + 1);
+            Action previousPageOption = () => BrowseMyGames(pageNumber - 1);
+            string title = $"Mis Juegos - Página {pageNumber}";
             ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
         }
 
@@ -143,6 +155,7 @@ namespace Client
 
             ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
         }
+
 
         private void ShowGamePage(GamePage gamePage, string title, Action nextPage, Action previousPage)
         {
@@ -310,10 +323,8 @@ namespace Client
             MainMenu();
         }
 
-        /// <summary>
-        /// TEST DATA
-        /// </summary>
-        private void TestData() // TODO eliminar
+
+        private void TestData()
         {
             PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
             string currentDict = Directory.GetCurrentDirectory();

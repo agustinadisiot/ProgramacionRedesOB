@@ -160,6 +160,12 @@ namespace Server
             return CreateGamePage(games, pageNumber);
         }
 
+        internal GamePage BrowseMyGames(int pageNumber, INetworkStreamHandler networkStreamHandler)
+        {
+            User CurrentUser = GetUser(GetUsername(networkStreamHandler));
+            // TODO validar que el pageNumber >0
+            return CreateGamePage(CurrentUser.GamesOwned, pageNumber);
+        }
         internal GamePage SearchByTitle(int pageNumber, string title)
         {
             List<Game> filteredList = games.FindAll(game => textSearchIsMatch(game.Title, title));

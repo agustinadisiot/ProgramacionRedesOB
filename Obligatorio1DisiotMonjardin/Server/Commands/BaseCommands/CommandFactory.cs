@@ -19,6 +19,8 @@ namespace Server
                     return new PublishGame(nwsh);
                 case Command.BROWSE_CATALOGUE:
                     return new BrowseCatalogue(nwsh);
+                case Command.BROWSE_MY_GAMES:
+                    return new BrowseMyGames(nwsh);
                 case Command.BROWSE_REVIEWS:
                     return new BrowseReviews(nwsh);
                 case Command.MODIFY_GAME:
