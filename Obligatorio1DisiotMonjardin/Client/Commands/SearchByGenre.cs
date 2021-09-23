@@ -9,20 +9,21 @@ using Common.Domain;
 
 namespace Client.Commands
 {
-    public class BrowseCatalogue : CreateGamePage
+    public class SearchByGenre : CreateGamePage
     {
-        public BrowseCatalogue(INetworkStreamHandler nwsh) : base(nwsh) { }
+        public SearchByGenre(INetworkStreamHandler nwsh) : base(nwsh) { }
 
-        public override Command cmd => Command.BROWSE_CATALOGUE;
+        public override Command cmd => Command.SEARCH_BY_GENRE;
 
-        public GamePage SendRequest(int pageNumber)
+        public GamePage SendRequest(int pageNumber, string genre)
         {
             SendHeader();
 
             string pageNumberText = pageNumber.ToString();
-            SendData(pageNumberText);
+            SendData(pageNumberText + Specification.delimiter + genre);
             return ResponseHandler(pageNumber);
         }
+
 
 
     }

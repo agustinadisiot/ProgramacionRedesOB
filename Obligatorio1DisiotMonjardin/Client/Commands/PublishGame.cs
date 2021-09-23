@@ -13,10 +13,11 @@ namespace Client.Commands
     {
         public PublishGame(INetworkStreamHandler nwsh) : base(nwsh) { }
 
+        public override Command cmd => Command.PUBLISH_GAME;
+
         public string SendRequest(Game newGame)
         {
             SendHeader();
-            SendCommand(Command.PUBLISH_GAME);
 
             string data = "";
             data += newGame.Title;

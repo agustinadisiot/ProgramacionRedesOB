@@ -35,6 +35,7 @@ namespace Server
         {
             newReview.User = GetUser(GetUsername(nwsh));
             games[gameId].Reviews.Add(newReview);
+            games[gameId].UpdateReviewsRating(); // TODO capaz hacer automatica 
             Console.WriteLine($"Review by {newReview.User.Name} has been published");
 
         }
@@ -111,7 +112,6 @@ namespace Server
         {
             Game game = games.Find(i => i.Id == gameId);
             User actualUser = GetUser(GetUsername(nwsh));
-            game.ReviewsRating = GetReviewsAvarageRating(game);
             GameView gameView = new GameView()
             {
                 Game = game,
@@ -121,22 +121,7 @@ namespace Server
 
             return gameView;
         }
-        private int GetReviewsAvarageRating(Game game)
-        {
-            // TODO lock
-            decimal total = 0;
-            decimal count = game.Reviews.Count;
-            foreach (Review review in game.Reviews)
-            {
-                total += review.Rating;
-            }
-            decimal result;
-            if (count > 0)
-                result = total / count;
-            else
-                result = 0;
-            return (int)Math.Ceiling(result);
-        }
+
 
         private User GetUser(string username)
         {
@@ -167,49 +152,61 @@ namespace Server
             return gameToGetCover.CoverFilePath;
 
         }
-
+      
         public GamePage BrowseGames(int pageNumber)
         {
-            int firstGamePos = (pageNumber - 1) * Specification.pageSize;
-            int lastGamePos = firstGamePos + Specification.pageSize;
-            List<string> gameTitles = new List<string>();
-            List<int> gamesIDs = new List<int>();
-
-            for (int i = firstGamePos; (i < games.Count) && (i < lastGamePos); i++)
-            {
-                gameTitles.Add(games[i].Title); //Todo checkear pagenumber > 0
-                gamesIDs.Add(games[i].Id);
-            }
-            GamePage ret = new GamePage()
-            {
-                GamesTitles = gameTitles,
-                GamesIDs = gamesIDs,
-                HasNextPage = ExistsNextGamePage(games, pageNumber),
-                HasPreviousPage = pageNumber > 1
-            };
-            return ret;
+            // TODO validar que el pageNumber >0
+            return CreateGamePage(games, pageNumber);
         }
 
+        internal GamePage BrowseMyGames(int pageNumber, INetworkStreamHandler networkStreamHandler)
+        {
+            User CurrentUser = GetUser(GetUsername(networkStreamHandler));
+            // TODO validar que el pageNumber >0
+            return CreateGamePage(CurrentUser.GamesOwned, pageNumber);
+        }
         internal GamePage SearchByTitle(int pageNumber, string title)
+        {
+            List<Game> filteredList = games.FindAll(game => textSearchIsMatch(game.Title, title));
+            // TODO validar que el pageNumber >0
+            return CreateGamePage(filteredList, pageNumber);
+        }
+
+        internal GamePage SearchByRating(int pageNumber, int minRating)
+        {
+            List<Game> filteredList = games.FindAll(game => game.ReviewsRating >= minRating);
+            // TODO validar que el pageNumber >0
+            return CreateGamePage(filteredList, pageNumber);
+        }
+
+        internal GamePage SearchByGenre(int pageNumber, string genre)
+        {
+            List<Game> filteredList = games.FindAll(game => game.Genre == genre);
+            // TODO validar que el pageNumber >0
+            return CreateGamePage(filteredList, pageNumber);
+        }
+
+        private GamePage CreateGamePage(List<Game> filteredList, int pageNumber)
         {
             int firstGamePos = (pageNumber - 1) * Specification.pageSize;
             int lastGamePos = firstGamePos + Specification.pageSize;
-            List<Game> filteredList = games.FindAll(game => textSearchIsMatch(game.Title, title));
             List<string> gameTitles = new List<string>();
+            List<int> gameIds = new List<int>();
 
             for (int i = firstGamePos; (i < filteredList.Count) && (i < lastGamePos); i++)
             {
                 gameTitles.Add(filteredList[i].Title); //Todo checkear pagenumber > 0
+                gameIds.Add(filteredList[i].Id);
             }
             GamePage ret = new GamePage()
             {
                 GamesTitles = gameTitles,
+                GamesIDs = gameIds,
                 HasNextPage = ExistsNextGamePage(filteredList, pageNumber),
                 HasPreviousPage = pageNumber > 1
             };
             return ret;
         }
-
         bool textSearchIsMatch(string real, string search)
         {
             return (real.ToLower().Contains(search.ToLower()));

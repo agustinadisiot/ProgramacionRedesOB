@@ -33,7 +33,8 @@ namespace Client
 
         protected void SendData(string data)
         {
-            networkStreamHandler.WriteInt(data.Length);
+            int dataLengthInBytes = Encoding.UTF8.GetBytes(data).Length;
+            networkStreamHandler.WriteInt(dataLengthInBytes);
             networkStreamHandler.WriteString(data);
         }
 

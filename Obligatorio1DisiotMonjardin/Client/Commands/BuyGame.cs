@@ -13,10 +13,11 @@ namespace Client.Commands
     {
         public BuyGame(INetworkStreamHandler nwsh) : base(nwsh) { }
 
+        public override Command cmd => Command.BUY_GAME;
+
         public string SendRequest(int gameID)
         {
             SendHeader();
-            SendCommand(Command.BUY_GAME);
 
             string data = "";
             data += gameID;

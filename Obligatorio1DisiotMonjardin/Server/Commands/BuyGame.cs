@@ -11,6 +11,9 @@ namespace Server.Commands
     public class BuyGame : TextCommand
     {
         public BuyGame(INetworkStreamHandler nwsh) : base(nwsh) { }
+
+        public override Command cmd => Command.BUY_GAME;
+
         public override void ParsedRequestHandler(string[] req)
         {
             int gameID;
@@ -24,11 +27,8 @@ namespace Server.Commands
 
         private void Respond(string message)
         {
-            
-            networkStreamHandler.WriteString(Specification.responseHeader);
-            networkStreamHandler.WriteCommand(Command.PUBLISH_GAME);
-            networkStreamHandler.WriteInt(message.Length);
-            networkStreamHandler.WriteString(message);
+            SendResponseHeader();
+            SendData(message);
 
         }
 

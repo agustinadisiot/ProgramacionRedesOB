@@ -5,9 +5,9 @@ using Common.FileHandler;
 using Common.NetworkUtils;
 using Common.Protocol;
 using Common.Utils;
-using Server;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -51,6 +51,10 @@ namespace Client
                 { "Ver catalogo", () => BrowseCatalogue() },
                 { "Publicar Juego", () => Publish() },
                 { "Buscar por titulo", () => SearchByTitle() },
+                { "Buscar por género", () => SearchByGenre() },
+                { "Buscar por clasificación", () => SearchByRating() },
+                { "Ver mis juegos", () => BrowseMyGames() },
+                { "Datos de prueba", () => TestData() },
                 { "Logout", () => Logout() },
                 { "Salir", () => Console.WriteLine("seguro que quiere salir????!!") }
             };
@@ -65,7 +69,7 @@ namespace Client
         {
             Console.WriteLine("Ingrese nombre de usuario: ");
             string username = Validation.ReadValidString("Reingrese un nombre de usuario valido");
-            
+
             var commandHandler = (Login)CommandFactory.GetCommandHandler(Command.LOGIN, networkStreamHandler);
             commandHandler.SendRequest(username);
             MainMenu();
@@ -82,7 +86,22 @@ namespace Client
         {
             BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
             GamePage newGamePage = commandHandler.SendRequest(pageNumber);
-            ShowCataloguePage(newGamePage);
+
+            Action nextPageOption = () => BrowseCatalogue(pageNumber + 1);
+            Action previousPageOption = () => BrowseCatalogue(pageNumber - 1);
+            string title = $"Catálogo de Juegos  - Página {pageNumber}";
+            ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
+        }
+
+        private void BrowseMyGames(int pageNumber = 1)
+        {
+            BrowseMyGames commandHandler = (BrowseMyGames)CommandFactory.GetCommandHandler(Command.BROWSE_MY_GAMES, networkStreamHandler);
+            GamePage newGamePage = commandHandler.SendRequest(pageNumber);
+
+            Action nextPageOption = () => BrowseMyGames(pageNumber + 1);
+            Action previousPageOption = () => BrowseMyGames(pageNumber - 1);
+            string title = $"Mis Juegos - Página {pageNumber}";
+            ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
         }
 
         private void SearchByTitle()
@@ -96,30 +115,50 @@ namespace Client
         {
             var commandHandler = (SearchByTitle)CommandFactory.GetCommandHandler(Command.SEARCH_BY_TITLE, networkStreamHandler);
             GamePage newGamePage = commandHandler.SendRequest(pageNumber, title);
-            ShowSearchByTitlePage(newGamePage, title);
-        }
 
-        private void ShowSearchByTitlePage(GamePage gamePage, string title)
+            Action nextPageOption = () => ShowSearchByTitlePage(title, pageNumber + 1);
+            Action previousPageOption = () => ShowSearchByTitlePage(title, pageNumber - 1);
+            ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
+        }
+        private void SearchByRating()
         {
-            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
-
-            foreach (string gameTitle in gamePage.GamesTitles)
-            {
-                menuOptions.Add(gameTitle, () => MainMenu());
-            }
-
-            if (gamePage.HasNextPage)
-                menuOptions.Add("Siguiene Página", () => ShowSearchByTitlePage(title, gamePage.CurrentPage + 1));
-
-            if (gamePage.HasPreviousPage)
-                menuOptions.Add("Página Anterior", () => ShowSearchByTitlePage(title, gamePage.CurrentPage - 1));
-
-            menuOptions.Add("Volver al Menu Principal", () => MainMenu());
-
-            CliMenu.showMenu(menuOptions, $"Juegos con \"{title}\" - Página {gamePage.CurrentPage}");
+            Console.WriteLine("Escriba la clasificación minima del juego: ");
+            int minRating = Validation.ReadValidNumber("Escriba un número entre 1 y 10", 1, 10);
+            ShowSearchByRatingPage(minRating);
         }
 
-        private void ShowCataloguePage(GamePage gamePage)
+        public void ShowSearchByRatingPage(int minRating, int pageNumber = 1)
+        {
+            var commandHandler = (SearchByRating)CommandFactory.GetCommandHandler(Command.SEARCH_BY_RATING, networkStreamHandler);
+            GamePage newGamePage = commandHandler.SendRequest(pageNumber, minRating);
+
+            Action nextPageOption = () => ShowSearchByRatingPage(minRating, pageNumber + 1);
+            Action previousPageOption = () => ShowSearchByRatingPage(minRating, pageNumber - 1);
+            string title = $"Juegos con clasificación {minRating} o más - Página {pageNumber}";
+            ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
+        }
+
+        private void SearchByGenre()
+        {
+            Console.WriteLine("Elija el género que quiera: ");
+            string genre = Validation.ReadValidString("READ VALID GENRE TODO ALFJADKLS"); // TODO
+            ShowSearchByGenrePage(genre);
+        }
+
+        public void ShowSearchByGenrePage(string genre, int pageNumber = 1)
+        {
+            var commandHandler = (SearchByGenre)CommandFactory.GetCommandHandler(Command.SEARCH_BY_GENRE, networkStreamHandler);
+            GamePage newGamePage = commandHandler.SendRequest(pageNumber, genre);
+
+            Action nextPageOption = () => ShowSearchByGenrePage(genre, pageNumber + 1);
+            Action previousPageOption = () => ShowSearchByGenrePage(genre, pageNumber - 1);
+            string title = $"Juegos de {genre}  - Página {pageNumber}";
+
+            ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
+        }
+
+
+        private void ShowGamePage(GamePage gamePage, string title, Action nextPage, Action previousPage)
         {
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
 
@@ -130,15 +169,16 @@ namespace Client
             }
 
             if (gamePage.HasNextPage)
-                menuOptions.Add("Siguiene Página", () => BrowseCatalogue(gamePage.CurrentPage + 1));
+                menuOptions.Add("Siguiene Página", () => nextPage());
 
             if (gamePage.HasPreviousPage)
-                menuOptions.Add("Página Anterior", () => BrowseCatalogue(gamePage.CurrentPage - 1));
+                menuOptions.Add("Página Anterior", () => previousPage());
 
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
-            CliMenu.showMenu(menuOptions, $"Catalogo de Juegos Pagina {gamePage.CurrentPage}");
+            CliMenu.showMenu(menuOptions, title);
         }
+
 
         private void ShowGameInfo(int id)
         {
@@ -267,11 +307,108 @@ namespace Client
             string returnMessage = commandHandler.SendRequest(newGame);
             ShowServerMessage(returnMessage);
         }
-      
+
         public void ShowServerMessage(string message)
         {
             Console.WriteLine(message);
             MainMenu();
+        }
+
+
+        private void TestData()
+        {
+            PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
+            string currentDict = Directory.GetCurrentDirectory();
+            currentDict = currentDict.Remove(currentDict.Length - 31) + "\\";
+            Game newGame = new Game
+            {
+                Title = "PUBG",
+                Synopsis = "El pubg",
+                ESRBRating = (Common.ESRBRating)4,
+                Genre = "Acción",
+                CoverFilePath = currentDict + "pubg.jpg"
+            };
+            commandHandler.SendRequest(newGame);
+
+            newGame = new Game
+            {
+                Title = "PUBG2",
+                Synopsis = "El pubg2",
+                ESRBRating = (Common.ESRBRating)5,
+                Genre = "Deporte",
+                CoverFilePath = currentDict + "pubg.jpg"
+            };
+            commandHandler.SendRequest(newGame);
+
+            newGame = new Game
+            {
+                Title = "My little Pony",
+                Synopsis = "GOTY 2021 ",
+                ESRBRating = (Common.ESRBRating)0,
+                Genre = "Deporte",
+                CoverFilePath = currentDict + "pubg.jpg"
+            };
+            commandHandler.SendRequest(newGame);
+
+            newGame = new Game
+            {
+                Title = "Pubg 3 - Remastered",
+                Synopsis = "Comback ",
+                ESRBRating = (Common.ESRBRating)4,
+                Genre = "Acción",
+                CoverFilePath = currentDict + "pubg.jpg"
+            };
+            commandHandler.SendRequest(newGame);
+
+            newGame = new Game
+            {
+                Title = "FIFA",
+                Synopsis = "El fifa",
+                ESRBRating = (Common.ESRBRating)2,
+                Genre = "Deporte",
+                CoverFilePath = currentDict + "pubg.jpg"
+            };
+            commandHandler.SendRequest(newGame);
+
+            Review newReview = new Review()
+            {
+                Text = "Juegaso 10/10",
+                Rating = 10
+            };
+            var commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            commandHandler2.SendRequest(newReview, 0);
+
+            newReview = new Review()
+            {
+                Text = "Meh",
+                Rating = 5
+            };
+            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            commandHandler2.SendRequest(newReview, 0);
+
+            newReview = new Review()
+            {
+                Text = "Podria ser mejor",
+                Rating = 6
+            };
+            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            commandHandler2.SendRequest(newReview, 0);
+
+            newReview = new Review()
+            {
+                Text = "GOTY",
+                Rating = 10
+            };
+            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            commandHandler2.SendRequest(newReview, 2);
+
+            newReview = new Review()
+            {
+                Text = "El mejor juego",
+                Rating = 2
+            };
+            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            commandHandler2.SendRequest(newReview, 2);
         }
 
 

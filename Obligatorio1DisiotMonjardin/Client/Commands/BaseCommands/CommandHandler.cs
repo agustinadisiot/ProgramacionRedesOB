@@ -1,11 +1,8 @@
-﻿using Common.FileHandler;
-using Common.FileHandler.Interfaces;
+﻿using Common.FileHandler.Interfaces;
 using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Client
 {
@@ -13,6 +10,8 @@ namespace Client
     {
         protected INetworkStreamHandler networkStreamHandler;
         protected IFileNetworkStreamHandler fileNetworkStreamHandler;
+        public abstract Command cmd { get; }
+
         public CommandHandler(INetworkStreamHandler nwsh)
         {
             networkStreamHandler = nwsh;
@@ -21,13 +20,10 @@ namespace Client
 
         protected void SendHeader()
         {
-            networkStreamHandler.WriteString(Specification.responseHeader);
-        }
-
-        protected void SendCommand(Command cmd)
-        {
+            networkStreamHandler.WriteString(Specification.requestHeader);
             networkStreamHandler.WriteCommand(cmd);
         }
+
 
         protected void ReadHeader()
         {

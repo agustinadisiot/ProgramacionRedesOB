@@ -13,16 +13,18 @@ namespace Client.Commands
     {
         public WriteReview(INetworkStreamHandler nwsh) : base(nwsh) { }
 
+        public override Command cmd => Command.WRITE_REVIEW;
+
         public string SendRequest(Review newReview, int gameId)
         {
             SendHeader();
-            SendCommand(Command.WRITE_REVIEW);
 
             string data = "";
             data += gameId;
             data += Specification.delimiter;
             data += newReview.Rating;
             data += Specification.delimiter;
+
             data += newReview.Text;
 
             SendData(data);

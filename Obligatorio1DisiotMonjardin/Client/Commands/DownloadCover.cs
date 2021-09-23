@@ -7,10 +7,11 @@ namespace Client
     {
         public DownloadCover(INetworkStreamHandler nwsh) : base(nwsh) { }
 
+        public override Command cmd => Command.DOWNLOAD_COVER;
+
         public string SendRequest(int gameId, string folderPath, string fileName)
         {
             SendHeader();
-            SendCommand(Command.DOWNLOAD_COVER);
 
             SendData(gameId.ToString());
             return ResponseHandler(folderPath, fileName);
