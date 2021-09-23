@@ -5,7 +5,6 @@ using Common.FileHandler;
 using Common.NetworkUtils;
 using Common.Protocol;
 using Common.Utils;
-using Server;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -62,104 +61,6 @@ namespace Client
             }
         }
 
-        /// <summary>
-        /// TEST DATA
-        /// </summary>
-        private void TestData() // TODO eliminar
-        {
-            PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
-            string currentDict = Directory.GetCurrentDirectory();
-            currentDict = currentDict.Remove(currentDict.Length - 31) + "\\";
-            Game newGame = new Game
-            {
-                Title = "PUBG",
-                Synopsis = "El pubg",
-                ESRBRating = (Common.ESRBRating)4,
-                Genre = "Acción",
-                CoverFilePath = currentDict + "pubg.jpg"
-            };
-            commandHandler.SendRequest(newGame);
-
-            newGame = new Game
-            {
-                Title = "PUBG2",
-                Synopsis = "El pubg2",
-                ESRBRating = (Common.ESRBRating)5,
-                Genre = "Deporte",
-                CoverFilePath = currentDict + "pubg.jpg"
-            };
-            commandHandler.SendRequest(newGame);
-
-            newGame = new Game
-            {
-                Title = "My little Pony",
-                Synopsis = "GOTY 2021 ",
-                ESRBRating = (Common.ESRBRating)0,
-                Genre = "Deporte",
-                CoverFilePath = currentDict + "pubg.jpg"
-            };
-            commandHandler.SendRequest(newGame);
-
-            newGame = new Game
-            {
-                Title = "Pubg 3 - Remastered",
-                Synopsis = "Comback ",
-                ESRBRating = (Common.ESRBRating)4,
-                Genre = "Acción",
-                CoverFilePath = currentDict + "pubg.jpg"
-            };
-            commandHandler.SendRequest(newGame);
-
-            newGame = new Game
-            {
-                Title = "FIFA",
-                Synopsis = "El fifa",
-                ESRBRating = (Common.ESRBRating)2,
-                Genre = "Deporte",
-                CoverFilePath = currentDict + "pubg.jpg"
-            };
-            commandHandler.SendRequest(newGame);
-
-            Review newReview = new Review()
-            {
-                Text = "Juegaso 10/10",
-                Rating = 10
-            };
-            var commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
-            commandHandler2.SendRequest(newReview, 0);
-
-            newReview = new Review()
-            {
-                Text = "Meh",
-                Rating = 5
-            };
-            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
-            commandHandler2.SendRequest(newReview, 0);
-
-            newReview = new Review()
-            {
-                Text = "Podria ser mejor",
-                Rating = 6
-            };
-            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
-            commandHandler2.SendRequest(newReview, 0);
-
-            newReview = new Review()
-            {
-                Text = "GOTY",
-                Rating = 10
-            };
-            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
-            commandHandler2.SendRequest(newReview, 2);
-
-            newReview = new Review()
-            {
-                Text = "El mejor juego",
-                Rating = 2
-            };
-            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
-            commandHandler2.SendRequest(newReview, 2);
-        }
 
         private void Login()
         {
@@ -226,7 +127,7 @@ namespace Client
 
         private void SearchByGenre()
         {
-            Console.WriteLine("Elija el género que queira: ");
+            Console.WriteLine("Elija el género que quiera: ");
             string genre = Validation.ReadValidString("READ VALID GENRE TODO ALFJADKLS"); // TODO
             ShowSearchByGenrePage(genre);
         }
@@ -239,6 +140,7 @@ namespace Client
             Action nextPageOption = () => ShowSearchByGenrePage(genre, pageNumber + 1);
             Action previousPageOption = () => ShowSearchByGenrePage(genre, pageNumber - 1);
             string title = $"Juegos de {genre}  - Página {pageNumber}";
+
             ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
         }
 
@@ -406,6 +308,105 @@ namespace Client
         {
             Console.WriteLine(message);
             MainMenu();
+        }
+
+        /// <summary>
+        /// TEST DATA
+        /// </summary>
+        private void TestData() // TODO eliminar
+        {
+            PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
+            string currentDict = Directory.GetCurrentDirectory();
+            currentDict = currentDict.Remove(currentDict.Length - 31) + "\\";
+            Game newGame = new Game
+            {
+                Title = "PUBG",
+                Synopsis = "El pubg",
+                ESRBRating = (Common.ESRBRating)4,
+                Genre = "Acción",
+                CoverFilePath = currentDict + "pubg.jpg"
+            };
+            commandHandler.SendRequest(newGame);
+
+            newGame = new Game
+            {
+                Title = "PUBG2",
+                Synopsis = "El pubg2",
+                ESRBRating = (Common.ESRBRating)5,
+                Genre = "Deporte",
+                CoverFilePath = currentDict + "pubg.jpg"
+            };
+            commandHandler.SendRequest(newGame);
+
+            newGame = new Game
+            {
+                Title = "My little Pony",
+                Synopsis = "GOTY 2021 ",
+                ESRBRating = (Common.ESRBRating)0,
+                Genre = "Deporte",
+                CoverFilePath = currentDict + "pubg.jpg"
+            };
+            commandHandler.SendRequest(newGame);
+
+            newGame = new Game
+            {
+                Title = "Pubg 3 - Remastered",
+                Synopsis = "Comback ",
+                ESRBRating = (Common.ESRBRating)4,
+                Genre = "Acción",
+                CoverFilePath = currentDict + "pubg.jpg"
+            };
+            commandHandler.SendRequest(newGame);
+
+            newGame = new Game
+            {
+                Title = "FIFA",
+                Synopsis = "El fifa",
+                ESRBRating = (Common.ESRBRating)2,
+                Genre = "Deporte",
+                CoverFilePath = currentDict + "pubg.jpg"
+            };
+            commandHandler.SendRequest(newGame);
+
+            Review newReview = new Review()
+            {
+                Text = "Juegaso 10/10",
+                Rating = 10
+            };
+            var commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            commandHandler2.SendRequest(newReview, 0);
+
+            newReview = new Review()
+            {
+                Text = "Meh",
+                Rating = 5
+            };
+            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            commandHandler2.SendRequest(newReview, 0);
+
+            newReview = new Review()
+            {
+                Text = "Podria ser mejor",
+                Rating = 6
+            };
+            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            commandHandler2.SendRequest(newReview, 0);
+
+            newReview = new Review()
+            {
+                Text = "GOTY",
+                Rating = 10
+            };
+            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            commandHandler2.SendRequest(newReview, 2);
+
+            newReview = new Review()
+            {
+                Text = "El mejor juego",
+                Rating = 2
+            };
+            commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
+            commandHandler2.SendRequest(newReview, 2);
         }
 
 
