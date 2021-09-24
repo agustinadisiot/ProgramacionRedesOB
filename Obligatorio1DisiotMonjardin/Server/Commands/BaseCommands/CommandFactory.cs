@@ -22,6 +22,7 @@ namespace Server
                 case Command.BROWSE_REVIEWS:
                     return new BrowseReviews(nwsh);
                 case Command.MODIFY_GAME:
+                    return new ModifyGame(nwsh);
                 case Command.BUY_GAME:
                     return new BuyGame(nwsh);
                 case Command.SEARCH_BY_TITLE:

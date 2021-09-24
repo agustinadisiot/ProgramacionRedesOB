@@ -161,6 +161,20 @@ namespace Server
 
         }
 
+
+        internal void ModifyGame(int gameToModId, Game modifiedGame)
+        {
+            Game gameToMod = games.Find(i => i.Id == gameToModId);
+            if (modifiedGame.Title != "") gameToMod.Title = modifiedGame.Title;
+            if (modifiedGame.Synopsis != "") gameToMod.Synopsis = modifiedGame.Synopsis;
+            gameToMod.ESRBRating = modifiedGame.ESRBRating;
+            gameToMod.Genre = modifiedGame.Genre;
+            if (modifiedGame.CoverFilePath != "") gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
+            Console.WriteLine("Game has been modified with title: " + gameToMod.Title + " and id: " + gameToMod.Id);
+
+        }
+
+
         public string GetCoverPath(int gameId)
         {
             Game gameToGetCover = games.Find(game => game.Id == gameId);

@@ -157,7 +157,7 @@ namespace Client
             if (gameInfo.IsOwned) menuOptions.Add("Escribir Review", () => ShowWriteReviewMenu(id));
             if (gameInfo.IsPublisher)
             {
-                menuOptions.Add("Modificar Juego", () => MainMenu()); //todo
+                menuOptions.Add("Modificar Juego", () => ModifyGame(id)); //todo
                 menuOptions.Add("Eliminar Juego", () => MainMenu()); //todo
             }
             menuOptions.Add("Descargar Caratula", () => DownloadCover(id));
@@ -166,6 +166,8 @@ namespace Client
             CliMenu.showMenu(menuOptions, "");
 
         }
+
+
 
         private void DownloadCover(int gameId)
         {
@@ -267,7 +269,38 @@ namespace Client
             string returnMessage = commandHandler.SendRequest(newGame);
             ShowServerMessage(returnMessage);
         }
-      
+
+        private void ModifyGame(int id)
+        {
+            ModifyGame commandHandler = (ModifyGame)CommandFactory.GetCommandHandler(Command.MODIFY_GAME, networkStreamHandler);
+            Console.WriteLine("Escriba el nuevo titulo del juego: (vacio si no lo quiere modificar)");
+            string title = Validation.ContainsDelimiter("Escriba un nuevo titulo del juego valido");
+
+            Console.WriteLine("Escriba la nueva sinopsis del juego: (vacio si no lo quiere modificar)");
+            string synopsis = Validation.ContainsDelimiter("Escriba una nueva sinopsis del juego valida");
+
+            Console.WriteLine("Elija el nuevo ESRBrating del juego:");
+            int ESRBRating = Validation.ReadValidESRB();
+
+            Console.WriteLine("Elija el nuevo genero del juego:");
+            string genre = Validation.ReadValidGenre();
+
+            Console.WriteLine("Escriba la nueva dirección del archivo de la caratula: (vacio si no lo quiere modificar)");
+            string coverPath = Console.ReadLine();
+            if(coverPath.Length == 0) { coverPath = ""; } else { coverPath = Validation.ReadValidPathModify(coverPath, "Escriba un archivo valido", fileHandler);  }
+
+            Game gameToModify = new Game
+            {
+                Title = title,
+                Synopsis = synopsis,
+                ESRBRating = (Common.ESRBRating)ESRBRating,
+                Genre = genre,
+                CoverFilePath = coverPath
+            };
+            string returnMessage = commandHandler.SendRequest(id, gameToModify);
+            ShowServerMessage(returnMessage);
+        }
+
         public void ShowServerMessage(string message)
         {
             Console.WriteLine(message);
