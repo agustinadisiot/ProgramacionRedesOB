@@ -306,7 +306,7 @@ namespace Client
             Console.WriteLine("1.Si");
             Console.WriteLine("2.No");
             int response = Validation.ReadValidNumber("Elija una opcion valida", 1, 2);
-            if(response == 1) {
+            if(response==1) {
                 string returnMessage = commandHandler.SendRequest(id);
                 ShowServerMessage(returnMessage);
             }

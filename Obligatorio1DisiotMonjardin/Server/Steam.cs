@@ -123,10 +123,7 @@ namespace Server
             return gameView;
         }
 
-        public bool DeleteGame(int gameId)
-        {
-            return games.Remove(games.Find(i => i.Id == gameId));
-        }
+       
 
         private int GetReviewsAvarageRating(Game game)
         {
@@ -168,7 +165,7 @@ namespace Server
 
         }
 
-
+       
         internal void ModifyGame(int gameToModId, Game modifiedGame)
         {
             Game gameToMod = games.Find(i => i.Id == gameToModId);
@@ -176,9 +173,15 @@ namespace Server
             if (modifiedGame.Synopsis != "") gameToMod.Synopsis = modifiedGame.Synopsis;
             gameToMod.ESRBRating = modifiedGame.ESRBRating;
             gameToMod.Genre = modifiedGame.Genre;
-            if (modifiedGame.CoverFilePath != "") gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
+            if (modifiedGame.CoverFilePath != null) gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
+            Console.WriteLine(gameToMod.CoverFilePath);
             Console.WriteLine("Game has been modified with title: " + gameToMod.Title + " and id: " + gameToMod.Id);
 
+        }
+
+        public bool DeleteGame(int gameId)
+        {
+            return games.Remove(games.Find(i => i.Id == gameId));
         }
 
 
