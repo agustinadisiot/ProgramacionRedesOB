@@ -174,7 +174,6 @@ namespace Server
             gameToMod.ESRBRating = modifiedGame.ESRBRating;
             gameToMod.Genre = modifiedGame.Genre;
             if (modifiedGame.CoverFilePath != null) gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
-            Console.WriteLine(gameToMod.CoverFilePath);
             Console.WriteLine("Game has been modified with title: " + gameToMod.Title + " and id: " + gameToMod.Id);
 
         }
