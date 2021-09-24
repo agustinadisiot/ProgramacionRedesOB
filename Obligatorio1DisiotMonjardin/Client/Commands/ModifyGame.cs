@@ -7,12 +7,13 @@ namespace Client
      public class ModifyGame : TextCommand
         
      {
-        public ModifyGame(INetworkStreamHandler nwsh) : base(nwsh) { }  
+        public ModifyGame(INetworkStreamHandler nwsh) : base(nwsh) { }
 
-        public string SendRequest(int gameId, Game gameToMod)  //refactoring i guess
+        public override Command cmd => Command.MODIFY_GAME;
+
+        public string SendRequest(int gameId, Game gameToMod)  
         {
             SendHeader();
-            SendCommand(Command.MODIFY_GAME);
 
             string data = "";
             data += gameId.ToString();

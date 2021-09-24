@@ -141,7 +141,7 @@ namespace Client
         private void SearchByGenre()
         {
             Console.WriteLine("Elija el género que quiera: ");
-            string genre = Validation.ReadValidString("READ VALID GENRE TODO ALFJADKLS"); // TODO
+            string genre = Validation.ReadValidGenre(); 
             ShowSearchByGenrePage(genre);
         }
 

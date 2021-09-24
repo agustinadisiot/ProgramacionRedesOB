@@ -9,6 +9,8 @@ namespace Server
         {
         }
 
+        public override Command cmd => Command.DELETE_GAME;
+
         public override void ParsedRequestHandler(string[] req)
         {
             int gameId = int.Parse(req[0]);

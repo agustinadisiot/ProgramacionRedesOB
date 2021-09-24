@@ -10,10 +10,11 @@ namespace Client
         {
         }
 
+        public override Command cmd => Command.DELETE_GAME;
+
         public string SendRequest(int gameId)
         {
             SendHeader();
-            SendCommand(Command.DELETE_GAME);
 
             string data = gameId.ToString();
 
