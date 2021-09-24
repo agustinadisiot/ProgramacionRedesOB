@@ -13,11 +13,11 @@ namespace Client.Commands
     {
         public BrowseReviews(INetworkStreamHandler nwsh) : base(nwsh) { }
 
+        public override Command cmd => Command.BROWSE_REVIEWS;
 
         public ReviewPage SendRequest(int pageNumber, int gameId)
         {
             SendHeader();
-            SendCommand(Command.BROWSE_REVIEWS);
 
             string pageNumberText = pageNumber.ToString();
             SendData(pageNumberText + Specification.delimiter + gameId);
@@ -26,15 +26,7 @@ namespace Client.Commands
 
         private ReviewPage ResponseHandler(int pageNumber) // TODO capaz que el currentPage ya te lo de el server (lo tendria  que mandar por el nwsh)
         {
-
-            ReadHeader();
-            ReadCommand(); // TODO ver si hacemos algo mas con estos 
-
-            int dataLength = networkStreamHandler.ReadInt(Specification.dataSizeLength);
-            string data = networkStreamHandler.ReadString(dataLength);
-
-
-            string[] parsedData = Parse(data); // TODO usar GetData()
+            string[] parsedData = GetData();
             List<string> unParsedReviews = parsedData.ToList();
             unParsedReviews.RemoveRange(parsedData.Length - 2, 2);
             List<Review> parsedReviews = ParseReviews(unParsedReviews);
@@ -48,7 +40,6 @@ namespace Client.Commands
 
             return reviewPage;
         }
-
         private List<Review> ParseReviews(List<string> unParsedReviews)
         {
             List<Review> reviews = new List<Review>();
@@ -76,7 +67,6 @@ namespace Client.Commands
         {
             return (text == "1");
         }
-
 
     }
 }

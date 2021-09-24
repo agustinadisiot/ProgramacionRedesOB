@@ -9,11 +9,11 @@ using Common.Domain;
 
 namespace Client.Commands
 {
-    public class BrowseCatalogue : CreateGamePage
+    public class BrowseMyGames : CreateGamePage
     {
-        public BrowseCatalogue(INetworkStreamHandler nwsh) : base(nwsh) { }
+        public BrowseMyGames(INetworkStreamHandler nwsh) : base(nwsh) { }
 
-        public override Command cmd => Command.BROWSE_CATALOGUE;
+        public override Command cmd => Command.BROWSE_MY_GAMES;
 
         public GamePage SendRequest(int pageNumber)
         {

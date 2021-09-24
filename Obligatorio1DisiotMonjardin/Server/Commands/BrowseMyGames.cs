@@ -8,16 +8,14 @@ using System.Text;
 
 namespace Server.Commands
 {
-    public class SearchByTitle : CreateGamePage
+    public class BrowseMyGames : CreateGamePage
     {
-        public SearchByTitle(INetworkStreamHandler nwsh) : base(nwsh) { }
-
-        public override Command cmd => Command.SEARCH_BY_TITLE;
+        public BrowseMyGames(INetworkStreamHandler nwsh) : base(nwsh) { }
+        public override Command cmd => Command.BROWSE_MY_GAMES;
 
         protected override GamePage GetGamePage(int pageNumber, string unParsedfilter)
         {
-            string titleToSearch = unParsedfilter;
-            return steamInstance.SearchByTitle(pageNumber, titleToSearch);
+            return steamInstance.BrowseMyGames(pageNumber, networkStreamHandler);
         }
     }
 }

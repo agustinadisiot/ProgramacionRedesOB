@@ -8,11 +8,12 @@ namespace Client
     {
         public Logout(INetworkStreamHandler nwsh) : base(nwsh) { }
 
+        public override Command cmd => Command.LOGOUT;
+
         public bool SendRequest()
         {
             SendHeader();
-            SendCommand(Command.LOGOUT);
-            
+
             // TODO ver que hacer aca, si sacarlo de Text command o que
             SendData("");
             return ResponseHandler();

@@ -11,6 +11,9 @@ namespace Server.Commands
     public class PublishGame : TextCommand
     {
         public PublishGame(INetworkStreamHandler nwsh) : base(nwsh) { }
+
+        public override Command cmd => Command.PUBLISH_GAME;
+
         public override void ParsedRequestHandler(string[] req)
         {
             Game newGame = new Game
@@ -32,12 +35,8 @@ namespace Server.Commands
 
         private void Respond(string message)
         {
-
-            networkStreamHandler.WriteString(Specification.responseHeader);
-            networkStreamHandler.WriteCommand(Command.PUBLISH_GAME);
-            networkStreamHandler.WriteInt(message.Length);
-            networkStreamHandler.WriteString(message);
-
+            SendResponseHeader();
+            SendData(message);
         }
 
     }

@@ -11,21 +11,21 @@ namespace Server.Commands.BaseCommands
 
         public Logout(INetworkStreamHandler nwsh) : base(nwsh) { }
 
+        public override Command cmd => Command.LOGOUT;
+
         public override void ParsedRequestHandler(string[] req)
         {
             Steam Steam = Steam.GetInstance();
             bool success = Steam.Logout(networkStreamHandler);
-            Respond(success);
+            Respond(success); // TODO ver si pones algo que no sea successful
             Console.WriteLine("Logged out");
         }
 
         private void Respond(bool resp)
         {
-            networkStreamHandler.WriteString(Specification.responseHeader);
-            networkStreamHandler.WriteCommand(Command.LOGOUT);
+            SendResponseHeader();
             string stringResp = resp ? "1" : "0";
-            networkStreamHandler.WriteInt(1);
-            networkStreamHandler.WriteString(stringResp);
+            SendData(stringResp);
         }
     }
 }

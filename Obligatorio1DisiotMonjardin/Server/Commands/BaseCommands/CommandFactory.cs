@@ -19,6 +19,8 @@ namespace Server
                     return new PublishGame(nwsh);
                 case Command.BROWSE_CATALOGUE:
                     return new BrowseCatalogue(nwsh);
+                case Command.BROWSE_MY_GAMES:
+                    return new BrowseMyGames(nwsh);
                 case Command.BROWSE_REVIEWS:
                     return new BrowseReviews(nwsh);
                 case Command.MODIFY_GAME:
@@ -29,6 +31,10 @@ namespace Server
                     return new BuyGame(nwsh);
                 case Command.SEARCH_BY_TITLE:
                     return new SearchByTitle(nwsh);
+                case Command.SEARCH_BY_GENRE:
+                    return new SearchByGenre(nwsh);
+                case Command.SEARCH_BY_RATING:
+                    return new SearchByRating(nwsh);
                 case Command.WRITE_REVIEW:
                     return new WriteReview(nwsh);
                 case Command.LOGIN:

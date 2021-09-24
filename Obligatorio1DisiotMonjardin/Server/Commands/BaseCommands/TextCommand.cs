@@ -13,7 +13,11 @@ namespace Server
 
         public override void HandleRequest()
         {
-
+            //string unParseddata = networkStreamHandler.ReadString(Specification.dataSizeLength);
+            //string[] parsedData = Parse(unParseddata);
+            //ParsedRequestHandler(parsedData);
+            
+            //--------------
             byte[] dataLength = networkStreamHandler.Read(Specification.dataSizeLength);
             int parsedLength = BitConverter.ToInt32(dataLength);
 
@@ -22,9 +26,10 @@ namespace Server
 
             string[] parsedData = Parse(unparsedData);
             ParsedRequestHandler(parsedData);
+
         }
 
-        public string[] Parse(string unparsedData)
+        private string[] Parse(string unparsedData)
         {
             string[] parsedData = unparsedData.Split(Specification.delimiter);
             return parsedData;

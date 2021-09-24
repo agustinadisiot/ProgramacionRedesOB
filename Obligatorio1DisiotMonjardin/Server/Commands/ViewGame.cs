@@ -8,9 +8,9 @@ namespace Server
 {
     internal class ViewGame : TextCommand
     {
-        public ViewGame(INetworkStreamHandler nwsh) : base(nwsh)
-        {
-        }
+        public ViewGame(INetworkStreamHandler nwsh) : base(nwsh) { }
+
+        public override Command cmd => throw new NotImplementedException();
 
         public override void ParsedRequestHandler(string[] req)
         {
