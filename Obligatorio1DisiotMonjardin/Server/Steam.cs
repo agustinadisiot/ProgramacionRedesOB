@@ -22,6 +22,7 @@ namespace Server
             return instance;
         }
 
+        
 
         public Steam()
         {
@@ -121,6 +122,12 @@ namespace Server
 
             return gameView;
         }
+
+        public bool DeleteGame(int gameId)
+        {
+            return games.Remove(games.Find(i => i.Id == gameId));
+        }
+
         private int GetReviewsAvarageRating(Game game)
         {
             // TODO lock

@@ -153,12 +153,12 @@ namespace Client
             Console.WriteLine($"Genero: {gameInfo.Game.Genre}");
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
             if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(id));
-            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, id)); //todooooo
+            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, id)); 
             if (gameInfo.IsOwned) menuOptions.Add("Escribir Review", () => ShowWriteReviewMenu(id));
             if (gameInfo.IsPublisher)
             {
-                menuOptions.Add("Modificar Juego", () => ModifyGame(id)); //todo
-                menuOptions.Add("Eliminar Juego", () => MainMenu()); //todo
+                menuOptions.Add("Modificar Juego", () => ModifyGame(id)); 
+                menuOptions.Add("Eliminar Juego", () => DeleteGame(id)); 
             }
             menuOptions.Add("Descargar Caratula", () => DownloadCover(id));
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
@@ -166,8 +166,6 @@ namespace Client
             CliMenu.showMenu(menuOptions, "");
 
         }
-
-
 
         private void DownloadCover(int gameId)
         {
@@ -300,6 +298,25 @@ namespace Client
             string returnMessage = commandHandler.SendRequest(id, gameToModify);
             ShowServerMessage(returnMessage);
         }
+
+        private void DeleteGame(int id)
+        {
+            DeleteGame commandHandler = (DeleteGame)CommandFactory.GetCommandHandler(Command.DELETE_GAME, networkStreamHandler);
+            Console.WriteLine("Seguro que quiere eliminar el juego?");
+            Console.WriteLine("1.Si");
+            Console.WriteLine("2.No");
+            int response = Validation.ReadValidNumber("Elija una opcion valida", 1, 2);
+            if(response == 1) {
+                string returnMessage = commandHandler.SendRequest(id);
+                ShowServerMessage(returnMessage);
+            }
+            else
+            {
+                ShowGameInfo(id);
+            }
+            
+        }
+
 
         public void ShowServerMessage(string message)
         {

@@ -29,14 +29,15 @@ namespace Client
             if(gameToMod.CoverFilePath == "")
             {
                 data += 0;
+                SendData(data);
             }
             else
             {
                 data += 1;
+                SendData(data);
                 fileNetworkStreamHandler.SendFile(gameToMod.CoverFilePath);
             }
 
-            SendData(data);
             return ResponseHandler();
         }
         private string ResponseHandler()
