@@ -103,6 +103,20 @@ namespace Common.Utils
             }
             return coverPath;
         }
+        public static string ReadValidPathModify(string coverPath, string errorMessage, FileHandler.FileHandler fileHandler)
+        {
+            bool isValidPath = fileHandler.FileExists(coverPath);
+            bool isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
+            while (!isValidPath && !isCorrectFormat)
+            {
+                Console.WriteLine(errorMessage);
+                coverPath = Console.ReadLine();
+                isValidPath = fileHandler.FileExists(coverPath);
+                isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
+            }
+            return coverPath;
+        }
+
 
         public static string ReadValidDirectory(string errorMessage, FileHandler.FileHandler fileHandler)
         {
@@ -125,5 +139,23 @@ namespace Common.Utils
                 Console.WriteLine($"Se intento descragar la caratula a {completePath} pero ocurrió un error y no se descargo");
         }
 
+        public static string ContainsDelimiter(string errorMessage)
+        {
+            string word = Console.ReadLine(); ;
+            bool containsDelimiter = word.Contains(Specification.delimiter);
+            bool containsDelimiter2 = word.Contains(Specification.secondDelimiter);
+            bool isValidEntry = containsDelimiter || containsDelimiter2;
+            while (isValidEntry)
+            {
+                Console.WriteLine(errorMessage);
+                word = Console.ReadLine();
+                containsDelimiter = word.Contains(Specification.delimiter);
+                containsDelimiter2 = word.Contains(Specification.secondDelimiter);
+                isValidEntry = containsDelimiter || containsDelimiter2;
+            }
+            return word;
+        }
+
+        
     }
 }

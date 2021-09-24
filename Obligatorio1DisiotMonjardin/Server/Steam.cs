@@ -22,6 +22,7 @@ namespace Server
             return instance;
         }
 
+        
 
         public Steam()
         {
@@ -122,6 +123,22 @@ namespace Server
             return gameView;
         }
 
+        private int GetReviewsAvarageRating(Game game)
+        {
+            // TODO lock
+            decimal total = 0;
+            decimal count = game.Reviews.Count;
+            foreach (Review review in game.Reviews)
+            {
+                total += review.Rating;
+            }
+            decimal result;
+            if (count > 0)
+                result = total / count;
+            else
+                result = 0;
+            return (int)Math.Ceiling(result);
+        }
 
         private User GetUser(string username)
         {
@@ -145,6 +162,25 @@ namespace Server
             Console.WriteLine("Game has been published with title: " + newGame.Title + " and id: " + newGame.Id);
 
         }
+
+       
+        internal void ModifyGame(int gameToModId, Game modifiedGame)
+        {
+            Game gameToMod = games.Find(i => i.Id == gameToModId);
+            if (modifiedGame.Title != "") gameToMod.Title = modifiedGame.Title;
+            if (modifiedGame.Synopsis != "") gameToMod.Synopsis = modifiedGame.Synopsis;
+            gameToMod.ESRBRating = modifiedGame.ESRBRating;
+            gameToMod.Genre = modifiedGame.Genre;
+            if (modifiedGame.CoverFilePath != null) gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
+            Console.WriteLine("Game has been modified with title: " + gameToMod.Title + " and id: " + gameToMod.Id);
+
+        }
+
+        public bool DeleteGame(int gameId)
+        {
+            return games.Remove(games.Find(i => i.Id == gameId));
+        }
+
 
         public string GetCoverPath(int gameId)
         {

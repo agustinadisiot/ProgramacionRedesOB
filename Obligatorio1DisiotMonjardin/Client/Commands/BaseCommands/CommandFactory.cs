@@ -19,6 +19,9 @@ namespace Client
                 case Command.BROWSE_CATALOGUE:
                     return new BrowseCatalogue(nwsh);
                 case Command.MODIFY_GAME:
+                    return new ModifyGame(nwsh);
+                case Command.DELETE_GAME:
+                    return new DeleteGame(nwsh);
                 case Command.BUY_GAME:
                     return new BuyGame(nwsh);
                 case Command.WRITE_REVIEW:

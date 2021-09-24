@@ -193,12 +193,12 @@ namespace Client
             Console.WriteLine($"Genero: {gameInfo.Game.Genre}");
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
             if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(id));
-            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, id)); //todooooo
+            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, id)); 
             if (gameInfo.IsOwned) menuOptions.Add("Escribir Review", () => ShowWriteReviewMenu(id));
             if (gameInfo.IsPublisher)
             {
-                menuOptions.Add("Modificar Juego", () => MainMenu()); //todo
-                menuOptions.Add("Eliminar Juego", () => MainMenu()); //todo
+                menuOptions.Add("Modificar Juego", () => ModifyGame(id)); 
+                menuOptions.Add("Eliminar Juego", () => DeleteGame(id)); 
             }
             menuOptions.Add("Descargar Caratula", () => DownloadCover(id));
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
@@ -306,6 +306,55 @@ namespace Client
             };
             string returnMessage = commandHandler.SendRequest(newGame);
             ShowServerMessage(returnMessage);
+        }
+
+        private void ModifyGame(int id)
+        {
+            ModifyGame commandHandler = (ModifyGame)CommandFactory.GetCommandHandler(Command.MODIFY_GAME, networkStreamHandler);
+            Console.WriteLine("Escriba el nuevo titulo del juego: (vacio si no lo quiere modificar)");
+            string title = Validation.ContainsDelimiter("Escriba un nuevo titulo del juego valido");
+
+            Console.WriteLine("Escriba la nueva sinopsis del juego: (vacio si no lo quiere modificar)");
+            string synopsis = Validation.ContainsDelimiter("Escriba una nueva sinopsis del juego valida");
+
+            Console.WriteLine("Elija el nuevo ESRBrating del juego:");
+            int ESRBRating = Validation.ReadValidESRB();
+
+            Console.WriteLine("Elija el nuevo genero del juego:");
+            string genre = Validation.ReadValidGenre();
+
+            Console.WriteLine("Escriba la nueva dirección del archivo de la caratula: (vacio si no lo quiere modificar)");
+            string coverPath = Console.ReadLine();
+            if(coverPath.Length == 0) { coverPath = ""; } else { coverPath = Validation.ReadValidPathModify(coverPath, "Escriba un archivo valido", fileHandler);  }
+
+            Game gameToModify = new Game
+            {
+                Title = title,
+                Synopsis = synopsis,
+                ESRBRating = (Common.ESRBRating)ESRBRating,
+                Genre = genre,
+                CoverFilePath = coverPath
+            };
+            string returnMessage = commandHandler.SendRequest(id, gameToModify);
+            ShowServerMessage(returnMessage);
+        }
+
+        private void DeleteGame(int id)
+        {
+            DeleteGame commandHandler = (DeleteGame)CommandFactory.GetCommandHandler(Command.DELETE_GAME, networkStreamHandler);
+            Console.WriteLine("Seguro que quiere eliminar el juego?");
+            Console.WriteLine("1.Si");
+            Console.WriteLine("2.No");
+            int response = Validation.ReadValidNumber("Elija una opcion valida", 1, 2);
+            if(response==1) {
+                string returnMessage = commandHandler.SendRequest(id);
+                ShowServerMessage(returnMessage);
+            }
+            else
+            {
+                ShowGameInfo(id);
+            }
+            
         }
 
         public void ShowServerMessage(string message)
