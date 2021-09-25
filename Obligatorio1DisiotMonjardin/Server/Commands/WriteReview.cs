@@ -23,8 +23,7 @@ namespace Server.Commands
                 Text = req[2]
             };
             Steam SteamInstance = Steam.GetInstance();
-            SteamInstance.WriteReview(newReview, gameId, networkStreamHandler);
-            string message = "Reseña agregada existosamente"; // TODO agregar catch para cuando tira error TODO cambiar mensaje
+            string message = SteamInstance.WriteReview(newReview, gameId, networkStreamHandler);
             Respond(message);
         }
 

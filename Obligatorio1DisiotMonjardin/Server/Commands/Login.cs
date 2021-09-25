@@ -19,7 +19,6 @@ namespace Server.Commands.BaseCommands
             string newUser = req[0];
             bool added = Steam.Login(newUser, networkStreamHandler);
             Respond(added);
-            Console.WriteLine("Logged");
         }
 
         private void Respond(bool resp)

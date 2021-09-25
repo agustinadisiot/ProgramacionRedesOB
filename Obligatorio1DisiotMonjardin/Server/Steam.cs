@@ -3,6 +3,7 @@ using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Server
@@ -12,17 +13,22 @@ namespace Server
         private List<Game> games;
         private List<User> users;
         private static Steam instance;
+        private static readonly object singletonPadlock = new object();
         private int gameId;
         private Dictionary<INetworkStreamHandler, string> connections;
 
+
         public static Steam GetInstance()
         {
-            if (instance == null)
-                instance = new Steam();
+            lock (singletonPadlock)
+            {
+
+                if (instance == null)
+                    instance = new Steam();
+            }
             return instance;
         }
 
-        
 
         public Steam()
         {
@@ -32,17 +38,21 @@ namespace Server
             connections = new Dictionary<INetworkStreamHandler, string>();
         }
 
-        internal void WriteReview(Review newReview, int gameId, INetworkStreamHandler nwsh)
+        internal string WriteReview(Review newReview, int gameId, INetworkStreamHandler nwsh)
         {
-            newReview.User = GetUser(GetUsername(nwsh));
-            games[gameId].Reviews.Add(newReview);
-            games[gameId].UpdateReviewsRating(); // TODO capaz hacer automatica 
-            Console.WriteLine($"Review by {newReview.User.Name} has been published");
+            newReview.User = GetUser(nwsh);
+            Game gameToAddReview = games[gameId];
+            gameToAddReview.Reviews.Add(newReview);
+            gameToAddReview.UpdateReviewsRating();
+            return (@$"Clasificación por {newReview.User.Name} para el juego {gameToAddReview.Title}
+                    fue publicada correctamente");
 
         }
         internal ReviewPage BrowseReviews(int pageNumber, int gameId) // TODO ver si usamos public o internal en cada uno
         {
-            Game gameToGetReviews = games.Find(game => game.Id == gameId);
+            if (pageNumber <= 0)
+                throw new ServerError($"Número de página {pageNumber} no válido");
+            Game gameToGetReviews = GetGameById(gameId);
             List<Review> allReviews = gameToGetReviews.Reviews;
 
             int firstReviewPos = (pageNumber - 1) * Specification.pageSize;
@@ -58,28 +68,30 @@ namespace Server
             ReviewPage ret = new ReviewPage()
             {
                 Reviews = reviewsInPage,
-                HasNextPage = ExistsNextReviewPage(allReviews, pageNumber), // TODO podria usar el if del PageSize
+                HasNextPage = ExistsNextPage(allReviews, pageNumber),
                 HasPreviousPage = pageNumber > 1
             };
             return ret;
         }
-        public bool ExistsNextReviewPage(List<Review> reviews, int pageNumber) // TODO usar la misma funcion que para ExistsNextGamePage
-        {
-            int maxPageNumber = reviews.Count / Specification.pageSize;
-            if (reviews.Count % Specification.pageSize != 0)
-                maxPageNumber++;
 
-            return pageNumber < maxPageNumber;
+        private Game GetGameById(int gameId)
+        {
+            Game gameFound = games.Find(game => game.Id == gameId);
+            if (gameFound == null)
+                throw new ServerError($"{gameId} No es una id de juego válida");
+            return gameFound;
         }
 
-        internal void BuyGame(int gameID, INetworkStreamHandler nwsh)
+        internal bool BuyGame(int gameID, INetworkStreamHandler nwsh)
         {
-            // TODO tirar error si el juego ya esta comprado / si la id no es valida
-            Game gameToBuy = games.Find(game => game.Id == gameID);
-            User userToBuyGame = GetUser(GetUsername(nwsh));
+            Game gameToBuy = GetGameById(gameID);
+            User userToBuyGame = GetUser(nwsh);
+
+            if (userToBuyGame.GamesOwned.Contains(gameToBuy))
+                return false;
+
             userToBuyGame.GamesOwned.Add(gameToBuy);
-            //TODO eliminar
-            Console.WriteLine($" {userToBuyGame.Name} bought {gameToBuy.Title} ");
+            return true;
         }
 
         public bool Login(string newUserName, INetworkStreamHandler nwsh)
@@ -106,13 +118,13 @@ namespace Server
             if (userLoggedIn)
                 return username;
             else
-                throw new Exception("No existe usuario con ese nombre"); 
+                throw new ServerError("No existe usuario con ese nombre");
         }
 
         public GameView ViewGame(int gameId, INetworkStreamHandler nwsh)
         {
-            Game game = games.Find(i => i.Id == gameId);
-            User actualUser = GetUser(GetUsername(nwsh));
+            Game game = GetGameById(gameId);
+            User actualUser = GetUser(nwsh);
             GameView gameView = new GameView()
             {
                 Game = game,
@@ -123,61 +135,52 @@ namespace Server
             return gameView;
         }
 
-        private int GetReviewsAvarageRating(Game game)
+        private User GetUser(INetworkStreamHandler nwsh)
         {
-            // TODO lock
-            decimal total = 0;
-            decimal count = game.Reviews.Count;
-            foreach (Review review in game.Reviews)
-            {
-                total += review.Rating;
-            }
-            decimal result;
-            if (count > 0)
-                result = total / count;
-            else
-                result = 0;
-            return (int)Math.Ceiling(result);
-        }
-
-        private User GetUser(string username)
-        {
+            string username = GetUsername(nwsh);
             User actualUser = users.Find(i => i.Name == username);
-            if (actualUser == null) throw new Exception("No se encontro usuario, rehacer login");
+            if (actualUser == null) throw new ServerError("No se encontró el usuario, rehacer login");
             return users.Find(i => i.Name == username);
         }
 
-        public void PublishGame(Game newGame, INetworkStreamHandler nwsh)
+        public string PublishGame(Game newGame, INetworkStreamHandler nwsh)
         {
-
             var gameWithSameTitle = games.Find(i => i.Title == newGame.Title);
             if (gameWithSameTitle != null)
-                throw new Exception("Ya existe un juego con este titulo"); 
+                throw new TitleAlreadyExistseException();
             newGame.Id = this.gameId;
             gameId++;
             newGame.ReviewsRating = 0;
-            newGame.Publisher = GetUser(GetUsername(nwsh));
+            newGame.Publisher = GetUser(nwsh);
             newGame.Reviews = new List<Review>();
             games.Add(newGame);
-            Console.WriteLine("Game has been published with title: " + newGame.Title + " and id: " + newGame.Id);
-
+            return $"Se publicó el juego {newGame.Title} correctamente";
         }
 
-       
-        internal void ModifyGame(int gameToModId, Game modifiedGame)
+
+        internal string ModifyGame(int gameToModId, Game modifiedGame)
         {
-            Game gameToMod = games.Find(i => i.Id == gameToModId);
-            if (modifiedGame.Title != "") gameToMod.Title = modifiedGame.Title;
+            Game gameToMod = GetGameById(gameToModId);
+            if (modifiedGame.Title != "") {
+                gameToMod.Title = modifiedGame.Title;
+                var gameWithSameTitle = games.Find(i => (i.Title == gameToMod.Title) && (i.Id != gameToModId));
+                if (gameWithSameTitle != null)
+                    throw new TitleAlreadyExistseException();
+            }
             if (modifiedGame.Synopsis != "") gameToMod.Synopsis = modifiedGame.Synopsis;
             gameToMod.ESRBRating = modifiedGame.ESRBRating;
             gameToMod.Genre = modifiedGame.Genre;
-            if (modifiedGame.CoverFilePath != null) gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
-            Console.WriteLine("Game has been modified with title: " + gameToMod.Title + " and id: " + gameToMod.Id);
-
+            if (modifiedGame.CoverFilePath != null) {
+                string pathToDelete = gameToMod.CoverFilePath;
+                gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
+                File.Delete(pathToDelete); // TODO capaz no tendria que ir en Steam
+            }
+            return $"Se modificó el juego {gameToMod.Title} correctamente";
         }
 
         public bool DeleteGame(int gameId)
         {
+            // TODO hacer lock en la lista 
             return games.Remove(games.Find(i => i.Id == gameId));
         }
 
@@ -188,42 +191,41 @@ namespace Server
             return gameToGetCover.CoverFilePath;
 
         }
-      
+
         public GamePage BrowseGames(int pageNumber)
         {
             // TODO validar que el pageNumber >0
             return CreateGamePage(games, pageNumber);
         }
 
-        internal GamePage BrowseMyGames(int pageNumber, INetworkStreamHandler networkStreamHandler)
+        internal GamePage BrowseMyGames(int pageNumber, INetworkStreamHandler nwsh)
         {
-            User CurrentUser = GetUser(GetUsername(networkStreamHandler));
-            // TODO validar que el pageNumber >0
+            User CurrentUser = GetUser(nwsh);
             return CreateGamePage(CurrentUser.GamesOwned, pageNumber);
         }
         internal GamePage SearchByTitle(int pageNumber, string title)
         {
-            List<Game> filteredList = games.FindAll(game => textSearchIsMatch(game.Title, title));
-            // TODO validar que el pageNumber >0
+            List<Game> filteredList = games.FindAll(game => TextSearchIsMatch(game.Title, title));
             return CreateGamePage(filteredList, pageNumber);
         }
 
         internal GamePage SearchByRating(int pageNumber, int minRating)
         {
             List<Game> filteredList = games.FindAll(game => game.ReviewsRating >= minRating);
-            // TODO validar que el pageNumber >0
             return CreateGamePage(filteredList, pageNumber);
         }
 
         internal GamePage SearchByGenre(int pageNumber, string genre)
         {
             List<Game> filteredList = games.FindAll(game => game.Genre == genre);
-            // TODO validar que el pageNumber >0
             return CreateGamePage(filteredList, pageNumber);
         }
 
         private GamePage CreateGamePage(List<Game> filteredList, int pageNumber)
         {
+            if (pageNumber <= 0)
+                throw new ServerError("Número de Página no valido");
+
             int firstGamePos = (pageNumber - 1) * Specification.pageSize;
             int lastGamePos = firstGamePos + Specification.pageSize;
             List<string> gameTitles = new List<string>();
@@ -231,27 +233,27 @@ namespace Server
 
             for (int i = firstGamePos; (i < filteredList.Count) && (i < lastGamePos); i++)
             {
-                gameTitles.Add(filteredList[i].Title); //Todo checkear pagenumber > 0
+                gameTitles.Add(filteredList[i].Title);
                 gameIds.Add(filteredList[i].Id);
             }
             GamePage ret = new GamePage()
             {
                 GamesTitles = gameTitles,
                 GamesIDs = gameIds,
-                HasNextPage = ExistsNextGamePage(filteredList, pageNumber),
+                HasNextPage = ExistsNextPage(filteredList, pageNumber),
                 HasPreviousPage = pageNumber > 1
             };
             return ret;
         }
-        bool textSearchIsMatch(string real, string search)
+        private bool TextSearchIsMatch(string real, string search)
         {
             return (real.ToLower().Contains(search.ToLower()));
         }
 
-        public bool ExistsNextGamePage(List<Game> games, int pageNumber)
+        private bool ExistsNextPage<T>(List<T>fullList, int pageNumber)
         {
-            int maxPageNumber = games.Count / Specification.pageSize;
-            if (games.Count % Specification.pageSize != 0)
+            int maxPageNumber = fullList.Count / Specification.pageSize;
+            if (fullList.Count % Specification.pageSize != 0)
                 maxPageNumber++;
 
             return pageNumber < maxPageNumber;

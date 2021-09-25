@@ -4,6 +4,7 @@ using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Server.Commands
@@ -27,9 +28,15 @@ namespace Server.Commands
             string coverPath = fileNetworkStreamHandler.ReceiveFile(ServerConfig.GameCoverPath); // TODO ver donde si dejamos el serverConfig aca
             newGame.CoverFilePath = coverPath;
             Steam SteamInstance = Steam.GetInstance();
-            SteamInstance.PublishGame(newGame, networkStreamHandler);
-            string message = "Juego agregado exitosamente"; // TODO agregar catch para cuando tira error
-            // TODO borrar caratula si no se publico viene
+            string message;
+            try
+            {
+                message = SteamInstance.PublishGame(newGame, networkStreamHandler);
+            }
+            catch (TitleAlreadyExistseException e) {
+                message = "Ya existe un juego con ese titulo";
+                File.Delete(coverPath);
+            }
             Respond(message);
         }
 

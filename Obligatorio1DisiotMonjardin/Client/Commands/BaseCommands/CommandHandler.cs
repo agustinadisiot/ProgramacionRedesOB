@@ -32,7 +32,14 @@ namespace Client
 
         protected void ReadCommand()
         {
-            networkStreamHandler.ReadCommand();
+            Command cmd = networkStreamHandler.ReadCommand();
+            if (cmd == Command.ERROR)
+                HandleError();
+        }
+
+        private void HandleError() { 
+            string errorMessage = networkStreamHandler.ReadString(Specification.HeaderLength);
+            throw new ServerError(errorMessage);
         }
     }
 }

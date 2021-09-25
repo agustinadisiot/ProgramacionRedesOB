@@ -58,12 +58,23 @@ namespace Client
                 { "Logout", () => Logout() },
                 { "Salir", () => Console.WriteLine("seguro que quiere salir????!!") }
             };
-            while (true) // TODO sacar
+
+            try
             {
                 CliMenu.showMenu(menuOptions, "Menu");
             }
+            catch (ServerError e) {
+                HandleServerError(e.message);
+            }
         }
 
+        private void HandleServerError(string message)
+        {
+            Console.WriteLine("Ocurrió un error con el servidor");
+            Console.WriteLine($"Error: {message}");
+            Console.WriteLine();
+            MainMenu();
+        }
 
         private void Login()
         {
@@ -118,7 +129,8 @@ namespace Client
 
             Action nextPageOption = () => ShowSearchByTitlePage(title, pageNumber + 1);
             Action previousPageOption = () => ShowSearchByTitlePage(title, pageNumber - 1);
-            ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
+            string gamePageTitle = $"Juegos con \"{title}\" - Página {pageNumber}";
+            ShowGamePage(newGamePage, gamePageTitle, nextPageOption, previousPageOption);
         }
         private void SearchByRating()
         {
@@ -185,6 +197,7 @@ namespace Client
             ViewGame commandHandler = (ViewGame)CommandFactory.GetCommandHandler(Command.VIEW_GAME, networkStreamHandler);
             string gameID = id.ToString();
             GameView gameInfo = commandHandler.SendRequest(gameID);
+            Console.WriteLine();
             Console.WriteLine($"Titulo: {gameInfo.Game.Title}");
             Console.WriteLine($"Sinopsis: {gameInfo.Game.Synopsis}");
             if (gameInfo.Game.ReviewsRating == 0) { Console.WriteLine($"Calificacion: -"); }
@@ -225,7 +238,8 @@ namespace Client
         {
             var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
             string message = commandHandler.SendRequest(gameID);
-            ShowServerMessage(message);
+            Console.Write(message);
+            ShowGameInfo(gameID);
         }
 
         private void ShowWriteReviewMenu(int gameID)
@@ -243,7 +257,8 @@ namespace Client
             };
             var commandHandler = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
             string message = commandHandler.SendRequest(newReview, gameID);
-            ShowServerMessage(message);
+            Console.WriteLine(message);
+            ShowGameInfo(gameID);
         }
 
         private void ShowBrowseReviewsMenu(int pageNumber, int gameId)
@@ -335,8 +350,9 @@ namespace Client
                 Genre = genre,
                 CoverFilePath = coverPath
             };
-            string returnMessage = commandHandler.SendRequest(id, gameToModify);
-            ShowServerMessage(returnMessage);
+            string message = commandHandler.SendRequest(id, gameToModify);
+            Console.WriteLine(message);
+            ShowGameInfo(id);
         }
 
         private void DeleteGame(int id)
@@ -458,6 +474,7 @@ namespace Client
             };
             commandHandler2 = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
             commandHandler2.SendRequest(newReview, 2);
+            MainMenu();
         }
 
 
