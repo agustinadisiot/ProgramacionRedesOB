@@ -15,12 +15,12 @@ namespace Client.Commands
 
         public override Command cmd => Command.BUY_GAME;
 
-        public string SendRequest(int gameID)
+        public string SendRequest(int gameId)
         {
             SendHeader();
 
             string data = "";
-            data += gameID;
+            data += gameId;
 
             SendData(data);
             return ResponseHandler();

@@ -15,9 +15,9 @@ namespace Server
         public override void ParsedRequestHandler(string[] req)
         {
             Steam Steam = Steam.GetInstance();
-            int gameID = int.Parse(req[0]);
+            int gameId = int.Parse(req[0]);
 
-            GameView gameView = Steam.ViewGame(gameID, networkStreamHandler); //ver que hacer en caso de juego en null
+            GameView gameView = Steam.ViewGame(gameId, networkStreamHandler); //ver que hacer en caso de juego en null
             Respond(gameView);
             Console.WriteLine("This is the game and actions");
         }

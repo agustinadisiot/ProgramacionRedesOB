@@ -192,10 +192,10 @@ namespace Client
         }
 
 
-        private void ShowGameInfo(int id)
+        private void ShowGameInfo(int gameId)
         {
             ViewGame commandHandler = (ViewGame)CommandFactory.GetCommandHandler(Command.VIEW_GAME, networkStreamHandler);
-            string gameID = id.ToString();
+            string gameID = gameId.ToString();
             GameView gameInfo = commandHandler.SendRequest(gameID);
             Console.WriteLine();
             Console.WriteLine($"Titulo: {gameInfo.Game.Title}");
@@ -205,15 +205,15 @@ namespace Client
             Console.WriteLine($"Clasificacion ESRB: {gameInfo.Game.ESRBRating}");
             Console.WriteLine($"Genero: {gameInfo.Game.Genre}");
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
-            if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(id));
-            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, id)); 
-            if (gameInfo.IsOwned) menuOptions.Add("Escribir Review", () => ShowWriteReviewMenu(id));
+            if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(gameId));
+            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, gameId)); 
+            if (gameInfo.IsOwned) menuOptions.Add("Escribir Review", () => ShowWriteReviewMenu(gameId));
             if (gameInfo.IsPublisher)
             {
-                menuOptions.Add("Modificar Juego", () => ModifyGame(id)); 
-                menuOptions.Add("Eliminar Juego", () => DeleteGame(id)); 
+                menuOptions.Add("Modificar Juego", () => ModifyGame(gameId)); 
+                menuOptions.Add("Eliminar Juego", () => DeleteGame(gameId)); 
             }
-            menuOptions.Add("Descargar Caratula", () => DownloadCover(id));
+            menuOptions.Add("Descargar Caratula", () => DownloadCover(gameId));
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
 
             CliMenu.showMenu(menuOptions, "");
@@ -234,15 +234,15 @@ namespace Client
             ShowGameInfo(gameId);
         }
 
-        private void ShowBuyGameMenu(int gameID)
+        private void ShowBuyGameMenu(int gameId)
         {
             var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
-            string message = commandHandler.SendRequest(gameID);
+            string message = commandHandler.SendRequest(gameId);
             Console.Write(message);
-            ShowGameInfo(gameID);
+            ShowGameInfo(gameId);
         }
 
-        private void ShowWriteReviewMenu(int gameID)
+        private void ShowWriteReviewMenu(int gameId)
         {
             Console.WriteLine("Escriba una puntuación: (del 1 al 10)");
             int rating = Validation.ReadValidNumber("Escriba una puntuación: (del 1 al 10)", 1, 10);
@@ -256,9 +256,9 @@ namespace Client
                 Rating = rating
             };
             var commandHandler = (WriteReview)CommandFactory.GetCommandHandler(Command.WRITE_REVIEW, networkStreamHandler);
-            string message = commandHandler.SendRequest(newReview, gameID);
+            string message = commandHandler.SendRequest(newReview, gameId);
             Console.WriteLine(message);
-            ShowGameInfo(gameID);
+            ShowGameInfo(gameId);
         }
 
         private void ShowBrowseReviewsMenu(int pageNumber, int gameId)
@@ -323,7 +323,7 @@ namespace Client
             ShowServerMessage(returnMessage);
         }
 
-        private void ModifyGame(int id)
+        private void ModifyGame(int gameId)
         {
             ModifyGame commandHandler = (ModifyGame)CommandFactory.GetCommandHandler(Command.MODIFY_GAME, networkStreamHandler);
             Console.WriteLine("Escriba el nuevo titulo del juego: (vacio si no lo quiere modificar)");
@@ -332,11 +332,11 @@ namespace Client
             Console.WriteLine("Escriba la nueva sinopsis del juego: (vacio si no lo quiere modificar)");
             string synopsis = Validation.ContainsDelimiter("Escriba una nueva sinopsis del juego valida");
 
-            Console.WriteLine("Elija el nuevo ESRBrating del juego:");
-            int ESRBRating = Validation.ReadValidESRB();
+            Console.WriteLine("Elija el nuevo ESRBrating del juego: (vacio si no lo quiere modificar)");
+            int ESRBRating = Validation.ReadValidESRBModify();
 
-            Console.WriteLine("Elija el nuevo genero del juego:");
-            string genre = Validation.ReadValidGenre();
+            Console.WriteLine("Elija el nuevo genero del juego: (vacio si no lo quiere modificar)");
+            string genre = Validation.ReadValidGenreModify();
 
             Console.WriteLine("Escriba la nueva dirección del archivo de la caratula: (vacio si no lo quiere modificar)");
             string coverPath = Console.ReadLine();
@@ -350,12 +350,12 @@ namespace Client
                 Genre = genre,
                 CoverFilePath = coverPath
             };
-            string message = commandHandler.SendRequest(id, gameToModify);
+            string message = commandHandler.SendRequest(gameId, gameToModify);
             Console.WriteLine(message);
-            ShowGameInfo(id);
+            ShowGameInfo(gameId);
         }
 
-        private void DeleteGame(int id)
+        private void DeleteGame(int gameId)
         {
             DeleteGame commandHandler = (DeleteGame)CommandFactory.GetCommandHandler(Command.DELETE_GAME, networkStreamHandler);
             Console.WriteLine("Seguro que quiere eliminar el juego?");
@@ -363,12 +363,12 @@ namespace Client
             Console.WriteLine("2.No");
             int response = Validation.ReadValidNumber("Elija una opcion valida", 1, 2);
             if(response==1) {
-                string returnMessage = commandHandler.SendRequest(id);
+                string returnMessage = commandHandler.SendRequest(gameId);
                 ShowServerMessage(returnMessage);
             }
             else
             {
-                ShowGameInfo(id);
+                ShowGameInfo(gameId);
             }
             
         }

@@ -168,8 +168,8 @@ namespace Server
                     throw new TitleAlreadyExistseException();
             }
             if (modifiedGame.Synopsis != "") gameToMod.Synopsis = modifiedGame.Synopsis;
-            gameToMod.ESRBRating = modifiedGame.ESRBRating;
-            gameToMod.Genre = modifiedGame.Genre;
+            if(modifiedGame.ESRBRating != Common.ESRBRating.EmptyESRB) gameToMod.ESRBRating = modifiedGame.ESRBRating;
+            if(modifiedGame.Genre != "") gameToMod.Genre = modifiedGame.Genre;
             if (modifiedGame.CoverFilePath != null) {
                 string pathToDelete = gameToMod.CoverFilePath;
                 gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
