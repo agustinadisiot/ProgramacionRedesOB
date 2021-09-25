@@ -39,11 +39,23 @@ namespace Client
         {
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>
             {
-                { "Iniciar Sesión", () => Login() }
+                { "Iniciar Sesión", () => Login() },
+                { "Salir", () => EndConnection()}
             };
             CliMenu.showMenu(menuOptions, "Menu Inicial");
 
         }
+
+        private void EndConnection()
+        {
+            Console.WriteLine("Seguro que quiere cerrar la conexion?");
+            Console.WriteLine("1.Si");
+            Console.WriteLine("2.No");
+            int input = Validation.ReadValidNumber("Ingrese una opcion correcta", 1, 2);
+            if(input == 1) { tcpClient.Close();}
+            else { StartMenu(); }
+        }
+
         public void MainMenu()
         {
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>
@@ -56,7 +68,6 @@ namespace Client
                 { "Ver mis juegos", () => BrowseMyGames() },
                 { "Datos de prueba", () => TestData() },
                 { "Logout", () => Logout() },
-                { "Salir", () => Console.WriteLine("seguro que quiere salir????!!") }
             };
 
             try
@@ -81,6 +92,8 @@ namespace Client
             Console.WriteLine("Ingrese nombre de usuario: ");
             string username = Validation.ReadValidString("Reingrese un nombre de usuario valido");
 
+           
+
             var commandHandler = (Login)CommandFactory.GetCommandHandler(Command.LOGIN, networkStreamHandler);
             commandHandler.SendRequest(username);
             MainMenu();
@@ -93,6 +106,7 @@ namespace Client
             StartMenu();
         }
 
+       
         private void BrowseCatalogue(int pageNumber = 1)
         {
             BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);

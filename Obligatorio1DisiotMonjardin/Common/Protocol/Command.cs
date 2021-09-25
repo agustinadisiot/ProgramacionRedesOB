@@ -6,21 +6,21 @@ namespace Common.Protocol
 {
     public enum Command
     {
-        LOGIN, // hecho
-        LOGOUT, // hecho
-        PUBLISH_GAME, //hecho 
+        LOGIN, 
+        LOGOUT, 
+        PUBLISH_GAME, 
         MODIFY_GAME,
         DELETE_GAME,
-        BUY_GAME, //hecho
-        VIEW_GAME, // hecho
-        SEARCH_BY_TITLE, // si - hacer refactor para juntar con browse games
+        BUY_GAME,
+        VIEW_GAME, 
+        SEARCH_BY_TITLE, 
         SEARCH_BY_RATING,
         SEARCH_BY_GENRE,
-        WRITE_REVIEW, // hecho
-        BROWSE_REVIEWS, // hecho
-        DOWNLOAD_COVER, //hecho
-        BROWSE_CATALOGUE, // si ponele
+        WRITE_REVIEW, 
+        BROWSE_REVIEWS,
+        DOWNLOAD_COVER,
+        BROWSE_CATALOGUE, 
         BROWSE_MY_GAMES,
-        ERROR
+        ERROR,
     }
 }

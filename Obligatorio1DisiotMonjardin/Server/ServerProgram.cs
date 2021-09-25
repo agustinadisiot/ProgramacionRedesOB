@@ -24,8 +24,19 @@ namespace Server
 
             Server server = new Server(serverIpAddress,serverPort);
             Console.WriteLine("Server will start accepting connections from the clients");
-            server. StartReceivingConnections();
+           
+            Thread clientConnectionsThread = new Thread(() => server.StartReceivingConnections());
+            clientConnectionsThread.Start();
 
+            bool exit = false;
+            while (!exit)
+            {
+                Console.WriteLine("Escribir exit para salir");
+                string entry = Console.ReadLine();
+                if(entry == "exit") { 
+                    exit = true;
+                }
+            }
         }
 
         

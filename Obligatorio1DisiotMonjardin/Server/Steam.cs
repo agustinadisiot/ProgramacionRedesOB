@@ -4,6 +4,7 @@ using Common.Protocol;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Server
@@ -48,6 +49,8 @@ namespace Server
                     fue publicada correctamente");
 
         }
+
+
         internal ReviewPage BrowseReviews(int pageNumber, int gameId) // TODO ver si usamos public o internal en cada uno
         {
             if (pageNumber <= 0)
