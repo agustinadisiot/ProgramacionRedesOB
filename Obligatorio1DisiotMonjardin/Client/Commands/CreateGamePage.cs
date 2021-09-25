@@ -21,20 +21,20 @@ namespace Client.Commands
             List<string> gamesInfo = data.ToList();
             gamesInfo.RemoveRange((data.Length - 2), 2);
             List<string> gamesTitles = new List<string>();
-            List<string> gameIDs = new List<string>();
+            List<string> gameIds = new List<string>();
 
 
             foreach (string gameInfo in gamesInfo)
             {
                 string[] gameTitleAndId = ParseBySecondDelimiter(gameInfo);
                 gamesTitles.Add(gameTitleAndId[0]);
-                gameIDs.Add(gameTitleAndId[1]);
+                gameIds.Add(gameTitleAndId[1]);
             }
 
             GamePage gamePage = new GamePage()
             {
                 GamesTitles = gamesTitles,
-                GamesIDs = gameIDs.Select(int.Parse).ToList(),
+                GamesIds = gameIds.Select(int.Parse).ToList(),
                 CurrentPage = pageNumber,
                 HasNextPage = ToBooleanFromString(data[data.Length - 2]),
                 HasPreviousPage = ToBooleanFromString(data[data.Length - 1])

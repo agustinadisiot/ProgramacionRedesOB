@@ -11,11 +11,11 @@ namespace Server
 
         public override void ParsedRequestHandler(string[] req)
         {
-            int gameID;
-            bool correctID = int.TryParse(req[0], out gameID);
+            int gameId;
+            bool correctID = int.TryParse(req[0], out gameId);
             // TODO ver que pasa si se parsea mal
             Steam SteamInstance = Steam.GetInstance();
-            string coverPath = SteamInstance.GetCoverPath(gameID);
+            string coverPath = SteamInstance.GetCoverPath(gameId);
             Respond(coverPath);
         }
 

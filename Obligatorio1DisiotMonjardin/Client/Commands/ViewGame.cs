@@ -11,11 +11,11 @@ namespace Client
 
         public override Command cmd => Command.VIEW_GAME;
 
-        public GameView SendRequest(string gameID)
+        public GameView SendRequest(string gameId)
         {
             SendHeader();
 
-            SendData(gameID);
+            SendData(gameId);
             return ResponseHandler();
         }
 
