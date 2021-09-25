@@ -25,8 +25,21 @@ namespace Server
             string unparsedData = Encoding.UTF8.GetString(data);
 
             string[] parsedData = Parse(unparsedData);
+            try
+            {
             ParsedRequestHandler(parsedData);
+            }
+            catch (ServerError e) {
+                SendErrorToClient(e.message);
+            }
 
+        }
+
+        private void SendErrorToClient(string message)
+        {
+            networkStreamHandler.WriteString(Specification.responseHeader);
+            networkStreamHandler.WriteCommand(Command.ERROR);
+            SendData(message); ;
         }
 
         private string[] Parse(string unparsedData)

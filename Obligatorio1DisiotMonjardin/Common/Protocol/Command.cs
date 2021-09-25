@@ -20,6 +20,7 @@ namespace Common.Protocol
         BROWSE_REVIEWS, // hecho
         DOWNLOAD_COVER, //hecho
         BROWSE_CATALOGUE, // si ponele
-        BROWSE_MY_GAMES
+        BROWSE_MY_GAMES,
+        ERROR
     }
 }

@@ -63,20 +63,14 @@ namespace Common.NetworkUtils
         {
             if (!fileHandler.FileExists(path))
                 throw new Exception("File does not exists");
-            // El envio del archivo se compone de las siguientes etapas:
-            // 1) Creo un paquete de datos que tiene esta estructura XXXX YYYYYYYY <NOMBRE>
-            //          a) XXXX -> Largo del nombre del archivo
-            //          b) YYYYYYYY -> Tamaño en bytes del archivo
-            //          c) <NOMBRE> -> Nombre del archivo
 
-            long fileSize = fileHandler.GetFileSize(path); //Obtenemos el tamaño del archivo
+            long fileSize = fileHandler.GetFileSize(path); 
             networkStreamHandler.WriteFileSize(fileSize);
-            // 2) Calculo tamaño y cantidad de partes a enviar
+
             var parts = SpecificationHelper.GetParts(fileSize);
             long offset = 0;
             long currentPart = 1;
 
-            // 3) Mientras tengo partes, envio TODO borrar comentarios del profe
             while (fileSize > offset)
             {
                 byte[] data;

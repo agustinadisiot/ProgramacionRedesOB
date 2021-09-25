@@ -12,7 +12,7 @@ namespace Server
     {
         protected INetworkStreamHandler networkStreamHandler;
         protected IFileNetworkStreamHandler fileNetworkStreamHandler;
-        public abstract Command cmd { get; }
+        public abstract Command cmd { get;}
         public CommandHandler(INetworkStreamHandler nwsh)
         {
             networkStreamHandler = nwsh;

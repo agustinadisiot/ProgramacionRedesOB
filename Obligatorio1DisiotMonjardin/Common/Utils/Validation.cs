@@ -94,7 +94,7 @@ namespace Common.Utils
             string coverPath = Console.ReadLine();
             bool isValidPath = fileHandler.FileExists(coverPath);
             bool isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
-            while (!isValidPath && !isCorrectFormat)
+            while (!(isValidPath && isCorrectFormat))
             {
                 Console.WriteLine(errorMessage);
                 coverPath = Console.ReadLine();

@@ -29,8 +29,14 @@ namespace Server
                 modifiedGame.CoverFilePath = coverPath;
             }
             Steam SteamInstance = Steam.GetInstance();
-            SteamInstance.ModifyGame(Id, modifiedGame);
-            string message = "Juego modificado exitosamente"; 
+            string message;
+            try
+            {
+                message = SteamInstance.ModifyGame(Id, modifiedGame);
+            }
+            catch (TitleAlreadyExistseException e) {
+                message = $"Ya existe un juego con el titulo {modifiedGame.Title}";
+            }
             Respond(message);
         }
 
