@@ -14,12 +14,12 @@ namespace Server
 
         public override void ParsedRequestHandler(string[] req)
         {
-            int Id = int.Parse(req[0]);
+            int Id = parseInt(req[0]);
             Game modifiedGame = new Game
             {
                 Title = req[1],
                 Synopsis = req[2],
-                ESRBRating = (Common.ESRBRating)int.Parse(req[3]),
+                ESRBRating = (Common.ESRBRating)parseInt(req[3]),
                 Genre = req[4]
             };
 

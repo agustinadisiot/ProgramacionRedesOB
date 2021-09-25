@@ -15,8 +15,8 @@ namespace Server.Commands
         protected Steam steamInstance;
         public override void ParsedRequestHandler(string[] req)
         {
-            int pageNumber = 1;
-            int.TryParse(req[0], out pageNumber);
+            int pageNumber = parseInt(req[0]); ;
+
             string unParsedfilter = "";
             if (req.Length > 1)
                 unParsedfilter = req[1];

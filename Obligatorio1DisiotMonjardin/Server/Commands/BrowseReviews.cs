@@ -17,8 +17,8 @@ namespace Server.Commands
         public override void ParsedRequestHandler(string[] req)
         {
             Steam Steam = Steam.GetInstance();
-            int pageNumber = int.Parse(req[0]);
-            int gameId = int.Parse(req[1]);
+            int pageNumber = parseInt(req[0]);
+            int gameId = parseInt(req[1]);
             ReviewPage reviewPage = Steam.BrowseReviews(pageNumber, gameId);
             Respond(reviewPage);
         }

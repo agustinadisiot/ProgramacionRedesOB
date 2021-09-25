@@ -15,11 +15,10 @@ namespace Server
         public override void ParsedRequestHandler(string[] req)
         {
             Steam Steam = Steam.GetInstance();
-            int gameID = int.Parse(req[0]);
+            int gameID = parseInt(req[0]);
 
-            GameView gameView = Steam.ViewGame(gameID, networkStreamHandler); //ver que hacer en caso de juego en null
+            GameView gameView = Steam.ViewGame(gameID, networkStreamHandler);
             Respond(gameView);
-            Console.WriteLine("This is the game and actions");
         }
 
         private void Respond(GameView gameView)  //todo refactor (?
@@ -45,16 +44,6 @@ namespace Server
 
             byte[] data = Encoding.UTF8.GetBytes(dataString);
             byte[] dataLength = BitConverter.GetBytes(data.Length);
-
-            // debuging TODO eliminar
-            networkStreamHandler.Write(header); // Header
-            Console.WriteLine(header.Length);
-            networkStreamHandler.Write(cmd); // CMD
-            Console.WriteLine(cmd.Length);
-            networkStreamHandler.Write(dataLength); // Largo
-            Console.WriteLine(BitConverter.ToInt32(dataLength));
-            networkStreamHandler.Write(data); //data 
-            Console.WriteLine(Encoding.UTF8.GetString(data));
 
         }
     }

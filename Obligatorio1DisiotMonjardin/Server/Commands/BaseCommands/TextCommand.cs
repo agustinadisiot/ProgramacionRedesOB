@@ -13,11 +13,6 @@ namespace Server
 
         public override void HandleRequest()
         {
-            //string unParseddata = networkStreamHandler.ReadString(Specification.dataSizeLength);
-            //string[] parsedData = Parse(unParseddata);
-            //ParsedRequestHandler(parsedData);
-            
-            //--------------
             byte[] dataLength = networkStreamHandler.Read(Specification.dataSizeLength);
             int parsedLength = BitConverter.ToInt32(dataLength);
 
@@ -46,6 +41,14 @@ namespace Server
         {
             string[] parsedData = unparsedData.Split(Specification.delimiter);
             return parsedData;
+        }
+
+        protected int parseInt(string unparsedInt) {
+            int result;
+            bool parseSuccessful = int.TryParse(unparsedInt, out result);
+            if (!parseSuccessful)
+                throw new ServerError($"Se esperaba un numero pero no se recibió {unparsedInt}");
+            return result;
         }
 
         public abstract void ParsedRequestHandler(string[] req);

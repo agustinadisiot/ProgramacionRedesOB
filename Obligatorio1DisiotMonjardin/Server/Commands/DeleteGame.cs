@@ -13,7 +13,7 @@ namespace Server
 
         public override void ParsedRequestHandler(string[] req)
         {
-            int gameId = int.Parse(req[0]);
+            int gameId = parseInt(req[0]);
 
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.DeleteGame(gameId);
