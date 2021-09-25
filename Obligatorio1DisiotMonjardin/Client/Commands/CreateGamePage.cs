@@ -34,7 +34,7 @@ namespace Client.Commands
             GamePage gamePage = new GamePage()
             {
                 GamesTitles = gamesTitles,
-                GamesIDs = gameIds.Select(int.Parse).ToList(),
+                GamesIds = gameIds.Select(int.Parse).ToList(),
                 CurrentPage = pageNumber,
                 HasNextPage = ToBooleanFromString(data[data.Length - 2]),
                 HasPreviousPage = ToBooleanFromString(data[data.Length - 1])

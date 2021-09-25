@@ -239,7 +239,7 @@ namespace Server
             GamePage ret = new GamePage()
             {
                 GamesTitles = gameTitles,
-                GamesIDs = gameIds,
+                GamesIds = gameIds,
                 HasNextPage = ExistsNextPage(filteredList, pageNumber),
                 HasPreviousPage = pageNumber > 1
             };

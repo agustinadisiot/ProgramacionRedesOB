@@ -177,7 +177,7 @@ namespace Client
             for (int i = 0; i < gamePage.GamesTitles.Count; i++)
             {
                 int idIndex = i;
-                menuOptions.Add(gamePage.GamesTitles[i], () => ShowGameInfo(gamePage.GamesIDs[idIndex]));
+                menuOptions.Add(gamePage.GamesTitles[i], () => ShowGameInfo(gamePage.GamesIds[idIndex]));
             }
 
             if (gamePage.HasNextPage)
