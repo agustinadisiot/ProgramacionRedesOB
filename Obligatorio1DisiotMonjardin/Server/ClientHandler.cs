@@ -35,18 +35,13 @@ namespace Server
                     string header = networkStreamHandler.ReadString(Specification.HeaderLength);
                     Command cmd = networkStreamHandler.ReadCommand();
 
-                    //Console.WriteLine(header); TODO borrar
-                    //Console.WriteLine(cmd);
-
                     CommandHandler commandHandler = CommandFactory.GetCommandHandler(cmd, networkStreamHandler);
 
-                    //Console.WriteLine("Client says (header): " + header); TODO borrar
-                    //Console.WriteLine("Client says (CMD):" + cmd);
 
                     commandHandler.HandleRequest();
 
 
-                    /*  var word = parsedData; 
+                    /*  var word = parsedData;  TODO 
                       if (word.Equals("exit"))
                       {
                           isClientConnected = false;

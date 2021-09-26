@@ -10,7 +10,7 @@ namespace Server
     {
         public ViewGame(INetworkStreamHandler nwsh) : base(nwsh) { }
 
-        public override Command cmd => throw new NotImplementedException();
+        public override Command cmd => Command.VIEW_GAME;
 
         public override void ParsedRequestHandler(string[] req)
         {
@@ -21,30 +21,26 @@ namespace Server
             Respond(gameView);
         }
 
-        private void Respond(GameView gameView)  //todo refactor (?
+        private void Respond(GameView gameView)  
         {
-            byte[] header = Encoding.UTF8.GetBytes(Specification.responseHeader);
-            ushort command = (ushort)Command.BROWSE_CATALOGUE;
-            byte[] cmd = BitConverter.GetBytes(command);
+            SendResponseHeader();
 
-            string dataString = ""; // TODO sacar los indices y ponerlo en specification
-            dataString += gameView.Game.Title; // 0
-            dataString += Specification.delimiter;
-            dataString += gameView.Game.Synopsis; // 1
-            dataString += Specification.delimiter;
-            dataString += gameView.Game.ReviewsRating; // 2
-            dataString += Specification.delimiter;
-            dataString += (int)gameView.Game.ESRBRating; // 3
-            dataString += Specification.delimiter;
-            dataString += gameView.Game.Genre;
-            dataString += Specification.delimiter;
-            dataString += Convert.ToInt32(gameView.IsOwned); // 4
-            dataString += Specification.delimiter;
-            dataString += Convert.ToInt32(gameView.IsPublisher); // 5
+            string data = ""; // TODO sacar los indices y ponerlo en specification
+            data += gameView.Game.Title; // 0
+            data += Specification.delimiter;
+            data += gameView.Game.Synopsis; // 1
+            data += Specification.delimiter;
+            data += gameView.Game.ReviewsRating; // 2
+            data += Specification.delimiter;
+            data += (int)gameView.Game.ESRBRating; // 3
+            data += Specification.delimiter;
+            data += gameView.Game.Genre;
+            data += Specification.delimiter;
+            data += Convert.ToInt32(gameView.IsOwned); // 4
+            data += Specification.delimiter;
+            data += Convert.ToInt32(gameView.IsPublisher); // 5
 
-            byte[] data = Encoding.UTF8.GetBytes(dataString);
-            byte[] dataLength = BitConverter.GetBytes(data.Length);
-
+            SendData(data);
         }
     }
 }

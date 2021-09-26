@@ -37,8 +37,10 @@ namespace Client
                 HandleError();
         }
 
-        private void HandleError() { 
-            string errorMessage = networkStreamHandler.ReadString(Specification.HeaderLength);
+        private void HandleError()
+        {
+            int messageErrorLength = networkStreamHandler.ReadInt(Specification.dataSizeLength);
+            string errorMessage = networkStreamHandler.ReadString(messageErrorLength);
             throw new ServerError(errorMessage);
         }
     }
