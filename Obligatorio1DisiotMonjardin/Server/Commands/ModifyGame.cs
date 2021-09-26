@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System;
 using System.IO;
 
 namespace Server
@@ -15,33 +16,33 @@ namespace Server
 
         public override void ParsedRequestHandler(string[] req)
         {
-            // Game cover is downloaded first, so all request data is read before sending an error to the user
-            //  in case of an incorrect parameter, so the reading stream is clear before next request
-            Game modifiedGame = new Game();
-            if(req[5] == "1")
+
+            Game modifiedGame = new Game
+            {
+                Title = req[1],
+                Synopsis = req[2],
+                Genre = req[4]
+            };
+
+            if (req[5] == "1")
             {
                 string coverPath = fileNetworkStreamHandler.ReceiveFile(ServerConfig.GameCoverPath);
                 modifiedGame.CoverFilePath = coverPath;
             }
 
-            modifiedGame = new Game
-            {
-                Title = req[1],
-                Synopsis = req[2],
-                ESRBRating = (Common.ESRBRating)parseInt(req[3]),
-                Genre = req[4]
-            };
-
-            int Id = parseInt(req[0]);
             Steam SteamInstance = Steam.GetInstance();
             string message;
             try
             {
-                message = SteamInstance.ModifyGame(Id, modifiedGame);
+                int id = parseInt(req[0]); // can thow serverError
+                modifiedGame.ESRBRating = (Common.ESRBRating)parseInt(req[3]);
+                message = SteamInstance.ModifyGame(id, modifiedGame);
             }
-            catch (TitleAlreadyExistseException e) {
-                message = $"Ya existe un juego con el titulo {modifiedGame.Title}";
-                File.Delete(modifiedGame.CoverFilePath);
+            catch (Exception e) when (e is TitleAlreadyExistsException || e is ServerError)
+            {
+                message = e.Message;
+                if (req[5] == "1")
+                    File.Delete(modifiedGame.CoverFilePath);
             }
             Respond(message);
         }

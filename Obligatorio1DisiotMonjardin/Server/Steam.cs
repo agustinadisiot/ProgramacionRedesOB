@@ -147,7 +147,7 @@ namespace Server
         {
             var gameWithSameTitle = games.Find(i => i.Title == newGame.Title);
             if (gameWithSameTitle != null)
-                throw new TitleAlreadyExistseException();
+                throw new TitleAlreadyExistsException();
             newGame.Id = this.gameId;
             gameId++;
             newGame.ReviewsRating = 0;
@@ -165,7 +165,7 @@ namespace Server
                 gameToMod.Title = modifiedGame.Title;
                 var gameWithSameTitle = games.Find(i => (i.Title == gameToMod.Title) && (i.Id != gameToModId));
                 if (gameWithSameTitle != null)
-                    throw new TitleAlreadyExistseException();
+                    throw new TitleAlreadyExistsException();
             }
             if (modifiedGame.Synopsis != "") gameToMod.Synopsis = modifiedGame.Synopsis;
             gameToMod.ESRBRating = modifiedGame.ESRBRating;
@@ -224,7 +224,7 @@ namespace Server
         private GamePage CreateGamePage(List<Game> filteredList, int pageNumber)
         {
             if (pageNumber <= 0)
-                throw new ServerError("Número de Página no valido");
+                throw new ServerError("Número de Página no válido");
 
             int firstGamePos = (pageNumber - 1) * Specification.pageSize;
             int lastGamePos = firstGamePos + Specification.pageSize;

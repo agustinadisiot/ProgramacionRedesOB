@@ -64,8 +64,9 @@ namespace Client
             {
                 CliMenu.showMenu(menuOptions, "Menu");
             }
-            catch (ServerError e) {
-                HandleServerError(e.message);
+            catch (ServerError e)
+            {
+                HandleServerError(e.Message);
             }
         }
 
@@ -88,11 +89,12 @@ namespace Client
                 Console.WriteLine("Se inicio sesión correctamente");
                 MainMenu();
             }
-            else {
+            else
+            {
                 Console.WriteLine("No se pudo iniciar sesión");
                 Login();
             }
-                
+
         }
 
         private void Logout()
@@ -109,7 +111,7 @@ namespace Client
                 Console.WriteLine("No se pudo iniciar sesión");
                 Logout();
             }
-            
+
         }
 
         private void BrowseCatalogue(int pageNumber = 1)
@@ -172,7 +174,7 @@ namespace Client
         private void SearchByGenre()
         {
             Console.WriteLine("Elija el género que quiera: ");
-            string genre = Validation.ReadValidGenre(); 
+            string genre = Validation.ReadValidGenre();
             ShowSearchByGenrePage(genre);
         }
 
@@ -225,12 +227,12 @@ namespace Client
             Console.WriteLine($"Genero: {gameInfo.Game.Genre}");
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
             if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(id));
-            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, id)); 
+            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, id));
             if (gameInfo.IsOwned) menuOptions.Add("Escribir Review", () => ShowWriteReviewMenu(id));
             if (gameInfo.IsPublisher)
             {
-                menuOptions.Add("Modificar Juego", () => ModifyGame(id)); 
-                menuOptions.Add("Eliminar Juego", () => DeleteGame(id)); 
+                menuOptions.Add("Modificar Juego", () => ModifyGame(id));
+                menuOptions.Add("Eliminar Juego", () => DeleteGame(id));
             }
             menuOptions.Add("Descargar Caratula", () => DownloadCover(id));
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
@@ -359,7 +361,7 @@ namespace Client
 
             Console.WriteLine("Escriba la nueva dirección del archivo de la caratula: (vacio si no lo quiere modificar)");
             string coverPath = Console.ReadLine();
-            if(coverPath.Length == 0) { coverPath = ""; } else { coverPath = Validation.ReadValidPathModify(coverPath, "Escriba un archivo valido", fileHandler);  }
+            if (coverPath.Length == 0) { coverPath = ""; } else { coverPath = Validation.ReadValidPathModify(coverPath, "Escriba un archivo valido", fileHandler); }
 
             Game gameToModify = new Game
             {
@@ -381,7 +383,8 @@ namespace Client
             Console.WriteLine("1.Si");
             Console.WriteLine("2.No");
             int response = Validation.ReadValidNumber("Elija una opcion valida", 1, 2);
-            if(response==1) {
+            if (response == 1)
+            {
                 string returnMessage = commandHandler.SendRequest(id);
                 ShowServerMessage(returnMessage);
             }
@@ -389,7 +392,7 @@ namespace Client
             {
                 ShowGameInfo(id);
             }
-            
+
         }
 
         public void ShowServerMessage(string message)

@@ -22,10 +22,11 @@ namespace Server
             string[] parsedData = Parse(unparsedData);
             try
             {
-            ParsedRequestHandler(parsedData);
+                ParsedRequestHandler(parsedData);
             }
-            catch (ServerError e) {
-                SendErrorToClient(e.message);
+            catch (ServerError e)
+            {
+                SendErrorToClient(e.Message);
             }
 
         }
@@ -34,7 +35,7 @@ namespace Server
         {
             networkStreamHandler.WriteString(Specification.responseHeader);
             networkStreamHandler.WriteCommand(Command.ERROR);
-            SendData(message); 
+            SendData(message);
         }
 
         private string[] Parse(string unparsedData)
@@ -43,7 +44,8 @@ namespace Server
             return parsedData;
         }
 
-        protected int parseInt(string unparsedInt) {
+        protected int parseInt(string unparsedInt)
+        {
             int result;
             bool parseSuccessful = int.TryParse(unparsedInt, out result);
             if (!parseSuccessful)
