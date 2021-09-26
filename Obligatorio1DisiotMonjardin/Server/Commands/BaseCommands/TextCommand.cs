@@ -34,7 +34,7 @@ namespace Server
         {
             networkStreamHandler.WriteString(Specification.responseHeader);
             networkStreamHandler.WriteCommand(Command.ERROR);
-            SendData(message); ;
+            SendData(message); 
         }
 
         private string[] Parse(string unparsedData)

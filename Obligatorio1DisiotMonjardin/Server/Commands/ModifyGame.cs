@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System.IO;
 
 namespace Server
 {
@@ -14,8 +15,16 @@ namespace Server
 
         public override void ParsedRequestHandler(string[] req)
         {
-            int Id = parseInt(req[0]);
-            Game modifiedGame = new Game
+            // Game cover is downloaded first, so all request data is read before sending an error to the user
+            //  in case of an incorrect parameter, so the reading stream is clear before next request
+            Game modifiedGame = new Game();
+            if(req[5] == "1")
+            {
+                string coverPath = fileNetworkStreamHandler.ReceiveFile(ServerConfig.GameCoverPath);
+                modifiedGame.CoverFilePath = coverPath;
+            }
+
+            modifiedGame = new Game
             {
                 Title = req[1],
                 Synopsis = req[2],
@@ -23,11 +32,7 @@ namespace Server
                 Genre = req[4]
             };
 
-            if(req[5] == "1")
-            {
-                string coverPath = fileNetworkStreamHandler.ReceiveFile(ServerConfig.GameCoverPath);
-                modifiedGame.CoverFilePath = coverPath;
-            }
+            int Id = parseInt(req[0]);
             Steam SteamInstance = Steam.GetInstance();
             string message;
             try
@@ -36,6 +41,7 @@ namespace Server
             }
             catch (TitleAlreadyExistseException e) {
                 message = $"Ya existe un juego con el titulo {modifiedGame.Title}";
+                File.Delete(modifiedGame.CoverFilePath);
             }
             Respond(message);
         }

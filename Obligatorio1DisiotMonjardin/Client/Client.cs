@@ -54,6 +54,7 @@ namespace Client
                 { "Buscar por género", () => SearchByGenre() },
                 { "Buscar por clasificación", () => SearchByRating() },
                 { "Ver mis juegos", () => BrowseMyGames() },
+                { "Enviar parametro incorrecto", () => BrowseMyGames(-1) }, // lo dejamos para la defensa para mostrar los errores
                 { "Datos de prueba", () => TestData() },
                 { "Logout", () => Logout() },
                 { "Salir", () => Console.WriteLine("seguro que quiere salir????!!") }
@@ -80,17 +81,35 @@ namespace Client
         {
             Console.WriteLine("Ingrese nombre de usuario: ");
             string username = Validation.ReadValidString("Reingrese un nombre de usuario valido");
-
             var commandHandler = (Login)CommandFactory.GetCommandHandler(Command.LOGIN, networkStreamHandler);
-            commandHandler.SendRequest(username);
-            MainMenu();
+            bool success = commandHandler.SendRequest(username);
+            if (success)
+            {
+                Console.WriteLine("Se inicio sesión correctamente");
+                MainMenu();
+            }
+            else {
+                Console.WriteLine("No se pudo iniciar sesión");
+                Login();
+            }
+                
         }
 
         private void Logout()
         {
             var commandHandler = (Logout)CommandFactory.GetCommandHandler(Command.LOGOUT, networkStreamHandler);
-            commandHandler.SendRequest();
-            StartMenu();
+            bool success = commandHandler.SendRequest();
+            if (success)
+            {
+                Console.WriteLine("Se inicio sesión correctamente");
+                StartMenu();
+            }
+            else
+            {
+                Console.WriteLine("No se pudo iniciar sesión");
+                Logout();
+            }
+            
         }
 
         private void BrowseCatalogue(int pageNumber = 1)
