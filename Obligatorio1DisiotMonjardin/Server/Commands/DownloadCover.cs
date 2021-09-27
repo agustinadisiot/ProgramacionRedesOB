@@ -14,9 +14,34 @@ namespace Server
         {
             int gameId = parseInt(req[0]);
             Steam SteamInstance = Steam.GetInstance();
-            string coverPath = SteamInstance.GetCoverPath(gameId);
-            Respond(coverPath);
+
+            bool coverIsLocked = false;
+            while (!coverIsLocked)
+            {
+                string lockedCoverPath = SteamInstance.GetCoverPath(gameId);
+                // Aca se podria modificar SteamInstance.GetCoverPath(gameId);
+                lock (lockedCoverPath)
+                {
+                    string latestCoverPath = SteamInstance.GetCoverPath(gameId);
+                    // chequeamos que tenemos el lock al path correcto
+                    if (lockedCoverPath == latestCoverPath)
+                    {
+                        Respond(lockedCoverPath);
+                        coverIsLocked = true;
+                    }
+                }
+                string coverPath = SteamInstance.GetCoverPath(gameId);
+                // Aca se podria modificar el coverPath, ya que ni SteamInstance ni esta clase tienen lock 
+                lock (coverPath)
+                {
+                    Respond(coverPath);
+                }
+            }
         }
+
+
+
+
 
         private void Respond(string coverPath)
         {
