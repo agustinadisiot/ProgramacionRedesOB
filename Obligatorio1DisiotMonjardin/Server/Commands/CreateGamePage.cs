@@ -15,8 +15,8 @@ namespace Server.Commands
         protected Steam steamInstance;
         public override void ParsedRequestHandler(string[] req)
         {
-            int pageNumber = 1;
-            int.TryParse(req[0], out pageNumber);
+            int pageNumber = parseInt(req[0]); ;
+
             string unParsedfilter = "";
             if (req.Length > 1)
                 unParsedfilter = req[1];
@@ -36,12 +36,12 @@ namespace Server.Commands
             for (int i = 0; i < gamePage.GamesTitles.Count; i++)
             {
                 data += gamePage.GamesTitles[i];
-                data += Specification.secondDelimiter;
-                data += gamePage.GamesIds[i];
-                data += Specification.delimiter;
+                data += Specification.SECOND_DELIMITER;
+                data += gamePage.GamesIDs[i];
+                data += Specification.FIRST_DELIMITER;
             }
             data += Convert.ToInt32(gamePage.HasNextPage);
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += Convert.ToInt32(gamePage.HasPreviousPage);
 
             SendData(data);

@@ -15,4 +15,5 @@ namespace Common
         AO = 5,
         RP = 6
     }
+
 }

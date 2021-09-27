@@ -21,20 +21,21 @@ namespace Server.Commands
             {
                 Title = req[0],
                 Synopsis = req[1],
-                ESRBRating = (Common.ESRBRating)int.Parse(req[2]),
                 Genre = req[3]
             };
-
             string coverPath = fileNetworkStreamHandler.ReceiveFile(ServerConfig.GameCoverPath); // TODO ver donde si dejamos el serverConfig aca
             newGame.CoverFilePath = coverPath;
+
             Steam SteamInstance = Steam.GetInstance();
             string message;
             try
             {
+                newGame.ESRBRating = (Common.ESRBRating)parseInt(req[2]); // can thow server error if not a number
                 message = SteamInstance.PublishGame(newGame, networkStreamHandler);
             }
-            catch (TitleAlreadyExistseException e) {
-                message = "Ya existe un juego con ese titulo";
+            catch (Exception e) when (e is TitleAlreadyExistsException || e is ServerError)
+            {
+                message = e.Message;
                 File.Delete(coverPath);
             }
             Respond(message);

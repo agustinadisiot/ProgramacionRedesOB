@@ -9,12 +9,37 @@ namespace Common.Utils
 {
     public static class Validation
     {
+
+        public static bool isValidId(int id)
+        {
+            return id >= 0;
+        }
+
+        public static bool isValidTitle(string title)
+        {
+            return IsValidEntry(title);
+        }
+        public static bool isValidSynopsis(string syn)
+        {
+            return IsValidEntry(syn);
+        }
+
+        public static bool isValidGenre(string genre)
+        {
+            return Game.genres.Contains(genre);
+        }
+
+        public static bool isValidESRBRating(int rating)
+        {
+            return rating > 0 && rating < Enum.GetValues(typeof(ESRBRating)).Length - 1;
+        }
+
         private static bool IsValidEntry(string word)
         {
             bool isEmptyString = word.Length == 0;
-            bool containsDelimiter = word.Contains(Specification.delimiter);
-            bool containsDelimiter2 = word.Contains(Specification.secondDelimiter);
-            return (!isEmptyString && !containsDelimiter);
+            bool containsDelimiter = word.Contains(Specification.FIRST_DELIMITER);
+            bool containsDelimiter2 = word.Contains(Specification.SECOND_DELIMITER);
+            return (!isEmptyString && !containsDelimiter && !containsDelimiter2);
         }
 
         private static bool IsValidNumber(string number, int min, int max)
@@ -27,13 +52,13 @@ namespace Common.Utils
 
         public static string ReadValidString(string errorMessage)
         {
-            string stringWord = Console.ReadLine(); ;
-            bool isValidTitle = IsValidEntry(stringWord);
-            while (!isValidTitle)
+            string stringWord = Console.ReadLine();
+            bool isValidString = IsValidEntry(stringWord);
+            while (!isValidString)
             {
-                Console.WriteLine(errorMessage); 
+                Console.WriteLine(errorMessage);
                 stringWord = Console.ReadLine();
-                isValidTitle = IsValidEntry(stringWord);
+                isValidString = IsValidEntry(stringWord);
             }
             return stringWord;
         }
@@ -41,17 +66,17 @@ namespace Common.Utils
         public static int ReadValidESRB()
         {
             List<ESRBRating> possibleESRB = Enum.GetValues(typeof(ESRBRating)).Cast<ESRBRating>().ToList();
-            for (int i = 0; i < possibleESRB.Count - 1; i++)
+            for (int i = 0; i < possibleESRB.Count; i++)
             {
                 Console.WriteLine($"{ i + 1}.{ possibleESRB.ElementAt(i)}");
             }
             string esrb = Console.ReadLine();
-            bool isANumber = IsValidNumber(esrb, 1, possibleESRB.Count-1);
+            bool isANumber = IsValidNumber(esrb, 1, possibleESRB.Count);
             while (!isANumber)
             {
-                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count-1}");
+                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
                 esrb = Console.ReadLine();
-                isANumber = IsValidNumber(esrb, 1, possibleESRB.Count-1);
+                isANumber = IsValidNumber(esrb, 1, possibleESRB.Count);
             }
             return int.Parse(esrb);
         }
@@ -106,13 +131,13 @@ namespace Common.Utils
         public static string ReadValidPathModify(string coverPath, string errorMessage, FileHandler.FileHandler fileHandler)
         {
             bool isValidPath = fileHandler.FileExists(coverPath);
-            bool isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
-            while (!(isValidPath && isCorrectFormat))
+            bool isCorrectFormat = coverPath.EndsWith(Specification.IMAGE_EXTENSION);
+            while (!isValidPath && !isCorrectFormat)
             {
                 Console.WriteLine(errorMessage);
                 coverPath = Console.ReadLine();
                 isValidPath = fileHandler.FileExists(coverPath);
-                isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
+                isCorrectFormat = coverPath.EndsWith(Specification.IMAGE_EXTENSION);
             }
             return coverPath;
         }
@@ -178,27 +203,27 @@ namespace Common.Utils
         {
             if (fileHandler.FileExists(completePath))
                 Console.WriteLine($"Se descargó la caratula en {completePath}");
-            else 
+            else
                 Console.WriteLine($"Se intento descragar la caratula a {completePath} pero ocurrió un error y no se descargo");
         }
 
         public static string ContainsDelimiter(string errorMessage)
         {
             string word = Console.ReadLine(); ;
-            bool containsDelimiter = word.Contains(Specification.delimiter);
-            bool containsDelimiter2 = word.Contains(Specification.secondDelimiter);
+            bool containsDelimiter = word.Contains(Specification.FIRST_DELIMITER);
+            bool containsDelimiter2 = word.Contains(Specification.SECOND_DELIMITER);
             bool isValidEntry = containsDelimiter || containsDelimiter2;
             while (isValidEntry)
             {
                 Console.WriteLine(errorMessage);
                 word = Console.ReadLine();
-                containsDelimiter = word.Contains(Specification.delimiter);
-                containsDelimiter2 = word.Contains(Specification.secondDelimiter);
+                containsDelimiter = word.Contains(Specification.FIRST_DELIMITER);
+                containsDelimiter2 = word.Contains(Specification.SECOND_DELIMITER);
                 isValidEntry = containsDelimiter || containsDelimiter2;
             }
             return word;
         }
 
-       
+        
     }
 }

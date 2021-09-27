@@ -13,7 +13,7 @@ namespace Server
 
         public override void ParsedRequestHandler(string[] req)
         {
-            int gameId = int.Parse(req[0]);
+            int gameId = parseInt(req[0]);
 
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.DeleteGame(gameId);
@@ -24,7 +24,7 @@ namespace Server
         private void Respond(string message)
         {
 
-            networkStreamHandler.WriteString(Specification.responseHeader);
+            networkStreamHandler.WriteString(Specification.RESPONSE_HEADER);
             networkStreamHandler.WriteCommand(Command.DELETE_GAME);
             networkStreamHandler.WriteInt(message.Length);
             networkStreamHandler.WriteString(message);

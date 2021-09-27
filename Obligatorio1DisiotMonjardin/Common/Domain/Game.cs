@@ -18,22 +18,23 @@ namespace Common.Domain
         public User Publisher { get; set; }
         public List<Review> Reviews { get; set; }
 
-
         public void UpdateReviewsRating()
         {
-            // TODO lock
-            decimal total = 0;
-            decimal count = Reviews.Count;
-            foreach (Review review in Reviews)
+            lock (Reviews)
             {
-                total += review.Rating;
+                decimal total = 0;
+                decimal count = Reviews.Count;
+                foreach (Review review in Reviews)
+                {
+                    total += review.Rating;
+                }
+                decimal result;
+                if (count > 0)
+                    result = total / count;
+                else
+                    result = 0;
+                ReviewsRating = (int)Math.Ceiling(result);
             }
-            decimal result;
-            if (count > 0)
-                result = total / count;
-            else
-                result = 0;
-            ReviewsRating = (int)Math.Ceiling(result);
         }
     }
 }

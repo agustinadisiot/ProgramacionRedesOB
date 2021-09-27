@@ -11,9 +11,7 @@ namespace Server
 
         public override void ParsedRequestHandler(string[] req)
         {
-            int gameId;
-            bool correctID = int.TryParse(req[0], out gameId);
-            // TODO ver que pasa si se parsea mal
+            int gameId = parseInt(req[0]);
             Steam SteamInstance = Steam.GetInstance();
             string coverPath = SteamInstance.GetCoverPath(gameId);
             Respond(coverPath);

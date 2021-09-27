@@ -16,12 +16,14 @@ namespace Server.Commands
 
         public override void ParsedRequestHandler(string[] req)
         {
-            int gameId;
-            bool correctId = int.TryParse(req[0], out gameId);
-            // TODO ver que pasa si se parsea mal
+            int gameId = parseInt(req[0]);
             Steam SteamInstance = Steam.GetInstance();
-            SteamInstance.BuyGame(gameId, networkStreamHandler);
-            string message = "Juego comprado correctamente"; // TODO agregar catch para cuando tira error
+            bool success = SteamInstance.BuyGame(gameId, networkStreamHandler);
+            string message;
+            if (success)
+                message = "Juego comprado correctamente"; // TODO agregar catch para cuando tira error
+            else
+                message = "No se pudo comprar el juego";
             Respond(message);
         }
 

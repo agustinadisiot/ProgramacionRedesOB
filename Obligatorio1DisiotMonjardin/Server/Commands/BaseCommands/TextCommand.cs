@@ -13,12 +13,7 @@ namespace Server
 
         public override void HandleRequest()
         {
-            //string unParseddata = networkStreamHandler.ReadString(Specification.dataSizeLength);
-            //string[] parsedData = Parse(unParseddata);
-            //ParsedRequestHandler(parsedData);
-            
-            //--------------
-            byte[] dataLength = networkStreamHandler.Read(Specification.dataSizeLength);
+            byte[] dataLength = networkStreamHandler.Read(Specification.DATA_SIZE_LENGTH);
             int parsedLength = BitConverter.ToInt32(dataLength);
 
             byte[] data = networkStreamHandler.Read(parsedLength);
@@ -27,25 +22,35 @@ namespace Server
             string[] parsedData = Parse(unparsedData);
             try
             {
-            ParsedRequestHandler(parsedData);
+                ParsedRequestHandler(parsedData);
             }
-            catch (ServerError e) {
-                SendErrorToClient(e.message);
+            catch (ServerError e)
+            {
+                SendErrorToClient(e.Message);
             }
 
         }
 
         private void SendErrorToClient(string message)
         {
-            networkStreamHandler.WriteString(Specification.responseHeader);
+            networkStreamHandler.WriteString(Specification.RESPONSE_HEADER);
             networkStreamHandler.WriteCommand(Command.ERROR);
-            SendData(message); ;
+            SendData(message);
         }
 
         private string[] Parse(string unparsedData)
         {
-            string[] parsedData = unparsedData.Split(Specification.delimiter);
+            string[] parsedData = unparsedData.Split(Specification.FIRST_DELIMITER);
             return parsedData;
+        }
+
+        protected int parseInt(string unparsedInt)
+        {
+            int result;
+            bool parseSuccessful = int.TryParse(unparsedInt, out result);
+            if (!parseSuccessful)
+                throw new ServerError($"Se esperaba un numero pero no se recibió {unparsedInt}");
+            return result;
         }
 
         public abstract void ParsedRequestHandler(string[] req);

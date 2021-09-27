@@ -35,7 +35,7 @@ namespace Common.NetworkUtils
                 if (!folderPath.Trim().EndsWith("\\"))
                     folderPath += "\\"; // TODO ver que pasa si me pasan el folder con "/"
 
-                string completeFileName = folderPath + fileName + Specification.imageExtension; // TODO ver si poner un while que cheque que el file no existe o si usar otro metodo
+                string completeFileName = folderPath + fileName + Specification.IMAGE_EXTENSION; // TODO ver si poner un while que cheque que el file no existe o si usar otro metodo
 
                 while (fileSize > offset)
                 {
@@ -48,8 +48,8 @@ namespace Common.NetworkUtils
                     }
                     else
                     {
-                        data = networkStreamHandler.Read(Specification.MaxPacketSize);
-                        offset += Specification.MaxPacketSize;
+                        data = networkStreamHandler.Read(Specification.MAX_PACKET_SIZE);
+                        offset += Specification.MAX_PACKET_SIZE;
                     }
                     fileStreamHandler.Write(completeFileName, data);
                     currentPart++;
@@ -62,7 +62,7 @@ namespace Common.NetworkUtils
         public void SendFile(string path)
         {
             if (!fileHandler.FileExists(path))
-                throw new Exception("File does not exists");
+                throw new Exception("File does not exists"); // TODO catchear capaz 
 
             long fileSize = fileHandler.GetFileSize(path); 
             networkStreamHandler.WriteFileSize(fileSize);
@@ -82,8 +82,8 @@ namespace Common.NetworkUtils
                 }
                 else
                 {
-                    data = fileStreamHandler.Read(path, offset, Specification.MaxPacketSize);
-                    offset += Specification.MaxPacketSize;
+                    data = fileStreamHandler.Read(path, offset, Specification.MAX_PACKET_SIZE);
+                    offset += Specification.MAX_PACKET_SIZE;
                 }
 
                 networkStreamHandler.Write(data);

@@ -20,7 +20,7 @@ namespace Client.Commands
             SendHeader();
 
             string pageNumberText = pageNumber.ToString();
-            SendData(pageNumberText + Specification.delimiter + title);
+            SendData(pageNumberText + Specification.FIRST_DELIMITER + title);
             return ResponseHandler(pageNumber);
         }
 

@@ -6,9 +6,7 @@ namespace Common.Protocol
 {
     public class ServerError : Exception
     {
-        public string message { get; set; }
-        public ServerError(string errorMessage) {
-            message = errorMessage;
-        }
+        public ServerError(string errorMessage)
+            : base(errorMessage) { }
     }
 }

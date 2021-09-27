@@ -66,6 +66,7 @@ namespace Client
                 { "Buscar por género", () => SearchByGenre() },
                 { "Buscar por clasificación", () => SearchByRating() },
                 { "Ver mis juegos", () => BrowseMyGames() },
+                { "Enviar parametro incorrecto", () => BrowseMyGames(-1) }, // lo dejamos para la defensa para mostrar los errores
                 { "Datos de prueba", () => TestData() },
                 { "Logout", () => Logout() },
             };
@@ -74,8 +75,9 @@ namespace Client
             {
                 CliMenu.showMenu(menuOptions, "Menu");
             }
-            catch (ServerError e) {
-                HandleServerError(e.message);
+            catch (ServerError e)
+            {
+                HandleServerError(e.Message);
             }
         }
 
@@ -91,22 +93,38 @@ namespace Client
         {
             Console.WriteLine("Ingrese nombre de usuario: ");
             string username = Validation.ReadValidString("Reingrese un nombre de usuario valido");
-
-           
-
             var commandHandler = (Login)CommandFactory.GetCommandHandler(Command.LOGIN, networkStreamHandler);
-            commandHandler.SendRequest(username);
-            MainMenu();
+            bool success = commandHandler.SendRequest(username);
+            if (success)
+            {
+                Console.WriteLine("Se inicio sesión correctamente");
+                MainMenu();
+            }
+            else
+            {
+                Console.WriteLine("No se pudo iniciar sesión");
+                Login();
+            }
+
         }
 
         private void Logout()
         {
             var commandHandler = (Logout)CommandFactory.GetCommandHandler(Command.LOGOUT, networkStreamHandler);
-            commandHandler.SendRequest();
-            StartMenu();
+            bool success = commandHandler.SendRequest();
+            if (success)
+            {
+                Console.WriteLine("Se cerró sesión correctamente");
+                StartMenu();
+            }
+            else
+            {
+                Console.WriteLine("No se pudo cerrar sesión");
+                MainMenu();
+            }
+
         }
 
-       
         private void BrowseCatalogue(int pageNumber = 1)
         {
             BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
@@ -149,7 +167,7 @@ namespace Client
         private void SearchByRating()
         {
             Console.WriteLine("Escriba la clasificación minima del juego: ");
-            int minRating = Validation.ReadValidNumber("Escriba un número entre 1 y 10", 1, 10);
+            int minRating = Validation.ReadValidNumber(@$"Escriba un número entre {Specification.MIN_RATING} y {Specification.MAX_RATING}", Specification.MIN_RATING, Specification.MAX_RATING);
             ShowSearchByRatingPage(minRating);
         }
 
@@ -167,7 +185,7 @@ namespace Client
         private void SearchByGenre()
         {
             Console.WriteLine("Elija el género que quiera: ");
-            string genre = Validation.ReadValidGenre(); 
+            string genre = Validation.ReadValidGenre();
             ShowSearchByGenrePage(genre);
         }
 
@@ -211,6 +229,7 @@ namespace Client
             ViewGame commandHandler = (ViewGame)CommandFactory.GetCommandHandler(Command.VIEW_GAME, networkStreamHandler);
             string gameID = gameId.ToString();
             GameView gameInfo = commandHandler.SendRequest(gameID);
+
             Console.WriteLine();
             Console.WriteLine($"Titulo: {gameInfo.Game.Title}");
             Console.WriteLine($"Sinopsis: {gameInfo.Game.Synopsis}");
@@ -218,6 +237,7 @@ namespace Client
             else { Console.WriteLine($"Calificacion: {gameInfo.Game.ReviewsRating}"); }
             Console.WriteLine($"Clasificacion ESRB: {gameInfo.Game.ESRBRating}");
             Console.WriteLine($"Genero: {gameInfo.Game.Genre}");
+
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
             if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(gameId));
             menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, gameId)); 
@@ -290,8 +310,8 @@ namespace Client
 
             foreach (Review review in reviewPage.Reviews)
             {
-                Console.WriteLine($"{review.User.Name} ({review.Rating}/10):"); // TODO el 10 que sea una constante, en Common, pero no parte del protocolo
-                Console.WriteLine($"{review.Text}"); // TODO ver si implementamos un "Ver mas" si es muy larga 
+                Console.WriteLine($"{review.User.Name} ({review.Rating}/{Specification.MAX_RATING}):");
+                Console.WriteLine($"{review.Text}");
                 Console.WriteLine();
             }
 
@@ -346,11 +366,11 @@ namespace Client
             Console.WriteLine("Escriba la nueva sinopsis del juego: (vacio si no lo quiere modificar)");
             string synopsis = Validation.ContainsDelimiter("Escriba una nueva sinopsis del juego valida");
 
-            Console.WriteLine("Elija el nuevo ESRBrating del juego: (vacio si no lo quiere modificar)");
-            int ESRBRating = Validation.ReadValidESRBModify();
+            Console.WriteLine("Elija el nuevo ESRBrating del juego:");
+            int ESRBRating = Validation.ReadValidESRB();
 
-            Console.WriteLine("Elija el nuevo genero del juego: (vacio si no lo quiere modificar)");
-            string genre = Validation.ReadValidGenreModify();
+            Console.WriteLine("Elija el nuevo genero del juego:");
+            string genre = Validation.ReadValidGenre();
 
             Console.WriteLine("Escriba la nueva dirección del archivo de la caratula: (vacio si no lo quiere modificar)");
             string coverPath = Console.ReadLine();
@@ -364,7 +384,7 @@ namespace Client
                 Genre = genre,
                 CoverFilePath = coverPath
             };
-            string message = commandHandler.SendRequest(gameId, gameToModify);
+            string message = commandHandler.SendRequest(id, gameToModify);
             Console.WriteLine(message);
             ShowGameInfo(gameId);
         }
@@ -377,14 +397,14 @@ namespace Client
             Console.WriteLine("2.No");
             int response = Validation.ReadValidNumber("Elija una opcion valida", 1, 2);
             if(response==1) {
-                string returnMessage = commandHandler.SendRequest(gameId);
+                string returnMessage = commandHandler.SendRequest(id);
                 ShowServerMessage(returnMessage);
             }
             else
             {
                 ShowGameInfo(gameId);
             }
-            
+
         }
 
         public void ShowServerMessage(string message)

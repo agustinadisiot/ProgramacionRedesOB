@@ -21,9 +21,9 @@ namespace Client.Commands
 
             string data = "";
             data += gameId;
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += newReview.Rating;
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
 
             data += newReview.Text;
 

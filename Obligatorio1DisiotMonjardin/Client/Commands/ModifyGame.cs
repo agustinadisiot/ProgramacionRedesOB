@@ -17,15 +17,15 @@ namespace Client
 
             string data = "";
             data += gameId.ToString();
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += gameToMod.Title;
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += gameToMod.Synopsis;
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += (int)gameToMod.ESRBRating;
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += gameToMod.Genre;
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
 
             if(gameToMod.CoverFilePath == "")
             {

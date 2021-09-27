@@ -17,8 +17,8 @@ namespace Server.Commands
         public override void ParsedRequestHandler(string[] req)
         {
             Steam Steam = Steam.GetInstance();
-            int pageNumber = int.Parse(req[0]);
-            int gameId = int.Parse(req[1]);
+            int pageNumber = parseInt(req[0]);
+            int gameId = parseInt(req[1]);
             ReviewPage reviewPage = Steam.BrowseReviews(pageNumber, gameId);
             Respond(reviewPage);
         }
@@ -29,16 +29,16 @@ namespace Server.Commands
             foreach (Review review in reviewPage.Reviews)
             {
                 data += review.User.Name;
-                data += Specification.secondDelimiter;
+                data += Specification.SECOND_DELIMITER;
                 data += review.Rating;
-                data += Specification.secondDelimiter;
+                data += Specification.SECOND_DELIMITER;
                 data += review.Text;
 
-                data += Specification.delimiter;
+                data += Specification.FIRST_DELIMITER;
             }
 
             data += Convert.ToInt32(reviewPage.HasNextPage);
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += Convert.ToInt32(reviewPage.HasPreviousPage);
 
             SendResponseHeader();

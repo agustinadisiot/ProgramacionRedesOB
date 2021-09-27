@@ -16,10 +16,10 @@ namespace Server.Commands
 
         public override void ParsedRequestHandler(string[] req)
         {
-            int gameId = int.Parse(req[0]);
+            int gameId = parseInt(req[0]);
             Review newReview = new Review
             {
-                Rating = int.Parse(req[1]),
+                Rating = parseInt(req[1]),
                 Text = req[2]
             };
             Steam SteamInstance = Steam.GetInstance();
