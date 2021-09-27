@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Domain;
+using Common.Utils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
@@ -14,8 +15,8 @@ namespace Server
     {
         private List<Game> games;
         private List<User> users;
-        private static Steam instance;
         private int gameId;
+        private static Steam instance;
         private Dictionary<INetworkStreamHandler, string> connections;
 
         private static readonly object singletonPadlock = new object();
@@ -162,17 +163,6 @@ namespace Server
             }
         }
 
-        private string GetUsername(INetworkStreamHandler nwsh)
-        {
-            lock (connections)
-            {
-                bool userLoggedIn = connections.TryGetValue(nwsh, out string username);
-                if (userLoggedIn)
-                    return username;
-                else
-                    throw new ServerError("No existe usuario con ese nombre");
-            }
-        }
 
         public GameView ViewGame(int gameId, INetworkStreamHandler nwsh)
         {
@@ -191,7 +181,7 @@ namespace Server
             }
         }
 
-        public Game CreateGameCopy(Game gameToCopy) // TODO sacar de steam
+        private Game CreateGameCopy(Game gameToCopy) // TODO sacar de steam
         {
             return new Game
             {
@@ -215,8 +205,21 @@ namespace Server
             }
         }
 
+        private string GetUsername(INetworkStreamHandler nwsh)
+        {
+            lock (connections)
+            {
+                bool userLoggedIn = connections.TryGetValue(nwsh, out string username);
+                if (userLoggedIn)
+                    return username;
+                else
+                    throw new ServerError("No existe usuario con ese nombre");
+            }
+        }
+
         public string PublishGame(Game newGame, INetworkStreamHandler nwsh)
         {
+            //VerifyGame(newGame); todo
             lock (games)
             {
                 var gameWithSameTitle = games.Find(i => i.Title == newGame.Title);
@@ -232,21 +235,47 @@ namespace Server
             }
         }
 
+        private void VerifyGame(Game newGame)
+        {
+            throw new NotImplementedException(); //TODO 
+        }
+
         public string ModifyGame(int gameToModId, Game modifiedGame)
         {
             lock (games)
             {
                 Game gameToMod = GetGameById(gameToModId);
+
                 if (modifiedGame.Title != "")
                 {
                     var gameWithSameTitle = games.Find(i => (i.Title == modifiedGame.Title) && (i.Id != gameToModId));
                     if (gameWithSameTitle != null)
                         throw new TitleAlreadyExistsException();
+                    if (!Validation.isValidTitle(modifiedGame.Title))
+                        throw new ServerError("Título no válido");
                     gameToMod.Title = modifiedGame.Title;
                 }
-                if (modifiedGame.Synopsis != "") gameToMod.Synopsis = modifiedGame.Synopsis;
-                if (modifiedGame.ESRBRating != Common.ESRBRating.EmptyESRB) gameToMod.ESRBRating = modifiedGame.ESRBRating;
-                if (modifiedGame.Genre != "") gameToMod.Genre = modifiedGame.Genre;
+
+                if (modifiedGame.Synopsis != "")
+                {
+                    if (!Validation.isValidSynopsis(modifiedGame.Synopsis))
+                        throw new ServerError("Sinopsis no válida");
+                    gameToMod.Synopsis = modifiedGame.Synopsis;
+                }
+                if (modifiedGame.ESRBRating != Common.ESRBRating.EmptyESRB)
+                {
+                    if (!Validation.isValidESRBRating((int)modifiedGame.ESRBRating))
+                        throw new ServerError("Clasificación ESRB no válida");
+                    gameToMod.ESRBRating = modifiedGame.ESRBRating;
+                }
+
+                if (modifiedGame.Genre != "")
+                {
+                    if (!Validation.isValidGenre(modifiedGame.Genre))
+                        throw new ServerError("Genero no válido");
+                    gameToMod.Genre = modifiedGame.Genre;
+                }
+
                 if (modifiedGame.CoverFilePath != null)
                 {
                     string pathToDelete = gameToMod.CoverFilePath;

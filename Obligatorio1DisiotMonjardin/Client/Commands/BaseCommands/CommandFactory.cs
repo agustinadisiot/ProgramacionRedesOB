@@ -44,6 +44,8 @@ namespace Client
                     return new ViewGame(nwsh);
                 case Command.DOWNLOAD_COVER:
                     return new DownloadCover(nwsh);
+                case Command.EXIT:
+                    return new Exit(nwsh);
                 default:
                     throw new NotImplementedException();
 

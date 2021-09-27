@@ -22,5 +22,7 @@ namespace Common.Protocol
         BROWSE_CATALOGUE, 
         BROWSE_MY_GAMES,
         ERROR,
+        SERVER_SHUTDOWN,
+        EXIT,
     }
 }

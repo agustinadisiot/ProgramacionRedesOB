@@ -35,6 +35,8 @@ namespace Client
             Command cmd = networkStreamHandler.ReadCommand();
             if (cmd == Command.ERROR)
                 HandleError();
+            if (cmd == Command.SERVER_SHUTDOWN)
+                throw new ServerShutDown();
         }
 
         private void HandleError()

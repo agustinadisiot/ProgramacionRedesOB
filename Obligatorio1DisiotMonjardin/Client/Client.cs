@@ -63,7 +63,12 @@ namespace Client
             Console.WriteLine("1.Si");
             Console.WriteLine("2.No");
             int input = Validation.ReadValidNumber("Ingrese una opción correcta", 1, 2);
-            if (input == 1) { tcpClient.Close(); }
+            if (input == 1)
+            {
+                var commandHandler = (Exit)CommandFactory.GetCommandHandler(Command.EXIT, networkStreamHandler);
+                commandHandler.SendRequest();
+                tcpClient.Close();
+            }
             else { StartMenu(); }
         }
 
@@ -89,6 +94,17 @@ namespace Client
             {
                 HandleServerError(e.Message);
             }
+            catch (ServerShutDown)
+            {
+                HandleServerShutDown();
+            }
+        }
+
+        private void HandleServerShutDown()
+        {
+            Console.WriteLine("El servidor se cerró");
+            Console.WriteLine("Cerrando cliente ...");
+            Console.WriteLine();
         }
 
         private void HandleServerError(string message)

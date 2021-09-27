@@ -22,23 +22,17 @@ namespace Server
             var serverPort = "6000";
             Console.WriteLine($"Server is starting in address {serverIpAddress} and port {serverPort}");
 
-            Server server = new Server(serverIpAddress,serverPort);
+            Server server = new Server(serverIpAddress, serverPort);
             Console.WriteLine("Server will start accepting connections from the clients");
-           
+
             Thread clientConnectionsThread = new Thread(() => server.StartReceivingConnections());
             clientConnectionsThread.Start();
 
-            bool exit = false;
-            while (!exit)
-            {
-                Console.WriteLine("Escribir exit para salir");
-                string entry = Console.ReadLine();
-                if(entry == "exit") { 
-                    exit = true;
-                }
-            }
+            Thread serverExitPrompt = new Thread(() => server.ExitPrompt());
+            serverExitPrompt.Start();
+
         }
 
-        
+
     }
 }

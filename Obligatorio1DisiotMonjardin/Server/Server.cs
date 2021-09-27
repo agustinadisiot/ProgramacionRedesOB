@@ -10,33 +10,56 @@ namespace Server
     public class Server
     {
         private readonly TcpListener tcpListener;
-        public const int  maxClientsInQ = 100;
+        public const int maxClientsInQ = 100;
         public bool acceptingConnections;
-        public List<TcpClient> tcpClients;
-        public Server(string serverIpAddress, string serverPort) {
+        public List<ClientHandler> clientHandlers;
+        public Server(string serverIpAddress, string serverPort)
+        {
 
-            tcpClients = new List<TcpClient>();
+            clientHandlers = new List<ClientHandler>();
             var ipEndPoint = new IPEndPoint(IPAddress.Parse(serverIpAddress), int.Parse(serverPort));
             tcpListener = new TcpListener(ipEndPoint);
             acceptingConnections = true;
         }
 
-        public  void StartReceivingConnections()
+        public void StartReceivingConnections()
         {
             tcpListener.Start(maxClientsInQ);
 
-            while (acceptingConnections) // This while (true) should only be valid for examples TODO SACAR
+            while (acceptingConnections)
             {
                 var acceptedTcpClient = tcpListener.AcceptTcpClient(); // Gets the first client in the queue
-                tcpClients.Add(acceptedTcpClient);
-                Console.WriteLine("Accepted new client connection");
-                Thread clientThread = new Thread(() => new ClientHandler(acceptedTcpClient).StartHandling());
-                clientThread.Start();
+                if (acceptingConnections)
+                {
+                    Console.WriteLine("Accepted new client connection");
+                    ClientHandler newHandler = new ClientHandler(acceptedTcpClient);
+                    clientHandlers.Add(newHandler);
+                    Thread clientThread = new Thread(() => newHandler.StartHandling());
+                    clientThread.Start();
+                }
             }
-            Console.WriteLine("Server closing");
-            foreach(TcpClient tcpclient in tcpClients)
+
+
+        }
+
+        public void ExitPrompt()
+        {
+            bool exit = false;
+            while (!exit)
             {
-                tcpclient.Close();
+                Console.WriteLine("Escribir exit para salir");
+                string entry = Console.ReadLine();
+                if (entry == "exit")
+                {
+                    exit = true;
+                }
+            }
+            acceptingConnections = false;
+
+            Console.WriteLine("Server closing");
+            foreach (ClientHandler clientHandler in clientHandlers)
+            {
+                clientHandler.StopHandling();
             }
         }
     }
