@@ -20,7 +20,6 @@ namespace Server
 
         private static readonly object singletonPadlock = new object();
 
-
         public static Steam GetInstance()
         {
             lock (singletonPadlock)
@@ -41,11 +40,12 @@ namespace Server
             connections = new Dictionary<INetworkStreamHandler, string>();
 
         }
+        //TODO organizar funciones 
 
         public string WriteReview(Review newReview, int gameId, INetworkStreamHandler nwsh)
         {
 
-            newReview.User = GetUser(nwsh);
+            newReview.Author = GetUser(nwsh);
             lock (games)
             {
                 Game gameToAddReview = games[gameId];
@@ -53,12 +53,11 @@ namespace Server
                 {
                     gameToAddReview.Reviews.Add(newReview);
                     gameToAddReview.UpdateReviewsRating();
-                    return (@$"Clasificación por {newReview.User.Name} para el juego {gameToAddReview.Title}
+                    return (@$"Clasificación por {newReview.Author.Name} para el juego {gameToAddReview.Title}
                     fue publicada correctamente");
                 }
             }
         }
-
 
         public ReviewPage BrowseReviews(int pageNumber, int gameId)
         {
@@ -79,7 +78,7 @@ namespace Server
                         pageSize = Specification.PAGE_SIZE;
 
 
-                    List<Review> reviewsInPage = allReviews.GetRange(firstReviewPos, pageSize); // TODO usar esto para BrowseCatalogue y search
+                    List<Review> reviewsInPage = allReviews.GetRange(firstReviewPos, pageSize);
 
                     ReviewPage ret = new ReviewPage()
                     {
@@ -91,6 +90,30 @@ namespace Server
                 }
             }
         }
+        private GamePage CreateGamePage(List<Game> filteredList, int pageNumber)
+        {
+            if (pageNumber <= 0)
+                throw new ServerError("Número de Página no válido");
+
+            int firstGamePos = (pageNumber - 1) * Specification.PAGE_SIZE;
+            int lastGamePos = firstGamePos + Specification.PAGE_SIZE;
+            List<string> gameTitles = new List<string>();
+            List<int> gameIds = new List<int>();
+
+            for (int i = firstGamePos; (i < filteredList.Count) && (i < lastGamePos); i++)
+            {
+                gameTitles.Add(filteredList[i].Title);
+                gameIds.Add(filteredList[i].Id);
+            }
+            GamePage ret = new GamePage()
+            {
+                GamesTitles = gameTitles,
+                GamesIds = gameIds,
+                HasNextPage = ExistsNextPage(filteredList, pageNumber),
+                HasPreviousPage = pageNumber > 1
+            };
+            return ret;
+        }
 
         private Game GetGameById(int gameId)
         {
@@ -100,7 +123,7 @@ namespace Server
             return gameFound;
         }
 
-        internal bool BuyGame(int gameID, INetworkStreamHandler nwsh)
+        public bool BuyGame(int gameID, INetworkStreamHandler nwsh)
         {
             lock (games)
             {
@@ -159,7 +182,7 @@ namespace Server
                 User actualUser = GetUser(nwsh);
                 GameView gameView = new GameView()
                 {
-                    Game = game, // TODO crear copia
+                    Game = CreateGameCopy(game),
                     IsOwned = actualUser.GamesOwned.Contains(game),
                     IsPublisher = actualUser.Equals(game.Publisher),
                 };
@@ -168,6 +191,19 @@ namespace Server
             }
         }
 
+        public Game CreateGameCopy(Game gameToCopy) // TODO sacar de steam
+        {
+            return new Game
+            {
+                Title = gameToCopy.Title,
+                Synopsis = gameToCopy.Synopsis,
+                Genre = gameToCopy.Genre,
+                ESRBRating = gameToCopy.ESRBRating,
+                ReviewsRating = gameToCopy.ReviewsRating
+            };
+
+
+        }
         private User GetUser(INetworkStreamHandler nwsh)
         {
             lock (users)
@@ -196,8 +232,7 @@ namespace Server
             }
         }
 
-
-        internal string ModifyGame(int gameToModId, Game modifiedGame)
+        public string ModifyGame(int gameToModId, Game modifiedGame)
         {
             lock (games)
             {
@@ -230,7 +265,6 @@ namespace Server
             }
         }
 
-
         public string GetCoverPath(int gameId)
         {
             lock (games)
@@ -249,7 +283,7 @@ namespace Server
             }
         }
 
-        internal GamePage BrowseMyGames(int pageNumber, INetworkStreamHandler nwsh)
+        public GamePage BrowseMyGames(int pageNumber, INetworkStreamHandler nwsh)
         {
             User CurrentUser = GetUser(nwsh);
             lock (games)
@@ -257,7 +291,8 @@ namespace Server
                 return CreateGamePage(CurrentUser.GamesOwned, pageNumber);
             }
         }
-        internal GamePage SearchByTitle(int pageNumber, string title)
+
+        public GamePage SearchByTitle(int pageNumber, string title)
         {
             lock (games)
             {
@@ -266,7 +301,7 @@ namespace Server
             }
         }
 
-        internal GamePage SearchByRating(int pageNumber, int minRating)
+        public GamePage SearchByRating(int pageNumber, int minRating)
         {
             lock (games)
             {
@@ -275,7 +310,7 @@ namespace Server
             }
         }
 
-        internal GamePage SearchByGenre(int pageNumber, string genre)
+        public GamePage SearchByGenre(int pageNumber, string genre)
         {
             lock (games)
             {
@@ -284,30 +319,6 @@ namespace Server
             }
         }
 
-        private GamePage CreateGamePage(List<Game> filteredList, int pageNumber)
-        {
-            if (pageNumber <= 0)
-                throw new ServerError("Número de Página no válido");
-
-            int firstGamePos = (pageNumber - 1) * Specification.PAGE_SIZE;
-            int lastGamePos = firstGamePos + Specification.PAGE_SIZE;
-            List<string> gameTitles = new List<string>();
-            List<int> gameIds = new List<int>();
-
-            for (int i = firstGamePos; (i < filteredList.Count) && (i < lastGamePos); i++)
-            {
-                gameTitles.Add(filteredList[i].Title);
-                gameIds.Add(filteredList[i].Id);
-            }
-            GamePage ret = new GamePage()
-            {
-                GamesTitles = gameTitles,
-                GamesIds = gameIds,
-                HasNextPage = ExistsNextPage(filteredList, pageNumber),
-                HasPreviousPage = pageNumber > 1
-            };
-            return ret;
-        }
         private bool TextSearchIsMatch(string real, string search)
         {
             return (real.ToLower().Contains(search.ToLower()));

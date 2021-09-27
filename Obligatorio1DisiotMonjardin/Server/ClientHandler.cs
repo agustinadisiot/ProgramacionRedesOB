@@ -37,8 +37,6 @@ namespace Server
 
                     CommandHandler commandHandler = CommandFactory.GetCommandHandler(cmd, networkStreamHandler);
 
-                    //Console.WriteLine("Client says (header): " + header); TODO borrar
-                    //Console.WriteLine("Client says (CMD):" + cmd);
 
                     commandHandler.HandleRequest();
                 }

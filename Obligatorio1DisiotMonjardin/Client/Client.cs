@@ -16,6 +16,7 @@ using System.Text;
 namespace Client
 {
     public class Client // TODO cambiar nombre de client y clienteProgram
+                        // TODO organizar funciones
     {
         private NetworkStreamHandler networkStreamHandler;
         private readonly TcpClient tcpClient;
@@ -46,12 +47,22 @@ namespace Client
 
         }
 
+        private void DeveloperMenu()
+        {
+            // Se dejó para mostrar en la defensa y para facilitar la correción
+            Dictionary<string, Action> developerOptions = new Dictionary<string, Action>
+            {
+                { "Enviar parámetro incorrecto", () => BrowseMyGames(-1) },
+                { "Datos de prueba", () => TestData() },
+            };
+            CliMenu.showMenu(developerOptions, "Menu de desarrollador");
+        }
         private void EndConnection()
         {
             Console.WriteLine("Seguro que quiere cerrar la conexion?");
             Console.WriteLine("1.Si");
             Console.WriteLine("2.No");
-            int input = Validation.ReadValidNumber("Ingrese una opcion correcta", 1, 2);
+            int input = Validation.ReadValidNumber("Ingrese una opción correcta", 1, 2);
             if (input == 1) { tcpClient.Close(); }
             else { StartMenu(); }
         }
@@ -62,15 +73,14 @@ namespace Client
             {
                 { "Ver catalogo", () => BrowseCatalogue() },
                 { "Publicar Juego", () => Publish() },
-                { "Buscar por titulo", () => SearchByTitle() },
+                { "Buscar por título", () => SearchByTitle() },
                 { "Buscar por género", () => SearchByGenre() },
                 { "Buscar por clasificación", () => SearchByRating() },
                 { "Ver mis juegos", () => BrowseMyGames() },
-                { "Enviar parametro incorrecto", () => BrowseMyGames(-1) }, // lo dejamos para la defensa para mostrar los errores
-                { "Datos de prueba", () => TestData() },
-                { "Logout", () => Logout() },
+                { "Cerrar Sesión", () => Logout() },
+                { "Menu de desarrollador", () => DeveloperMenu() },
             };
-
+            Console.WriteLine();
             try
             {
                 CliMenu.showMenu(menuOptions, "Menu");
@@ -92,7 +102,7 @@ namespace Client
         private void Login()
         {
             Console.WriteLine("Ingrese nombre de usuario: ");
-            string username = Validation.ReadValidString("Reingrese un nombre de usuario valido");
+            string username = Validation.ReadValidString("Reingrese un nombre de usuario válido");
             var commandHandler = (Login)CommandFactory.GetCommandHandler(Command.LOGIN, networkStreamHandler);
             bool success = commandHandler.SendRequest(username);
             if (success)
@@ -149,8 +159,8 @@ namespace Client
 
         private void SearchByTitle()
         {
-            Console.WriteLine("Escriba el titulo del juego: ");
-            string title = Validation.ReadValidString("Escriba un titulo valido");
+            Console.WriteLine("Escriba el título del juego: ");
+            string title = Validation.ReadValidString("Escriba un título válido");
             ShowSearchByTitlePage(title);
         }
 
@@ -166,7 +176,7 @@ namespace Client
         }
         private void SearchByRating()
         {
-            Console.WriteLine("Escriba la clasificación minima del juego: ");
+            Console.WriteLine("Escriba la clasificación mínima del juego: ");
             int minRating = Validation.ReadValidNumber(@$"Escriba un número entre {Specification.MIN_RATING} y {Specification.MAX_RATING}", Specification.MIN_RATING, Specification.MAX_RATING);
             ShowSearchByRatingPage(minRating);
         }
@@ -231,7 +241,7 @@ namespace Client
             GameView gameInfo = commandHandler.SendRequest(gameID);
 
             Console.WriteLine();
-            Console.WriteLine($"Titulo: {gameInfo.Game.Title}");
+            Console.WriteLine($"título: {gameInfo.Game.Title}");
             Console.WriteLine($"Sinopsis: {gameInfo.Game.Synopsis}");
             if (gameInfo.Game.ReviewsRating == 0) { Console.WriteLine($"Calificacion: -"); }
             else { Console.WriteLine($"Calificacion: {gameInfo.Game.ReviewsRating}"); }
@@ -259,7 +269,7 @@ namespace Client
             Console.WriteLine("Escriba la carpeta donde quiere guardar la caratula");
             string folderPath = Validation.ReadValidDirectory("No se encontro tal carpeta, ingrese de nuevo", fileHandler);
             Console.WriteLine("Escriba el nombre que quiere para el archivo");
-            string fileName = Validation.ReadValidString("Escriba un nombre valido para su archivo");
+            string fileName = Validation.ReadValidString("Escriba un nombre válido para su archivo");
 
             var commandHandler = (DownloadCover)CommandFactory.GetCommandHandler(Command.DOWNLOAD_COVER, networkStreamHandler);
             string completePath = commandHandler.SendRequest(gameId, folderPath, fileName);
@@ -282,7 +292,7 @@ namespace Client
             int rating = Validation.ReadValidNumber("Escriba una puntuación: (del 1 al 10)", 1, 10);
 
             Console.WriteLine("Escriba un comentario ");
-            string comment = Validation.ReadValidString("Escriba un comentario valido");
+            string comment = Validation.ReadValidString("Escriba un comentario válido");
 
             Review newReview = new Review()
             {
@@ -305,12 +315,12 @@ namespace Client
         private void ShowReviewPage(ReviewPage reviewPage, int gameId)
         {
             Console.WriteLine($"Calificaciones - Página {reviewPage.CurrentPage}");
-            Console.WriteLine();// TODO capaz poner el nombre del juego
+            Console.WriteLine();
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
 
             foreach (Review review in reviewPage.Reviews)
             {
-                Console.WriteLine($"{review.User.Name} ({review.Rating}/{Specification.MAX_RATING}):");
+                Console.WriteLine($"{review.Author.Name} ({review.Rating}/{Specification.MAX_RATING}):");
                 Console.WriteLine($"{review.Text}");
                 Console.WriteLine();
             }
@@ -330,8 +340,8 @@ namespace Client
         private void Publish()
         {
             PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
-            Console.WriteLine("Escriba el titulo del juego:");
-            string title = Validation.ReadValidString("Escriba un titulo del juego valido");
+            Console.WriteLine("Escriba el título del juego:");
+            string title = Validation.ReadValidString("Escriba un título del juego válido");
 
             Console.WriteLine("Escriba la sinopsis del juego:");
             string synopsis = Validation.ReadValidString("Escriba una sinopsis del juego valida");
@@ -343,7 +353,7 @@ namespace Client
             string genre = Validation.ReadValidGenre();
 
             Console.WriteLine("Escriba la dirección del archivo de la caratula:");
-            string coverPath = Validation.ReadValidPath("Escriba un archivo valido", fileHandler);
+            string coverPath = Validation.ReadValidPath("Escriba un archivo válido", fileHandler);
 
             Game newGame = new Game
             {
@@ -360,8 +370,8 @@ namespace Client
         private void ModifyGame(int gameId)
         {
             ModifyGame commandHandler = (ModifyGame)CommandFactory.GetCommandHandler(Command.MODIFY_GAME, networkStreamHandler);
-            Console.WriteLine("Escriba el nuevo titulo del juego: (vacio si no lo quiere modificar)");
-            string title = Validation.ContainsDelimiter("Escriba un nuevo titulo del juego valido");
+            Console.WriteLine("Escriba el nuevo título del juego: (vacio si no lo quiere modificar)");
+            string title = Validation.ContainsDelimiter("Escriba un nuevo título del juego válido");
 
             Console.WriteLine("Escriba la nueva sinopsis del juego: (vacio si no lo quiere modificar)");
             string synopsis = Validation.ContainsDelimiter("Escriba una nueva sinopsis del juego valida");
@@ -374,7 +384,7 @@ namespace Client
 
             Console.WriteLine("Escriba la nueva dirección del archivo de la caratula: (vacio si no lo quiere modificar)");
             string coverPath = Console.ReadLine();
-            if (coverPath.Length == 0) { coverPath = ""; } else { coverPath = Validation.ReadValidPathModify(coverPath, "Escriba un archivo valido", fileHandler); }
+            if (coverPath.Length == 0) { coverPath = ""; } else { coverPath = Validation.ReadValidPathModify(coverPath, "Escriba un archivo válido", fileHandler); }
 
             Game gameToModify = new Game
             {
@@ -395,7 +405,7 @@ namespace Client
             Console.WriteLine("Seguro que quiere eliminar el juego?");
             Console.WriteLine("1.Si");
             Console.WriteLine("2.No");
-            int response = Validation.ReadValidNumber("Elija una opcion valida", 1, 2);
+            int response = Validation.ReadValidNumber("Elija una opción valida", 1, 2);
             if (response == 1)
             {
                 string returnMessage = commandHandler.SendRequest(gameId);

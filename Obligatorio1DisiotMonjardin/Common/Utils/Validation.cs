@@ -74,7 +74,7 @@ namespace Common.Utils
             bool isANumber = IsValidNumber(esrb, 1, possibleESRB.Count);
             while (!isANumber)
             {
-                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count}");
+                Console.WriteLine($"Elija un número entre 1 y {possibleESRB.Count}");
                 esrb = Console.ReadLine();
                 isANumber = IsValidNumber(esrb, 1, possibleESRB.Count);
             }
@@ -92,7 +92,7 @@ namespace Common.Utils
             bool isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
             while (!isValidNumber)
             {
-                Console.WriteLine($"Elija un numero entre 1 y {maxGenre}");
+                Console.WriteLine($"Elija un número entre 1 y {maxGenre}");
                 stringGenre = Console.ReadLine();
                 isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
             }
@@ -167,7 +167,7 @@ namespace Common.Utils
             bool isANumber = IsValidNumber(esrb, 1, possibleESRB.Count - 1);
             while (!isANumber && esrb != "")
             {
-                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count - 1}");
+                Console.WriteLine($"Elija un número entre 1 y {possibleESRB.Count - 1}");
                 esrb = Console.ReadLine();
                 isANumber = IsValidNumber(esrb, 1, possibleESRB.Count - 1);
             }
@@ -187,7 +187,7 @@ namespace Common.Utils
             bool isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
             while (!isValidNumber && stringGenre != "")
             {
-                Console.WriteLine($"Elija un numero entre 1 y {maxGenre} o vacio");
+                Console.WriteLine($"Elija un número entre 1 y {maxGenre} o vacio");
                 stringGenre = Console.ReadLine();
                 isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
             }

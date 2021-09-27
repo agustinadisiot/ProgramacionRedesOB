@@ -30,7 +30,7 @@ namespace Server
         {
             networkStreamHandler.ReadString(Specification.HEADER_LENGTH);
             networkStreamHandler.ReadCommand();
-        } // TODO usar para ahorrar codigo 
+        }
 
         protected void SendData(string data)
         {

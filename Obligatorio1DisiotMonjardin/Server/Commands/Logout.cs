@@ -17,8 +17,7 @@ namespace Server.Commands.BaseCommands
         {
             Steam Steam = Steam.GetInstance();
             bool success = Steam.Logout(networkStreamHandler);
-            Respond(success); // TODO ver si pones algo que no sea successful
-            Console.WriteLine("Logged out");
+            Respond(success);
         }
 
         private void Respond(bool resp)

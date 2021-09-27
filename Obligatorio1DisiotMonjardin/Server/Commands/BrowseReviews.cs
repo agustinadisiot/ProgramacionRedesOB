@@ -28,7 +28,7 @@ namespace Server.Commands
             string data = "";
             foreach (Review review in reviewPage.Reviews)
             {
-                data += review.User.Name;
+                data += review.Author.Name;
                 data += Specification.SECOND_DELIMITER;
                 data += review.Rating;
                 data += Specification.SECOND_DELIMITER;

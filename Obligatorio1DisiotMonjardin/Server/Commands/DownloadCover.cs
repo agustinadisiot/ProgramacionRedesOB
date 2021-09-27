@@ -3,7 +3,7 @@ using Common.Protocol;
 
 namespace Server
 {
-    internal class DownloadCover : TextCommand
+    public class DownloadCover : TextCommand
     {
         public DownloadCover(INetworkStreamHandler nwsh) : base(nwsh) { }
 

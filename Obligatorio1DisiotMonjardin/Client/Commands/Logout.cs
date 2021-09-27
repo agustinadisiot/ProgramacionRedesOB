@@ -13,8 +13,6 @@ namespace Client
         public bool SendRequest()
         {
             SendHeader();
-
-            // TODO ver que hacer aca, si sacarlo de Text command o que
             SendData("");
             return ResponseHandler();
         }
@@ -23,7 +21,6 @@ namespace Client
         {
             string[] data = GetData();
             bool response = ToBooleanFromString(data[0]);
-            // TODO ver para que usamos la response
             return response;
         }
 
