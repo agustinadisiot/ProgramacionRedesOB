@@ -179,13 +179,13 @@ namespace Server
 
 
         }
-        public string GetCoverPath(int gameId)
+        public void GetCoverPath(int gameId, out string coverPath)
         {
             List<Game> games = db.Games;
             lock (games)
             {
                 Game gameToGetCover = games.Find(game => game.Id == gameId);
-                return gameToGetCover.CoverFilePath;
+                coverPath = gameToGetCover.CoverFilePath;
             }
 
         }
@@ -204,7 +204,7 @@ namespace Server
             }
         }
 
-        // GAME / crud?
+        // GAME CUD
         public string PublishGame(Game newGame, INetworkStreamHandler nwsh)
         {
             //VerifyGame(newGame); todo
@@ -268,7 +268,7 @@ namespace Server
                 {
                     string pathToDelete = gameToMod.CoverFilePath;
                     gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
-                    File.Delete(pathToDelete); // TODO capaz no tendria que ir en Steam
+                    File.Delete(pathToDelete); // TODO capaz no tendria que ir en Steam TODO lock
                 }
                 return $"Se modificó el juego {gameToMod.Title} correctamente";
             }
@@ -280,6 +280,7 @@ namespace Server
             lock (games)
             {
                 return games.Remove(games.Find(i => i.Id == gameId));
+                // TODO eliminar caratula
             }
         }
 

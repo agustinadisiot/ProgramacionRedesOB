@@ -1,5 +1,6 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System;
 
 namespace Server
 {
@@ -13,7 +14,7 @@ namespace Server
         {
             int gameId = parseInt(req[0]);
             Steam SteamInstance = Steam.GetInstance();
-            string coverPath = SteamInstance.GetCoverPath(gameId);
+            coverPath = SteamInstance.GetCoverPath(gameId);
             Respond(coverPath);
         }
 
