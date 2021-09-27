@@ -179,13 +179,13 @@ namespace Server
 
 
         }
-        public void GetCoverPath(int gameId, out string coverPath)
+        public string GetCoverPath(int gameId)
         {
             List<Game> games = db.Games;
             lock (games)
             {
                 Game gameToGetCover = games.Find(game => game.Id == gameId);
-                coverPath = gameToGetCover.CoverFilePath;
+                return gameToGetCover.CoverFilePath; // TODO lock
             }
 
         }

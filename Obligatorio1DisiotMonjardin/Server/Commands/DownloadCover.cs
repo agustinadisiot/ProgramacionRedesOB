@@ -14,7 +14,7 @@ namespace Server
         {
             int gameId = parseInt(req[0]);
             Steam SteamInstance = Steam.GetInstance();
-            coverPath = SteamInstance.GetCoverPath(gameId);
+            string coverPath = SteamInstance.GetCoverPath(gameId);
             Respond(coverPath);
         }
 
