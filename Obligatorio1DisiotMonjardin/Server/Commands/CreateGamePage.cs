@@ -37,7 +37,7 @@ namespace Server.Commands
             {
                 data += gamePage.GamesTitles[i];
                 data += Specification.SECOND_DELIMITER;
-                data += gamePage.GamesIDs[i];
+                data += gamePage.GamesIds[i];
                 data += Specification.FIRST_DELIMITER;
             }
             data += Convert.ToInt32(gamePage.HasNextPage);

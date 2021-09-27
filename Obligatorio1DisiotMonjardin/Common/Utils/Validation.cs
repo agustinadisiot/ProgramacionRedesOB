@@ -96,13 +96,13 @@ namespace Common.Utils
                 stringGenre = Console.ReadLine();
                 isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
             }
-            int genrePos = int.Parse(stringGenre) -1;
+            int genrePos = int.Parse(stringGenre) - 1;
             return Game.genres[genrePos];
         }
 
         public static int ReadValidNumber(string errorMessage, int min, int max)
         {
-            
+
             string number = Console.ReadLine();
             bool isValidNumber = IsValidNumber(number, min, max);
             while (!isValidNumber)
@@ -118,13 +118,13 @@ namespace Common.Utils
         {
             string coverPath = Console.ReadLine();
             bool isValidPath = fileHandler.FileExists(coverPath);
-            bool isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
+            bool isCorrectFormat = coverPath.EndsWith(Specification.IMAGE_EXTENSION);
             while (!(isValidPath && isCorrectFormat))
             {
                 Console.WriteLine(errorMessage);
                 coverPath = Console.ReadLine();
                 isValidPath = fileHandler.FileExists(coverPath);
-                isCorrectFormat = coverPath.EndsWith(Specification.imageExtension);
+                isCorrectFormat = coverPath.EndsWith(Specification.IMAGE_EXTENSION);
             }
             return coverPath;
         }
@@ -159,19 +159,19 @@ namespace Common.Utils
         public static int ReadValidESRBModify()
         {
             List<ESRBRating> possibleESRB = Enum.GetValues(typeof(ESRBRating)).Cast<ESRBRating>().ToList();
-            for (int i = 0; i < possibleESRB.Count -1; i++)
+            for (int i = 0; i < possibleESRB.Count - 1; i++)
             {
                 Console.WriteLine($"{ i + 1}.{ possibleESRB.ElementAt(i)}");
             }
             string esrb = Console.ReadLine();
-            bool isANumber = IsValidNumber(esrb, 1, possibleESRB.Count-1);
+            bool isANumber = IsValidNumber(esrb, 1, possibleESRB.Count - 1);
             while (!isANumber && esrb != "")
             {
-                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count-1}");
+                Console.WriteLine($"Elija un numero entre 1 y {possibleESRB.Count - 1}");
                 esrb = Console.ReadLine();
-                isANumber = IsValidNumber(esrb, 1, possibleESRB.Count-1);
+                isANumber = IsValidNumber(esrb, 1, possibleESRB.Count - 1);
             }
-            if(isANumber) return int.Parse(esrb);
+            if (isANumber) return int.Parse(esrb);
             return -1;
 
         }
@@ -183,7 +183,7 @@ namespace Common.Utils
             {
                 Console.WriteLine($"{ i + 1}.{ Game.genres[i] }");
             }
-            string stringGenre = Console.ReadLine(); 
+            string stringGenre = Console.ReadLine();
             bool isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
             while (!isValidNumber && stringGenre != "")
             {
@@ -191,12 +191,13 @@ namespace Common.Utils
                 stringGenre = Console.ReadLine();
                 isValidNumber = IsValidNumber(stringGenre, 1, maxGenre);
             }
-            if (isValidNumber) {
+            if (isValidNumber)
+            {
                 int genrePos = int.Parse(stringGenre) - 1;
                 return Game.genres[genrePos];
             }
             else { return ""; }
-            
+
         }
 
         public static void CouldDownload(string completePath, FileHandler.FileHandler fileHandler)
@@ -224,6 +225,6 @@ namespace Common.Utils
             return word;
         }
 
-        
+
     }
 }

@@ -15,7 +15,7 @@ using System.Text;
 
 namespace Client
 {
-    public class Client
+    public class Client // TODO cambiar nombre de client y clienteProgram
     {
         private NetworkStreamHandler networkStreamHandler;
         private readonly TcpClient tcpClient;
@@ -52,7 +52,7 @@ namespace Client
             Console.WriteLine("1.Si");
             Console.WriteLine("2.No");
             int input = Validation.ReadValidNumber("Ingrese una opcion correcta", 1, 2);
-            if(input == 1) { tcpClient.Close();}
+            if (input == 1) { tcpClient.Close(); }
             else { StartMenu(); }
         }
 
@@ -240,12 +240,12 @@ namespace Client
 
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
             if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(gameId));
-            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, gameId)); 
+            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, gameId));
             if (gameInfo.IsOwned) menuOptions.Add("Escribir Review", () => ShowWriteReviewMenu(gameId));
             if (gameInfo.IsPublisher)
             {
-                menuOptions.Add("Modificar Juego", () => ModifyGame(gameId)); 
-                menuOptions.Add("Eliminar Juego", () => DeleteGame(gameId)); 
+                menuOptions.Add("Modificar Juego", () => ModifyGame(gameId));
+                menuOptions.Add("Eliminar Juego", () => DeleteGame(gameId));
             }
             menuOptions.Add("Descargar Caratula", () => DownloadCover(gameId));
             menuOptions.Add("Volver al Menu Principal", () => MainMenu());
@@ -367,14 +367,14 @@ namespace Client
             string synopsis = Validation.ContainsDelimiter("Escriba una nueva sinopsis del juego valida");
 
             Console.WriteLine("Elija el nuevo ESRBrating del juego:");
-            int ESRBRating = Validation.ReadValidESRB();
+            int ESRBRating = Validation.ReadValidESRBModify();
 
             Console.WriteLine("Elija el nuevo genero del juego:");
-            string genre = Validation.ReadValidGenre();
+            string genre = Validation.ReadValidGenreModify();
 
             Console.WriteLine("Escriba la nueva dirección del archivo de la caratula: (vacio si no lo quiere modificar)");
             string coverPath = Console.ReadLine();
-            if(coverPath.Length == 0) { coverPath = ""; } else { coverPath = Validation.ReadValidPathModify(coverPath, "Escriba un archivo valido", fileHandler);  }
+            if (coverPath.Length == 0) { coverPath = ""; } else { coverPath = Validation.ReadValidPathModify(coverPath, "Escriba un archivo valido", fileHandler); }
 
             Game gameToModify = new Game
             {
@@ -384,7 +384,7 @@ namespace Client
                 Genre = genre,
                 CoverFilePath = coverPath
             };
-            string message = commandHandler.SendRequest(id, gameToModify);
+            string message = commandHandler.SendRequest(gameId, gameToModify);
             Console.WriteLine(message);
             ShowGameInfo(gameId);
         }
@@ -396,8 +396,9 @@ namespace Client
             Console.WriteLine("1.Si");
             Console.WriteLine("2.No");
             int response = Validation.ReadValidNumber("Elija una opcion valida", 1, 2);
-            if(response==1) {
-                string returnMessage = commandHandler.SendRequest(id);
+            if (response == 1)
+            {
+                string returnMessage = commandHandler.SendRequest(gameId);
                 ShowServerMessage(returnMessage);
             }
             else

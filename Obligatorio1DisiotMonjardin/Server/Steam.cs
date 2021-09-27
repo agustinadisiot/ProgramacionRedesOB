@@ -204,10 +204,10 @@ namespace Server
                 Game gameToMod = GetGameById(gameToModId);
                 if (modifiedGame.Title != "")
                 {
-                    gameToMod.Title = modifiedGame.Title;
-                    var gameWithSameTitle = games.Find(i => (i.Title == gameToMod.Title) && (i.Id != gameToModId));
+                    var gameWithSameTitle = games.Find(i => (i.Title == modifiedGame.Title) && (i.Id != gameToModId));
                     if (gameWithSameTitle != null)
                         throw new TitleAlreadyExistsException();
+                    gameToMod.Title = modifiedGame.Title;
                 }
                 if (modifiedGame.Synopsis != "") gameToMod.Synopsis = modifiedGame.Synopsis;
                 if (modifiedGame.ESRBRating != Common.ESRBRating.EmptyESRB) gameToMod.ESRBRating = modifiedGame.ESRBRating;
