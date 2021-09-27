@@ -42,7 +42,7 @@ namespace Server
 
         }
 
-        internal string WriteReview(Review newReview, int gameId, INetworkStreamHandler nwsh)
+        public string WriteReview(Review newReview, int gameId, INetworkStreamHandler nwsh)
         {
 
             newReview.User = GetUser(nwsh);
@@ -60,7 +60,7 @@ namespace Server
         }
 
 
-        internal ReviewPage BrowseReviews(int pageNumber, int gameId) // TODO ver si usamos public o internal en cada uno
+        public ReviewPage BrowseReviews(int pageNumber, int gameId)
         {
             if (pageNumber <= 0)
                 throw new ServerError($"Número de página {pageNumber} no válido");

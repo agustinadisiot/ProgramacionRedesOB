@@ -3,7 +3,7 @@ using Common.Protocol;
 
 namespace Client
 {
-    internal class DownloadCover : TextCommand // TODO ver si dejar internal o public
+    public class DownloadCover : TextCommand // TODO ver si dejar internal o public
     {
         public DownloadCover(INetworkStreamHandler nwsh) : base(nwsh) { }
 

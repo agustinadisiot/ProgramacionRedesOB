@@ -4,7 +4,7 @@ using Common.Protocol;
 
 namespace Client
 {
-    internal class DeleteGame : TextCommand
+    public class DeleteGame : TextCommand
     {
         public DeleteGame(INetworkStreamHandler nwsh) : base(nwsh)
         {

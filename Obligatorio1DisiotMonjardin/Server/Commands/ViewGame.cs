@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Server
 {
-    internal class ViewGame : TextCommand
+    public class ViewGame : TextCommand
     {
         public ViewGame(INetworkStreamHandler nwsh) : base(nwsh) { }
 
