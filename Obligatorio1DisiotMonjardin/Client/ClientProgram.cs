@@ -20,9 +20,9 @@ namespace Client
             Console.WriteLine("Trying to connect to server"); // TODO catcher excepciones de cuando el server se apaga 
             client.StartConnection();
             client.StartMenu();
-            
+
         }
-        
+
     }
 
 

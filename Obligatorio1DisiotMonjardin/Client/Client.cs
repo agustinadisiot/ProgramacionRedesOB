@@ -461,17 +461,17 @@ namespace Client
                 Title = "PUBG2",
                 Synopsis = "El pubg2",
                 ESRBRating = (Common.ESRBRating)5,
-                Genre = "Deporte",
+                Genre = "Acción",
                 CoverFilePath = currentDict + "pubg.jpg"
             };
             commandHandler.SendRequest(newGame);
 
             newGame = new Game
             {
-                Title = "My little Pony",
+                Title = "GTA V",
                 Synopsis = "GOTY 2021 ",
                 ESRBRating = (Common.ESRBRating)0,
-                Genre = "Deporte",
+                Genre = "Aventura",
                 CoverFilePath = currentDict + "pubg.jpg"
             };
             commandHandler.SendRequest(newGame);
@@ -479,7 +479,7 @@ namespace Client
             newGame = new Game
             {
                 Title = "Pubg 3 - Remastered",
-                Synopsis = "Comback ",
+                Synopsis = "Comeback ",
                 ESRBRating = (Common.ESRBRating)4,
                 Genre = "Acción",
                 CoverFilePath = currentDict + "pubg.jpg"
