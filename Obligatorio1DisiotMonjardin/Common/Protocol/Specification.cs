@@ -14,6 +14,8 @@ namespace Common.Protocol
 
         public const int FixedFileSizeLength = 8;
         public const int MaxPacketSize = 32768; // 32KB
+
         public const string imageExtension = ".jpg";
+        public const int unModifiedESRBRating = -1;
     };
 }

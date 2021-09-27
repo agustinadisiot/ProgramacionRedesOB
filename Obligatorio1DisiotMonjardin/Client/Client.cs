@@ -103,13 +103,13 @@ namespace Client
             bool success = commandHandler.SendRequest();
             if (success)
             {
-                Console.WriteLine("Se inicio sesión correctamente");
+                Console.WriteLine("Se cerró sesión correctamente");
                 StartMenu();
             }
             else
             {
-                Console.WriteLine("No se pudo iniciar sesión");
-                Logout();
+                Console.WriteLine("No se pudo cerrar sesión");
+                MainMenu();
             }
 
         }
@@ -218,6 +218,7 @@ namespace Client
             ViewGame commandHandler = (ViewGame)CommandFactory.GetCommandHandler(Command.VIEW_GAME, networkStreamHandler);
             string gameID = id.ToString();
             GameView gameInfo = commandHandler.SendRequest(gameID);
+
             Console.WriteLine();
             Console.WriteLine($"Titulo: {gameInfo.Game.Title}");
             Console.WriteLine($"Sinopsis: {gameInfo.Game.Synopsis}");
@@ -225,6 +226,7 @@ namespace Client
             else { Console.WriteLine($"Calificacion: {gameInfo.Game.ReviewsRating}"); }
             Console.WriteLine($"Clasificacion ESRB: {gameInfo.Game.ESRBRating}");
             Console.WriteLine($"Genero: {gameInfo.Game.Genre}");
+
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
             if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(id));
             menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, id));
@@ -354,10 +356,10 @@ namespace Client
             string synopsis = Validation.ContainsDelimiter("Escriba una nueva sinopsis del juego valida");
 
             Console.WriteLine("Elija el nuevo ESRBrating del juego:");
-            int ESRBRating = Validation.ReadValidESRB();
+            int ESRBRating = Validation.ReadValidESRBOrEmpty();
 
             Console.WriteLine("Elija el nuevo genero del juego:");
-            string genre = Validation.ReadValidGenre();
+            string genre = Validation.ReadValidGenreOrEmpty();
 
             Console.WriteLine("Escriba la nueva dirección del archivo de la caratula: (vacio si no lo quiere modificar)");
             string coverPath = Console.ReadLine();
@@ -371,6 +373,7 @@ namespace Client
                 Genre = genre,
                 CoverFilePath = coverPath
             };
+
             string message = commandHandler.SendRequest(id, gameToModify);
             Console.WriteLine(message);
             ShowGameInfo(id);

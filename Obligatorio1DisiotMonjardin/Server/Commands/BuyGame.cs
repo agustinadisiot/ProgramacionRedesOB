@@ -18,8 +18,12 @@ namespace Server.Commands
         {
             int gameID = parseInt(req[0]);
             Steam SteamInstance = Steam.GetInstance();
-            SteamInstance.BuyGame(gameID, networkStreamHandler);
-            string message = "Juego comprado correctamente"; // TODO agregar catch para cuando tira error
+            bool success = SteamInstance.BuyGame(gameID, networkStreamHandler);
+            string message;
+            if (success)
+                message = "Juego comprado correctamente"; // TODO agregar catch para cuando tira error
+            else
+                message = "No se pudo comprar el juego";
             Respond(message);
         }
 

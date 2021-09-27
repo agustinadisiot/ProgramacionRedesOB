@@ -6,6 +6,7 @@ namespace Common
 {
     public enum ESRBRating
     {
+        None = -1,
         EC = 0,
         E = 1,
         E10 = 2,
@@ -14,4 +15,5 @@ namespace Common
         AO = 5,
         RP = 6
     }
+
 }
