@@ -3,7 +3,7 @@ using Common.Protocol;
 
 namespace Server
 {
-    internal class DeleteGame : TextCommand
+    public class DeleteGame : TextCommand
     {
         public DeleteGame(INetworkStreamHandler nwsh) : base(nwsh)
         {
@@ -17,7 +17,7 @@ namespace Server
 
             Steam SteamInstance = Steam.GetInstance();
             SteamInstance.DeleteGame(gameId);
-            string message = "Juego borrado exitosamente"; 
+            string message = "Juego borrado exitosamente";
             Respond(message);
         }
 

@@ -3,7 +3,7 @@ using Common.Protocol;
 
 namespace Client
 {
-    internal class DownloadCover : TextCommand // TODO ver si dejar internal o public
+    public class DownloadCover : TextCommand
     {
         public DownloadCover(INetworkStreamHandler nwsh) : base(nwsh) { }
 
@@ -21,7 +21,7 @@ namespace Client
         {
 
             ReadHeader();
-            ReadCommand(); // TODO ver si hacemos algo mas con estos 
+            ReadCommand();
 
             string completePath = fileNetworkStreamHandler.ReceiveFile(folderPath, fileName);
             return completePath;

@@ -32,10 +32,10 @@ namespace Common.NetworkUtils
                 if (fileName == "")
                     fileName = Guid.NewGuid().ToString();
 
-                if (!folderPath.Trim().EndsWith("\\"))
-                    folderPath += "\\"; // TODO ver que pasa si me pasan el folder con "/"
+                if ((!folderPath.Trim().EndsWith("\\")) || (!folderPath.Trim().EndsWith("/")))
+                    folderPath += "\\";
 
-                string completeFileName = folderPath + fileName + Specification.IMAGE_EXTENSION; // TODO ver si poner un while que cheque que el file no existe o si usar otro metodo
+                string completeFileName = folderPath + fileName + Specification.IMAGE_EXTENSION;
 
                 while (fileSize > offset)
                 {
@@ -64,7 +64,7 @@ namespace Common.NetworkUtils
             if (!fileHandler.FileExists(path))
                 throw new Exception("File does not exists"); // TODO catchear capaz 
 
-            long fileSize = fileHandler.GetFileSize(path); 
+            long fileSize = fileHandler.GetFileSize(path);
             networkStreamHandler.WriteFileSize(fileSize);
 
             var parts = SpecificationHelper.GetParts(fileSize);

@@ -29,7 +29,7 @@ namespace Client
             string data = networkStreamHandler.ReadString(dataLength);
 
 
-            string[] parsedData = Parse(data);
+            string[] parsedData = ParseByFirstDelimiter(data);
             Game game = new Game()
             {
                 Title = parsedData[0],

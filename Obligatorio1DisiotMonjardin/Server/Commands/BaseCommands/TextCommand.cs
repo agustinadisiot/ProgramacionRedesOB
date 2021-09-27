@@ -49,7 +49,7 @@ namespace Server
             int result;
             bool parseSuccessful = int.TryParse(unparsedInt, out result);
             if (!parseSuccessful)
-                throw new ServerError($"Se esperaba un numero pero no se recibió {unparsedInt}");
+                throw new ServerError($"Se esperaba un número pero no se recibió {unparsedInt}");
             return result;
         }
 

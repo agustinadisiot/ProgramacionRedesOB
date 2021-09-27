@@ -24,7 +24,7 @@ namespace Client.Commands
             return ResponseHandler(pageNumber);
         }
 
-        private ReviewPage ResponseHandler(int pageNumber) // TODO capaz que el currentPage ya te lo de el server (lo tendria  que mandar por el nwsh)
+        private ReviewPage ResponseHandler(int pageNumber)
         {
             string[] parsedData = GetData();
             List<string> unParsedReviews = parsedData.ToList();
@@ -53,8 +53,8 @@ namespace Client.Commands
                     User reviewWriter = new User(reviewsInfoSepareted[i]);
                     Review newReview = new Review
                     {
-                        User = reviewWriter, // TODO poner los indices en la specification capaz (en vez de usar +0, +1, +2)
-                        Rating = int.Parse(reviewsInfoSepareted[i + 1]), // TODO usar Try parse y tirar error?
+                        Author = reviewWriter, // TODO poner los indices en la documentacion (o sea, el orden de las cosas) 
+                        Rating = int.Parse(reviewsInfoSepareted[i + 1]),
                         Text = reviewsInfoSepareted[i + 2],
                     };
                     reviews.Add(newReview);

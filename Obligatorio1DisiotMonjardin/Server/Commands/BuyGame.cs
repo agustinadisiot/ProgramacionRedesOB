@@ -21,7 +21,7 @@ namespace Server.Commands
             bool success = SteamInstance.BuyGame(gameId, networkStreamHandler);
             string message;
             if (success)
-                message = "Juego comprado correctamente"; // TODO agregar catch para cuando tira error
+                message = "Juego comprado correctamente";
             else
                 message = "No se pudo comprar el juego";
             Respond(message);

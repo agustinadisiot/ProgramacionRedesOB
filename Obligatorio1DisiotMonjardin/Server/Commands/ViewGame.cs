@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Server
 {
-    internal class ViewGame : TextCommand
+    public class ViewGame : TextCommand
     {
         public ViewGame(INetworkStreamHandler nwsh) : base(nwsh) { }
 
@@ -25,20 +25,20 @@ namespace Server
         {
             SendResponseHeader();
 
-            string data = ""; // TODO sacar los indices y ponerlo en specification
-            data += gameView.Game.Title; // 0
+            string data = "";
+            data += gameView.Game.Title;
             data += Specification.FIRST_DELIMITER;
-            data += gameView.Game.Synopsis; // 1
+            data += gameView.Game.Synopsis;
             data += Specification.FIRST_DELIMITER;
-            data += gameView.Game.ReviewsRating; // 2
+            data += gameView.Game.ReviewsRating;
             data += Specification.FIRST_DELIMITER;
-            data += (int)gameView.Game.ESRBRating; // 3
+            data += (int)gameView.Game.ESRBRating;
             data += Specification.FIRST_DELIMITER;
             data += gameView.Game.Genre;
             data += Specification.FIRST_DELIMITER;
-            data += Convert.ToInt32(gameView.IsOwned); // 4
+            data += Convert.ToInt32(gameView.IsOwned);
             data += Specification.FIRST_DELIMITER;
-            data += Convert.ToInt32(gameView.IsPublisher); // 5
+            data += Convert.ToInt32(gameView.IsPublisher);
 
             SendData(data);
         }

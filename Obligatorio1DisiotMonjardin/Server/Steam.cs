@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Domain;
+using Common.Utils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
@@ -12,14 +13,10 @@ namespace Server
 {
     public class Steam
     {
-        private List<Game> games;
-        private List<User> users;
+        private DataAccess db;
         private static Steam instance;
-        private int gameId;
-        private Dictionary<INetworkStreamHandler, string> connections;
 
         private static readonly object singletonPadlock = new object();
-
 
         public static Steam GetInstance()
         {
@@ -35,17 +32,16 @@ namespace Server
 
         public Steam()
         {
-            games = new List<Game>();
-            users = new List<User>();
-            gameId = 0;
-            connections = new Dictionary<INetworkStreamHandler, string>();
-
+            db = new DataAccess();
         }
+        //TODO organizar funciones 
 
-        internal string WriteReview(Review newReview, int gameId, INetworkStreamHandler nwsh)
+        // REVIEWS 
+        public string WriteReview(Review newReview, int gameId, INetworkStreamHandler nwsh)
         {
 
-            newReview.User = GetUser(nwsh);
+            newReview.Author = GetUser(nwsh);
+            List<Game> games = db.Games;
             lock (games)
             {
                 Game gameToAddReview = games[gameId];
@@ -53,18 +49,17 @@ namespace Server
                 {
                     gameToAddReview.Reviews.Add(newReview);
                     gameToAddReview.UpdateReviewsRating();
-                    return (@$"Clasificación por {newReview.User.Name} para el juego {gameToAddReview.Title}
+                    return (@$"Clasificación por {newReview.Author.Name} para el juego {gameToAddReview.Title}
                     fue publicada correctamente");
                 }
             }
         }
 
-
-        internal ReviewPage BrowseReviews(int pageNumber, int gameId) // TODO ver si usamos public o internal en cada uno
+        public ReviewPage BrowseReviews(int pageNumber, int gameId)
         {
             if (pageNumber <= 0)
                 throw new ServerError($"Número de página {pageNumber} no válido");
-            lock (games)
+            lock (db.Games)
             {
                 Game gameToGetReviews = GetGameById(gameId);
                 lock (gameToGetReviews.Reviews)
@@ -79,7 +74,7 @@ namespace Server
                         pageSize = Specification.PAGE_SIZE;
 
 
-                    List<Review> reviewsInPage = allReviews.GetRange(firstReviewPos, pageSize); // TODO usar esto para BrowseCatalogue y search
+                    List<Review> reviewsInPage = allReviews.GetRange(firstReviewPos, pageSize);
 
                     ReviewPage ret = new ReviewPage()
                     {
@@ -92,17 +87,111 @@ namespace Server
             }
         }
 
+        // PRE: Requires lock on db.Games TODO ver si esta bien poner esto
         private Game GetGameById(int gameId)
         {
-            Game gameFound = games.Find(game => game.Id == gameId);
+            Game gameFound = db.Games.Find(game => game.Id == gameId);
             if (gameFound == null)
                 throw new ServerError($"{gameId} No es una id de juego válida");
             return gameFound;
         }
 
-        internal bool BuyGame(int gameID, INetworkStreamHandler nwsh)
+
+        // SESSION
+        public bool Login(string newUserName, INetworkStreamHandler nwsh)
         {
+            List<User> users = db.Users;
+            lock (users)
+            {
+                User newUser = new User(newUserName);
+                bool alreadyExists = users.Contains(newUser);
+                if (!alreadyExists)
+                {
+                    users.Add(newUser);
+                }
+                db.Connections.Add(nwsh, newUserName);
+
+                return !alreadyExists;
+            }
+        }
+
+        public bool Logout(INetworkStreamHandler nwsh)
+        {
+            var connections = db.Connections;
+            lock (connections)
+            {
+                return connections.Remove(nwsh);
+            }
+        }
+
+        // UTILS 
+        private User GetUser(INetworkStreamHandler nwsh)
+        {
+            List<User> users = db.Users;
+            lock (users)
+            {
+                string username = GetUsername(nwsh);
+                User actualUser = users.Find(i => i.Name == username);
+                if (actualUser == null) throw new ServerError("No se encontró el usuario, rehacer login");
+                return users.Find(i => i.Name == username);
+            }
+        }
+        private string GetUsername(INetworkStreamHandler nwsh)
+        {
+            var connections = db.Connections;
+            lock (connections)
+            {
+                bool userLoggedIn = connections.TryGetValue(nwsh, out string username);
+                if (userLoggedIn)
+                    return username;
+                else
+                    throw new ServerError("No existe usuario con ese nombre");
+            }
+        }
+
+        // GAME INFO  ????
+        public GameView ViewGame(int gameId, INetworkStreamHandler nwsh)
+        {
+            lock (db.Games)
+            {
+                Game game = GetGameById(gameId);
+                User actualUser = GetUser(nwsh);
+                GameView gameView = new GameView()
+                {
+                    Game = CreateGameCopy(game),
+                    IsOwned = actualUser.GamesOwned.Contains(game),
+                    IsPublisher = actualUser.Equals(game.Publisher),
+                };
+
+                return gameView;
+            }
+        }
+        private Game CreateGameCopy(Game gameToCopy) // TODO sacar de steam
+        {
+            return new Game
+            {
+                Title = gameToCopy.Title,
+                Synopsis = gameToCopy.Synopsis,
+                Genre = gameToCopy.Genre,
+                ESRBRating = gameToCopy.ESRBRating,
+                ReviewsRating = gameToCopy.ReviewsRating
+            };
+
+
+        }
+        public string GetCoverPath(int gameId)
+        {
+            List<Game> games = db.Games;
             lock (games)
+            {
+                Game gameToGetCover = games.Find(game => game.Id == gameId);
+                return gameToGetCover.CoverFilePath; // TODO lock
+            }
+
+        }
+        public bool BuyGame(int gameID, INetworkStreamHandler nwsh)
+        {
+            lock (db.Games)
             {
                 Game gameToBuy = GetGameById(gameID);
                 User userToBuyGame = GetUser(nwsh);
@@ -115,79 +204,17 @@ namespace Server
             }
         }
 
-        public bool Login(string newUserName, INetworkStreamHandler nwsh)
-        {
-            lock (users)
-            {
-                User newUser = new User(newUserName);
-                bool alreadyExists = users.Contains(newUser);
-                if (!alreadyExists)
-                {
-                    users.Add(newUser);
-                }
-                connections.Add(nwsh, newUserName);
-
-                return !alreadyExists;
-            }
-        }
-
-        public bool Logout(INetworkStreamHandler nwsh)
-        {
-            lock (connections)
-            {
-                return connections.Remove(nwsh);
-            }
-        }
-
-        private string GetUsername(INetworkStreamHandler nwsh)
-        {
-            lock (connections)
-            {
-                bool userLoggedIn = connections.TryGetValue(nwsh, out string username);
-                if (userLoggedIn)
-                    return username;
-                else
-                    throw new ServerError("No existe usuario con ese nombre");
-            }
-        }
-
-        public GameView ViewGame(int gameId, INetworkStreamHandler nwsh)
-        {
-            lock (games)
-            {
-                Game game = GetGameById(gameId);
-                User actualUser = GetUser(nwsh);
-                GameView gameView = new GameView()
-                {
-                    Game = game, // TODO crear copia
-                    IsOwned = actualUser.GamesOwned.Contains(game),
-                    IsPublisher = actualUser.Equals(game.Publisher),
-                };
-
-                return gameView;
-            }
-        }
-
-        private User GetUser(INetworkStreamHandler nwsh)
-        {
-            lock (users)
-            {
-                string username = GetUsername(nwsh);
-                User actualUser = users.Find(i => i.Name == username);
-                if (actualUser == null) throw new ServerError("No se encontró el usuario, rehacer login");
-                return users.Find(i => i.Name == username);
-            }
-        }
-
+        // GAME CUD
         public string PublishGame(Game newGame, INetworkStreamHandler nwsh)
         {
+            //VerifyGame(newGame); todo
+            List<Game> games = db.Games;
             lock (games)
             {
                 var gameWithSameTitle = games.Find(i => i.Title == newGame.Title);
                 if (gameWithSameTitle != null)
                     throw new TitleAlreadyExistsException();
-                newGame.Id = this.gameId;
-                gameId++;
+                newGame.Id = db.NextGameID;
                 newGame.ReviewsRating = 0;
                 newGame.Publisher = GetUser(nwsh);
                 newGame.Reviews = new List<Review>();
@@ -195,28 +222,53 @@ namespace Server
                 return $"Se publicó el juego {newGame.Title} correctamente";
             }
         }
-
-
-        internal string ModifyGame(int gameToModId, Game modifiedGame)
+        private void VerifyGame(Game newGame)
         {
+            throw new NotImplementedException(); //TODO 
+        }
+
+        public string ModifyGame(int gameToModId, Game modifiedGame)
+        {
+            List<Game> games = db.Games;
             lock (games)
             {
                 Game gameToMod = GetGameById(gameToModId);
+
                 if (modifiedGame.Title != "")
                 {
                     var gameWithSameTitle = games.Find(i => (i.Title == modifiedGame.Title) && (i.Id != gameToModId));
                     if (gameWithSameTitle != null)
                         throw new TitleAlreadyExistsException();
+                    if (!Validation.isValidTitle(modifiedGame.Title))
+                        throw new ServerError("Título no válido");
                     gameToMod.Title = modifiedGame.Title;
                 }
-                if (modifiedGame.Synopsis != "") gameToMod.Synopsis = modifiedGame.Synopsis;
-                if (modifiedGame.ESRBRating != Common.ESRBRating.EmptyESRB) gameToMod.ESRBRating = modifiedGame.ESRBRating;
-                if (modifiedGame.Genre != "") gameToMod.Genre = modifiedGame.Genre;
+
+                if (modifiedGame.Synopsis != "")
+                {
+                    if (!Validation.isValidSynopsis(modifiedGame.Synopsis))
+                        throw new ServerError("Sinopsis no válida");
+                    gameToMod.Synopsis = modifiedGame.Synopsis;
+                }
+                if (modifiedGame.ESRBRating != Common.ESRBRating.EmptyESRB)
+                {
+                    if (!Validation.isValidESRBRating((int)modifiedGame.ESRBRating))
+                        throw new ServerError("Clasificación ESRB no válida");
+                    gameToMod.ESRBRating = modifiedGame.ESRBRating;
+                }
+
+                if (modifiedGame.Genre != "")
+                {
+                    if (!Validation.isValidGenre(modifiedGame.Genre))
+                        throw new ServerError("Genero no válido");
+                    gameToMod.Genre = modifiedGame.Genre;
+                }
+
                 if (modifiedGame.CoverFilePath != null)
                 {
                     string pathToDelete = gameToMod.CoverFilePath;
                     gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
-                    File.Delete(pathToDelete); // TODO capaz no tendria que ir en Steam
+                    File.Delete(pathToDelete); // TODO capaz no tendria que ir en Steam TODO lock
                 }
                 return $"Se modificó el juego {gameToMod.Title} correctamente";
             }
@@ -224,66 +276,18 @@ namespace Server
 
         public bool DeleteGame(int gameId)
         {
+            List<Game> games = db.Games;
             lock (games)
             {
                 return games.Remove(games.Find(i => i.Id == gameId));
+                // TODO eliminar caratula
             }
         }
 
 
-        public string GetCoverPath(int gameId)
-        {
-            lock (games)
-            {
-                Game gameToGetCover = games.Find(game => game.Id == gameId);
-                return gameToGetCover.CoverFilePath;
-            }
+        // GAME PAGE
 
-        }
-
-        public GamePage BrowseGames(int pageNumber)
-        {
-            lock (games)
-            {
-                return CreateGamePage(games, pageNumber);
-            }
-        }
-
-        internal GamePage BrowseMyGames(int pageNumber, INetworkStreamHandler nwsh)
-        {
-            User CurrentUser = GetUser(nwsh);
-            lock (games)
-            {
-                return CreateGamePage(CurrentUser.GamesOwned, pageNumber);
-            }
-        }
-        internal GamePage SearchByTitle(int pageNumber, string title)
-        {
-            lock (games)
-            {
-                List<Game> filteredList = games.FindAll(game => TextSearchIsMatch(game.Title, title));
-                return CreateGamePage(filteredList, pageNumber);
-            }
-        }
-
-        internal GamePage SearchByRating(int pageNumber, int minRating)
-        {
-            lock (games)
-            {
-                List<Game> filteredList = games.FindAll(game => game.ReviewsRating >= minRating);
-                return CreateGamePage(filteredList, pageNumber);
-            }
-        }
-
-        internal GamePage SearchByGenre(int pageNumber, string genre)
-        {
-            lock (games)
-            {
-                List<Game> filteredList = games.FindAll(game => game.Genre == genre);
-                return CreateGamePage(filteredList, pageNumber);
-            }
-        }
-
+        // PRE: Requires lock on filteredList TODO ver si esta bien poner esto
         private GamePage CreateGamePage(List<Game> filteredList, int pageNumber)
         {
             if (pageNumber <= 0)
@@ -308,6 +312,56 @@ namespace Server
             };
             return ret;
         }
+
+        public GamePage BrowseGames(int pageNumber)
+        {
+            List<Game> games = db.Games;
+            lock (games)
+            {
+                return CreateGamePage(games, pageNumber);
+            }
+        }
+
+        public GamePage BrowseMyGames(int pageNumber, INetworkStreamHandler nwsh)
+        {
+            User CurrentUser = GetUser(nwsh);
+            List<Game> games = db.Games;
+            lock (games)
+            {
+                return CreateGamePage(CurrentUser.GamesOwned, pageNumber);
+            }
+        }
+
+        public GamePage SearchByTitle(int pageNumber, string title)
+        {
+            List<Game> games = db.Games;
+            lock (games)
+            {
+                List<Game> filteredList = games.FindAll(game => TextSearchIsMatch(game.Title, title));
+                return CreateGamePage(filteredList, pageNumber);
+            }
+        }
+
+        public GamePage SearchByRating(int pageNumber, int minRating)
+        {
+            List<Game> games = db.Games;
+            lock (games)
+            {
+                List<Game> filteredList = games.FindAll(game => game.ReviewsRating >= minRating);
+                return CreateGamePage(filteredList, pageNumber);
+            }
+        }
+
+        public GamePage SearchByGenre(int pageNumber, string genre)
+        {
+            List<Game> games = db.Games;
+            lock (games)
+            {
+                List<Game> filteredList = games.FindAll(game => game.Genre == genre);
+                return CreateGamePage(filteredList, pageNumber);
+            }
+        }
+
         private bool TextSearchIsMatch(string real, string search)
         {
             return (real.ToLower().Contains(search.ToLower()));
