@@ -29,16 +29,16 @@ namespace Server.Commands
             foreach (Review review in reviewPage.Reviews)
             {
                 data += review.User.Name;
-                data += Specification.secondDelimiter;
+                data += Specification.SECOND_DELIMITER;
                 data += review.Rating;
-                data += Specification.secondDelimiter;
+                data += Specification.SECOND_DELIMITER;
                 data += review.Text;
 
-                data += Specification.delimiter;
+                data += Specification.FIRST_DELIMITER;
             }
 
             data += Convert.ToInt32(reviewPage.HasNextPage);
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += Convert.ToInt32(reviewPage.HasPreviousPage);
 
             SendResponseHeader();

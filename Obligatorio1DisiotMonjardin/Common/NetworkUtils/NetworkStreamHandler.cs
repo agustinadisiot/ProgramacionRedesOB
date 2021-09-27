@@ -36,7 +36,7 @@ namespace Common.NetworkUtils
         public Command ReadCommand()
         {
             if (debugging) Console.Write("DEBUG Reading command: ");
-            byte[] cmd = Read(Specification.CmdLength);
+            byte[] cmd = Read(Specification.CMD_LENGTH);
             if (debugging) Console.WriteLine((Command)BitConverter.ToUInt16(cmd));
             return (Command)BitConverter.ToUInt16(cmd);
         }
@@ -51,7 +51,7 @@ namespace Common.NetworkUtils
 
         public long ReadFileSize()
         {
-            byte[] number = Read(Specification.FixedFileSizeLength);
+            byte[] number = Read(Specification.FIXED_FILE_SIZE_LENGTH);
             return BitConverter.ToInt64(number);
         }
 

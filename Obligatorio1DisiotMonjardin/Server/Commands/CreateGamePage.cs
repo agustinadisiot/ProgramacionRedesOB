@@ -36,12 +36,12 @@ namespace Server.Commands
             for (int i = 0; i < gamePage.GamesTitles.Count; i++)
             {
                 data += gamePage.GamesTitles[i];
-                data += Specification.secondDelimiter;
+                data += Specification.SECOND_DELIMITER;
                 data += gamePage.GamesIDs[i];
-                data += Specification.delimiter;
+                data += Specification.FIRST_DELIMITER;
             }
             data += Convert.ToInt32(gamePage.HasNextPage);
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += Convert.ToInt32(gamePage.HasPreviousPage);
 
             SendData(data);

@@ -68,12 +68,12 @@ namespace Server
                 {
                     List<Review> allReviews = gameToGetReviews.Reviews;
 
-                    int firstReviewPos = (pageNumber - 1) * Specification.pageSize;
+                    int firstReviewPos = (pageNumber - 1) * Specification.PAGE_SIZE;
                     int pageSize;
-                    if (firstReviewPos + Specification.pageSize > allReviews.Count)
+                    if (firstReviewPos + Specification.PAGE_SIZE > allReviews.Count)
                         pageSize = allReviews.Count - firstReviewPos;
                     else
-                        pageSize = Specification.pageSize;
+                        pageSize = Specification.PAGE_SIZE;
 
 
                     List<Review> reviewsInPage = allReviews.GetRange(firstReviewPos, pageSize); // TODO usar esto para BrowseCatalogue y search
@@ -288,8 +288,8 @@ namespace Server
             if (pageNumber <= 0)
                 throw new ServerError("Número de Página no válido");
 
-            int firstGamePos = (pageNumber - 1) * Specification.pageSize;
-            int lastGamePos = firstGamePos + Specification.pageSize;
+            int firstGamePos = (pageNumber - 1) * Specification.PAGE_SIZE;
+            int lastGamePos = firstGamePos + Specification.PAGE_SIZE;
             List<string> gameTitles = new List<string>();
             List<int> gameIds = new List<int>();
 
@@ -314,8 +314,8 @@ namespace Server
 
         private bool ExistsNextPage<T>(List<T> fullList, int pageNumber)
         {
-            int maxPageNumber = fullList.Count / Specification.pageSize;
-            if (fullList.Count % Specification.pageSize != 0)
+            int maxPageNumber = fullList.Count / Specification.PAGE_SIZE;
+            if (fullList.Count % Specification.PAGE_SIZE != 0)
                 maxPageNumber++;
 
             return pageNumber < maxPageNumber;

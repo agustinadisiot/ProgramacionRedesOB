@@ -15,19 +15,19 @@ namespace Client
 
         public string Format(string[] parsedData)
         {
-            string unParsedData = String.Join(Specification.delimiter, parsedData);
+            string unParsedData = String.Join(Specification.FIRST_DELIMITER, parsedData);
             return unParsedData;
         }
 
         public string[] Parse(string unparsedData) // TODO capaz renombrar a ParsedByFirstDelimiter y cambiarle el nombre a delimiter
         {
-            string[] parsedData = unparsedData.Split(Specification.delimiter);
+            string[] parsedData = unparsedData.Split(Specification.FIRST_DELIMITER);
             return parsedData;
         } // TODO poner en common(el server tambien la tiene)
 
         public string[] ParseBySecondDelimiter(string unparsedData)
         {
-            string[] parsedData = unparsedData.Split(Specification.secondDelimiter);
+            string[] parsedData = unparsedData.Split(Specification.SECOND_DELIMITER);
             return parsedData;
         } // TODO poner en common(el server tambien la tiene)?
 
@@ -43,7 +43,7 @@ namespace Client
             ReadHeader();
             ReadCommand(); // TODO ver si hacemos algo mas con estos 
 
-            int dataLength = networkStreamHandler.ReadInt(Specification.dataSizeLength);
+            int dataLength = networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
             string data = networkStreamHandler.ReadString(dataLength);
 
 

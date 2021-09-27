@@ -22,13 +22,13 @@ namespace Server
 
         protected void SendResponseHeader()
         {
-            networkStreamHandler.WriteString(Specification.responseHeader);
+            networkStreamHandler.WriteString(Specification.RESPONSE_HEADER);
             networkStreamHandler.WriteCommand(cmd);
         }
 
         protected void ReadHeader()
         {
-            networkStreamHandler.ReadString(Specification.HeaderLength);
+            networkStreamHandler.ReadString(Specification.HEADER_LENGTH);
             networkStreamHandler.ReadCommand();
         } // TODO usar para ahorrar codigo 
 

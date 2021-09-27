@@ -27,17 +27,17 @@ namespace Server
 
             string data = ""; // TODO sacar los indices y ponerlo en specification
             data += gameView.Game.Title; // 0
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += gameView.Game.Synopsis; // 1
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += gameView.Game.ReviewsRating; // 2
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += (int)gameView.Game.ESRBRating; // 3
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += gameView.Game.Genre;
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += Convert.ToInt32(gameView.IsOwned); // 4
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += Convert.ToInt32(gameView.IsPublisher); // 5
 
             SendData(data);

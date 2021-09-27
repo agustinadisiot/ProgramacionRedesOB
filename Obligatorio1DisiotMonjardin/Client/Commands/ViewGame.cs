@@ -25,7 +25,7 @@ namespace Client
             ReadHeader();
             ReadCommand(); // TODO ver si hacemos algo mas con estos 
 
-            int dataLength = networkStreamHandler.ReadInt(Specification.dataSizeLength);
+            int dataLength = networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
             string data = networkStreamHandler.ReadString(dataLength);
 
 

@@ -20,14 +20,14 @@ namespace Client
 
         protected void SendHeader()
         {
-            networkStreamHandler.WriteString(Specification.requestHeader);
+            networkStreamHandler.WriteString(Specification.REQUEST_HEADER);
             networkStreamHandler.WriteCommand(cmd);
         }
 
 
         protected void ReadHeader()
         {
-            networkStreamHandler.ReadString(Specification.HeaderLength);
+            networkStreamHandler.ReadString(Specification.HEADER_LENGTH);
         }
 
         protected void ReadCommand()
@@ -39,7 +39,7 @@ namespace Client
 
         private void HandleError()
         {
-            int messageErrorLength = networkStreamHandler.ReadInt(Specification.dataSizeLength);
+            int messageErrorLength = networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
             string errorMessage = networkStreamHandler.ReadString(messageErrorLength);
             throw new ServerError(errorMessage);
         }

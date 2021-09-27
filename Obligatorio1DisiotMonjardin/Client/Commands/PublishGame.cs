@@ -21,11 +21,11 @@ namespace Client.Commands
 
             string data = "";
             data += newGame.Title;
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += newGame.Synopsis;
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += (int)newGame.ESRBRating;
-            data += Specification.delimiter;
+            data += Specification.FIRST_DELIMITER;
             data += newGame.Genre;
 
             SendData(data);

@@ -32,7 +32,7 @@ namespace Server
                 while (isClientConnected)
                 {
 
-                    string header = networkStreamHandler.ReadString(Specification.HeaderLength);
+                    string header = networkStreamHandler.ReadString(Specification.HEADER_LENGTH);
                     Command cmd = networkStreamHandler.ReadCommand();
 
                     CommandHandler commandHandler = CommandFactory.GetCommandHandler(cmd, networkStreamHandler);

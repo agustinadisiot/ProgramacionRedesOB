@@ -156,7 +156,7 @@ namespace Client
         private void SearchByRating()
         {
             Console.WriteLine("Escriba la clasificación minima del juego: ");
-            int minRating = Validation.ReadValidNumber("Escriba un número entre 1 y 10", 1, 10);
+            int minRating = Validation.ReadValidNumber(@$"Escriba un número entre {Specification.MIN_RATING} y {Specification.MAX_RATING}", Specification.MIN_RATING, Specification.MAX_RATING);
             ShowSearchByRatingPage(minRating);
         }
 
@@ -299,8 +299,8 @@ namespace Client
 
             foreach (Review review in reviewPage.Reviews)
             {
-                Console.WriteLine($"{review.User.Name} ({review.Rating}/10):"); // TODO el 10 que sea una constante, en Common, pero no parte del protocolo
-                Console.WriteLine($"{review.Text}"); // TODO ver si implementamos un "Ver mas" si es muy larga 
+                Console.WriteLine($"{review.User.Name} ({review.Rating}/{Specification.MAX_RATING}):");
+                Console.WriteLine($"{review.Text}");
                 Console.WriteLine();
             }
 
