@@ -1,4 +1,6 @@
-﻿using Common.Domain;
+﻿using Common;
+using Common.Domain;
+using Common.Interfaces;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
@@ -26,7 +28,9 @@ namespace Server
 
             if (req[5] == "1")
             {
-                string coverPath = fileNetworkStreamHandler.ReceiveFile(ServerConfig.GameCoverPath);
+                ISettingsManager SettingsMgr = new SettingsManager();
+                string folderPath = SettingsMgr.ReadSetting(ServerConfig.GameCoverPathKey);
+                string coverPath = fileNetworkStreamHandler.ReceiveFile(folderPath);
                 modifiedGame.CoverFilePath = coverPath;
             }
 

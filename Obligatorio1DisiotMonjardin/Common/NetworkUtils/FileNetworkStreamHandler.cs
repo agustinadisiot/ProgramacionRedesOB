@@ -3,7 +3,6 @@ using Common.FileHandler.Interfaces;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
-using System.Text;
 
 namespace Common.NetworkUtils
 {

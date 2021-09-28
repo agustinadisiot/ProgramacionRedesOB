@@ -4,6 +4,6 @@ namespace Server
     {
         public static string ServerIpConfigKey = "ServerIpAddress";
         public static string SeverPortConfigKey = "ServerPort";
-        public static string GameCoverPath = "C:\\GameCovers\\";
+        public static string GameCoverPathKey = "GameCoverPath";
     }
 }

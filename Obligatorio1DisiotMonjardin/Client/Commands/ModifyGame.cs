@@ -4,14 +4,14 @@ using Common.Protocol;
 
 namespace Client
 {
-     public class ModifyGame : TextCommand
-        
-     {
+    public class ModifyGame : TextCommand
+
+    {
         public ModifyGame(INetworkStreamHandler nwsh) : base(nwsh) { }
 
         public override Command cmd => Command.MODIFY_GAME;
 
-        public string SendRequest(int gameId, Game gameToMod)  
+        public string SendRequest(int gameId, Game gameToMod)
         {
             SendHeader();
 
@@ -27,7 +27,7 @@ namespace Client
             data += gameToMod.Genre;
             data += Specification.FIRST_DELIMITER;
 
-            if(gameToMod.CoverFilePath == "")
+            if (gameToMod.CoverFilePath == "")
             {
                 data += 0;
                 SendData(data);

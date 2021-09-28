@@ -1,5 +1,4 @@
 ﻿using Client.Commands;
-using Common;
 using Common.Domain;
 using Common.FileHandler;
 using Common.NetworkUtils;
@@ -8,10 +7,8 @@ using Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace Client
 {
@@ -24,9 +21,8 @@ namespace Client
 
         public ClientPresentation()
         {
-            var clientIpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 0); // Puerto 0 -> usa el primer puerto disponible
-            tcpClient = new TcpClient(clientIpEndPoint);
-            serverIpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6000); // TODO usar config files
+            tcpClient = ClientNetworkUtil.GetNewClientTcpEndpoint();
+            serverIpEndPoint = ClientNetworkUtil.GetServerEndpoint();
             fileHandler = new FileHandler();
         }
         public void StartConnection()

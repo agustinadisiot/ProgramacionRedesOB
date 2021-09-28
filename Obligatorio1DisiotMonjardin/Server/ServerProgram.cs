@@ -1,10 +1,6 @@
 ﻿using Common;
-using Common.Protocol;
 using Common.Interfaces;
 using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 
 namespace Server
@@ -16,7 +12,7 @@ namespace Server
 
         static void Main(string[] args)
         {
-            var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.ServerIpConfigKey);// TODO
+            var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.ServerIpConfigKey);
             var serverPort = SettingsMgr.ReadSetting(ServerConfig.SeverPortConfigKey);
             Console.WriteLine($"Server is starting in address {serverIpAddress} and port {serverPort}");
 

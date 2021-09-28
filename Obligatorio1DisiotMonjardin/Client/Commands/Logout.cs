@@ -1,6 +1,5 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
-using System;
 
 namespace Client
 {

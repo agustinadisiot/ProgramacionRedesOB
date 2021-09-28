@@ -1,8 +1,8 @@
+using Common.NetworkUtils.Interfaces;
+using Common.Protocol;
 using System;
 using System.Net.Sockets;
 using System.Text;
-using Common.NetworkUtils.Interfaces;
-using Common.Protocol;
 
 namespace Common.NetworkUtils
 {
