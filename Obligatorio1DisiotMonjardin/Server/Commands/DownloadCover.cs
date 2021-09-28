@@ -15,9 +15,26 @@ namespace Server
         {
             int gameId = parseInt(req[0]);
             BusinessLogicGameInfo GameInfo = BusinessLogicGameInfo.GetInstance();
-            string coverPath = GameInfo.GetCoverPath(gameId);
-            Respond(coverPath);
+
+            bool coverIsLocked = false;
+            while (!coverIsLocked)
+            {
+                string lockedCoverPath = GameInfo.GetCoverPath(gameId);
+                // Aca se podria modificar SteamInstance.GetCoverPath(gameId);
+                lock (lockedCoverPath)
+                {
+                    string latestCoverPath = GameInfo.GetCoverPath(gameId);
+                    // chequeamos que tenemos el lock al path correcto
+                    if (lockedCoverPath == latestCoverPath)
+                    {
+                        Respond(lockedCoverPath);
+                        coverIsLocked = true;
+                    }
+                }
+            }
         }
+
+
 
         private void Respond(string coverPath)
         {
