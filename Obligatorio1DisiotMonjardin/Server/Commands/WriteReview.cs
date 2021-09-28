@@ -2,6 +2,7 @@
 using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,8 +23,8 @@ namespace Server.Commands
                 Rating = parseInt(req[1]),
                 Text = req[2]
             };
-            Steam SteamInstance = Steam.GetInstance();
-            string message = SteamInstance.WriteReview(newReview, gameId, networkStreamHandler);
+            BusinessLogicReview Review = BusinessLogicReview.GetInstance();
+            string message = Review.WriteReview(newReview, gameId, networkStreamHandler);
             Respond(message);
         }
 

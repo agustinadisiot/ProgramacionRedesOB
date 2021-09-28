@@ -18,7 +18,7 @@ namespace Server.Commands
         {
             int minRating = 1;
             int.TryParse(unParsedfilter, out minRating);
-            return steamInstance.SearchByRating(pageNumber, minRating);
+            return GamePage.SearchByRating(pageNumber, minRating);
         }
     }
 }

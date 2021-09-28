@@ -193,7 +193,7 @@ namespace Client
         private void SearchByRating()
         {
             Console.WriteLine("Escriba la clasificación mínima del juego: ");
-            int minRating = Validation.ReadValidNumber(@$"Escriba un número entre {Specification.MIN_RATING} y {Specification.MAX_RATING}", Specification.MIN_RATING, Specification.MAX_RATING);
+            int minRating = Validation.ReadValidNumber(@$"Escriba un número entre {LogicSpecification.MIN_RATING} y {LogicSpecification.MAX_RATING}", LogicSpecification.MIN_RATING, LogicSpecification.MAX_RATING);
             ShowSearchByRatingPage(minRating);
         }
 
@@ -274,7 +274,7 @@ namespace Client
                 menuOptions.Add("Eliminar Juego", () => DeleteGame(gameId));
             }
             menuOptions.Add("Descargar Caratula", () => DownloadCover(gameId));
-            menuOptions.Add("Volver al Menu Principal", () => MainMenu());
+            menuOptions.Add("Volver al Menu Pricipal", () => MainMenu());
 
             CliMenu.showMenu(menuOptions, "");
 
@@ -336,7 +336,7 @@ namespace Client
 
             foreach (Review review in reviewPage.Reviews)
             {
-                Console.WriteLine($"{review.Author.Name} ({review.Rating}/{Specification.MAX_RATING}):");
+                Console.WriteLine($"{review.Author.Name} ({review.Rating}/{LogicSpecification.MAX_RATING}):");
                 Console.WriteLine($"{review.Text}");
                 Console.WriteLine();
             }

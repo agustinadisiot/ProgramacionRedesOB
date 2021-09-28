@@ -118,26 +118,26 @@ namespace Common.Utils
         {
             string coverPath = Console.ReadLine();
             bool isValidPath = fileHandler.FileExists(coverPath);
-            bool isCorrectFormat = coverPath.EndsWith(Specification.IMAGE_EXTENSION);
+            bool isCorrectFormat = coverPath.EndsWith(LogicSpecification.IMAGE_EXTENSION);
             while (!(isValidPath && isCorrectFormat))
             {
                 Console.WriteLine(errorMessage);
                 coverPath = Console.ReadLine();
                 isValidPath = fileHandler.FileExists(coverPath);
-                isCorrectFormat = coverPath.EndsWith(Specification.IMAGE_EXTENSION);
+                isCorrectFormat = coverPath.EndsWith(LogicSpecification.IMAGE_EXTENSION);
             }
             return coverPath;
         }
         public static string ReadValidPathModify(string coverPath, string errorMessage, FileHandler.FileHandler fileHandler)
         {
             bool isValidPath = fileHandler.FileExists(coverPath);
-            bool isCorrectFormat = coverPath.EndsWith(Specification.IMAGE_EXTENSION);
+            bool isCorrectFormat = coverPath.EndsWith(LogicSpecification.IMAGE_EXTENSION);
             while (!isValidPath && !isCorrectFormat)
             {
                 Console.WriteLine(errorMessage);
                 coverPath = Console.ReadLine();
                 isValidPath = fileHandler.FileExists(coverPath);
-                isCorrectFormat = coverPath.EndsWith(Specification.IMAGE_EXTENSION);
+                isCorrectFormat = coverPath.EndsWith(LogicSpecification.IMAGE_EXTENSION);
             }
             return coverPath;
         }

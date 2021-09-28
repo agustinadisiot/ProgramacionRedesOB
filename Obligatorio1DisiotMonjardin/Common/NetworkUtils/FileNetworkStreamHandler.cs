@@ -2,6 +2,7 @@
 using Common.FileHandler.Interfaces;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Common.Utils;
 using System;
 using System.Text;
 
@@ -35,7 +36,7 @@ namespace Common.NetworkUtils
                 if ((!folderPath.Trim().EndsWith("\\")) || (!folderPath.Trim().EndsWith("/")))
                     folderPath += "\\";
 
-                string completeFileName = folderPath + fileName + Specification.IMAGE_EXTENSION;
+                string completeFileName = folderPath + fileName + LogicSpecification.IMAGE_EXTENSION;
 
                 while (fileSize > offset)
                 {

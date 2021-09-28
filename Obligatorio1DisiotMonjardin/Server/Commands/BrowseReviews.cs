@@ -2,6 +2,7 @@
 using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,10 +17,10 @@ namespace Server.Commands
 
         public override void ParsedRequestHandler(string[] req)
         {
-            Steam Steam = Steam.GetInstance();
+            BusinessLogicReview Review = BusinessLogicReview.GetInstance();
             int pageNumber = parseInt(req[0]);
             int gameId = parseInt(req[1]);
-            ReviewPage reviewPage = Steam.BrowseReviews(pageNumber, gameId);
+            ReviewPage reviewPage = Review.BrowseReviews(pageNumber, gameId);
             Respond(reviewPage);
         }
 

@@ -1,5 +1,6 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 
 namespace Server
 {
@@ -15,8 +16,8 @@ namespace Server
         {
             int gameId = parseInt(req[0]);
 
-            Steam SteamInstance = Steam.GetInstance();
-            SteamInstance.DeleteGame(gameId);
+            BusinessLogicGameCUD GameCUD = BusinessLogicGameCUD.GetInstance();
+            GameCUD.DeleteGame(gameId);
             string message = "Juego borrado exitosamente";
             Respond(message);
         }

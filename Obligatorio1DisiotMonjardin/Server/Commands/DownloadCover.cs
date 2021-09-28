@@ -1,5 +1,6 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 
 namespace Server
@@ -13,16 +14,16 @@ namespace Server
         public override void ParsedRequestHandler(string[] req)
         {
             int gameId = parseInt(req[0]);
-            Steam SteamInstance = Steam.GetInstance();
+            BusinessLogicGameInfo GameInfo = BusinessLogicGameInfo.GetInstance();
 
             bool coverIsLocked = false;
             while (!coverIsLocked)
             {
-                string lockedCoverPath = SteamInstance.GetCoverPath(gameId);
+                string lockedCoverPath = GameInfo.GetCoverPath(gameId);
                 // Aca se podria modificar SteamInstance.GetCoverPath(gameId);
                 lock (lockedCoverPath)
                 {
-                    string latestCoverPath = SteamInstance.GetCoverPath(gameId);
+                    string latestCoverPath = GameInfo.GetCoverPath(gameId);
                     // chequeamos que tenemos el lock al path correcto
                     if (lockedCoverPath == latestCoverPath)
                     {
@@ -30,16 +31,8 @@ namespace Server
                         coverIsLocked = true;
                     }
                 }
-                string coverPath = SteamInstance.GetCoverPath(gameId);
-                // Aca se podria modificar el coverPath, ya que ni SteamInstance ni esta clase tienen lock 
-                lock (coverPath)
-                {
-                    Respond(coverPath);
-                }
             }
         }
-
-
 
 
 
