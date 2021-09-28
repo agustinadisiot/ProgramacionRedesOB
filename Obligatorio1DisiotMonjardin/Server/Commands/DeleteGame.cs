@@ -24,12 +24,8 @@ namespace Server
 
         private void Respond(string message)
         {
-
-            networkStreamHandler.WriteString(Specification.RESPONSE_HEADER);
-            networkStreamHandler.WriteCommand(Command.DELETE_GAME);
-            networkStreamHandler.WriteInt(message.Length);
-            networkStreamHandler.WriteString(message);
-
+            SendResponseHeader();
+            SendData(message);
         }
     }
 }
