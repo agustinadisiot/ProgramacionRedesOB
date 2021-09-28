@@ -43,7 +43,7 @@ namespace Server.BusinessLogic
                 }
                 da.Connections.Add(nwsh, newUserName);
 
-                return !alreadyExists;
+                return true;
             }
         }
 

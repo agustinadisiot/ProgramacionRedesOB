@@ -62,7 +62,7 @@ namespace Server.BusinessLogic
         {
             Game gameFound = da.Games.Find(game => game.Id == gameId);
             if (gameFound == null)
-                throw new ServerError($"{gameId} No es una id de juego válida");
+                throw new ServerError($" No existe el juego, tal vez haya sido eliminado");
             return gameFound;
         }
 
