@@ -1,5 +1,4 @@
-﻿using Common.Domain;
-using Common.NetworkUtils.Interfaces;
+﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 
 namespace Client

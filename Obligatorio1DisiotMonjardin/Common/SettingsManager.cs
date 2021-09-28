@@ -1,6 +1,6 @@
+using Common.Interfaces;
 using System;
 using System.Configuration;
-using Common.Interfaces;
 
 namespace Common
 {

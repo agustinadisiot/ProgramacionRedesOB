@@ -1,7 +1,6 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
-using System.Linq;
 
 namespace Client
 {
@@ -23,7 +22,7 @@ namespace Client
         {
 
             ReadHeader();
-            ReadCommand(); // TODO ver si hacemos algo mas con estos 
+            ReadCommand();
 
             int dataLength = networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
             string data = networkStreamHandler.ReadString(dataLength);

@@ -1,12 +1,11 @@
-﻿using Common.Domain;
-using Common.NetworkUtils;
+﻿using Common;
+using Common.Domain;
+using Common.Interfaces;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Server.BusinessLogic;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Server.Commands
 {
@@ -24,7 +23,9 @@ namespace Server.Commands
                 Synopsis = req[1],
                 Genre = req[3]
             };
-            string coverPath = fileNetworkStreamHandler.ReceiveFile(ServerConfig.GameCoverPath); // TODO ver donde si dejamos el serverConfig aca
+            ISettingsManager SettingsMgr = new SettingsManager();
+            string folderPath = SettingsMgr.ReadSetting(ServerConfig.GameCoverPathKey);
+            string coverPath = fileNetworkStreamHandler.ReceiveFile(folderPath);
             newGame.CoverFilePath = coverPath;
 
             BusinessLogicGameCUD GameCUD = BusinessLogicGameCUD.GetInstance();

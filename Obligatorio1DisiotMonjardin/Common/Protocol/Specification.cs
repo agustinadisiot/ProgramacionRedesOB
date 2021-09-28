@@ -2,7 +2,6 @@ namespace Common.Protocol
 {
     public static class Specification
     {
-        // TODO separar las constatnes en grupos / diferentes archivos
         public const int HEADER_LENGTH = 3;
         public const int CMD_LENGTH = 2;
         public const int DATA_SIZE_LENGTH = 4;

@@ -1,6 +1,6 @@
+using Common.FileHandler.Interfaces;
 using System;
 using System.IO;
-using Common.FileHandler.Interfaces;
 
 namespace Common.FileHandler
 {

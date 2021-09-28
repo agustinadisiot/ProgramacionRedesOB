@@ -1,11 +1,7 @@
-﻿using Common.NetworkUtils;
+﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
-using Common.Protocol;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using Common.Domain;
 
 namespace Client.Commands
 {
@@ -48,7 +44,7 @@ namespace Client.Commands
 
         }
 
-        protected bool ToBooleanFromString(string text) // TODO poner en common o algo
+        protected bool ToBooleanFromString(string text)
         {
             return (text == "1");
         }

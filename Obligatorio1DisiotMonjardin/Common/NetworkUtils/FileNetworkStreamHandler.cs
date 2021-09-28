@@ -4,7 +4,6 @@ using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Common.Utils;
 using System;
-using System.Text;
 
 namespace Common.NetworkUtils
 {

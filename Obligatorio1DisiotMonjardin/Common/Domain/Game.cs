@@ -1,13 +1,11 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Common.Domain
 {
     public class Game
     {
-        public static readonly string[] genres = { "Acción", "Aventura", "Juego de Rol", "Estrategia", "Deporte", "Carreras", "Otros"};
+        public static readonly string[] genres = { "Acción", "Aventura", "Juego de Rol", "Estrategia", "Deporte", "Carreras", "Otros" };
         public int Id { get; set; }
         public string Title { get; set; }
         public string Synopsis { get; set; }

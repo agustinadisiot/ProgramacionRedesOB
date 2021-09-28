@@ -1,15 +1,15 @@
+using Common.NetworkUtils.Interfaces;
+using Common.Protocol;
 using System;
 using System.Net.Sockets;
 using System.Text;
-using Common.NetworkUtils.Interfaces;
-using Common.Protocol;
 
 namespace Common.NetworkUtils
 {
     public class NetworkStreamHandler : INetworkStreamHandler
     {
         private readonly NetworkStream _networkStream;
-        private const bool debugging = false; // TODO ver si lo dejamos o lo docuementamos
+        private const bool debugging = false;
 
         public NetworkStreamHandler(NetworkStream networkStream)
         {

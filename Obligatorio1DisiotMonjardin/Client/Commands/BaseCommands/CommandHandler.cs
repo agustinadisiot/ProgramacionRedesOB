@@ -2,7 +2,6 @@
 using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
-using System;
 
 namespace Client
 {
@@ -36,7 +35,7 @@ namespace Client
             if (cmd == Command.ERROR)
                 HandleError();
             if (cmd == Command.SERVER_SHUTDOWN)
-                throw new ServerShutDown();
+                throw new ServerShutDownException();
         }
 
         private void HandleError()
