@@ -9,7 +9,7 @@ namespace Common.NetworkUtils
     public class NetworkStreamHandler : INetworkStreamHandler
     {
         private readonly NetworkStream _networkStream;
-        private const bool debugging = false; // TODO ver si lo dejamos o lo docuementamos
+        private const bool debugging = false;
 
         public NetworkStreamHandler(NetworkStream networkStream)
         {

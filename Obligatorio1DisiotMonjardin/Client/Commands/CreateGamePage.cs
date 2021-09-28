@@ -44,7 +44,7 @@ namespace Client.Commands
 
         }
 
-        protected bool ToBooleanFromString(string text) // TODO poner en common o algo
+        protected bool ToBooleanFromString(string text)
         {
             return (text == "1");
         }

@@ -50,7 +50,7 @@ namespace Client.Commands
                     User reviewWriter = new User(reviewsInfoSepareted[i]);
                     Review newReview = new Review
                     {
-                        Author = reviewWriter, // TODO poner los indices en la documentacion (o sea, el orden de las cosas) 
+                        Author = reviewWriter,
                         Rating = int.Parse(reviewsInfoSepareted[i + 1]),
                         Text = reviewsInfoSepareted[i + 2],
                     };

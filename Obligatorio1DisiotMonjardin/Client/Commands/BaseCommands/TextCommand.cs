@@ -27,7 +27,7 @@ namespace Client
         {
             string[] parsedData = unparsedData.Split(Specification.SECOND_DELIMITER);
             return parsedData;
-        } // TODO poner en common(el server tambien la tiene)?
+        }
 
         protected void SendData(string data)
         {
