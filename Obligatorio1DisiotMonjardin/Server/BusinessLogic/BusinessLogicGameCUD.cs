@@ -54,20 +54,20 @@ namespace Server.BusinessLogic
         }
         private void VerifyGame(Game newGame)
         {
-            if (!Validation.isValidTitle(newGame.Title))
+            if (!Validation.IsValidTitle(newGame.Title))
                 throw new ServerError("Título no válido");
 
             var gameWithSameTitle = da.Games.Find(i => (i.Title == newGame.Title) && (i.Id != newGame.Id));
             if (gameWithSameTitle != null)
                 throw new TitleAlreadyExistsException();
 
-            if (!Validation.isValidSynopsis(newGame.Synopsis))
+            if (!Validation.IsValidSynopsis(newGame.Synopsis))
                 throw new ServerError("Sinopsis no válida");
 
-            if (!Validation.isValidESRBRating((int)newGame.ESRBRating))
+            if (!Validation.IsValidESRBRating((int)newGame.ESRBRating))
                 throw new ServerError("Clasificación ESRB no válida");
 
-            if (!Validation.isValidGenre(newGame.Genre))
+            if (!Validation.IsValidGenre(newGame.Genre))
                 throw new ServerError("Genero no válido");
 
             if (!File.Exists(newGame.CoverFilePath))
@@ -122,26 +122,26 @@ namespace Server.BusinessLogic
             var gameWithSameTitle = games.Find(i => (i.Title == title) && (i.Id != gameToModId));
             if (gameWithSameTitle != null)
                 throw new TitleAlreadyExistsException();
-            if (!Validation.isValidTitle(title))
+            if (!Validation.IsValidTitle(title))
                 throw new ServerError("Título no válido");
             return title;
         }
         private string ModifiedValidSynopsis(string synopsis)
         {
-            if (!Validation.isValidSynopsis(synopsis))
+            if (!Validation.IsValidSynopsis(synopsis))
                 throw new ServerError("Sinopsis no válida");
             return synopsis;
         }
         private ESRBRating ModifiedValidESRBRating(ESRBRating eSRBRating)
         {
-            if (!Validation.isValidESRBRating((int)eSRBRating))
+            if (!Validation.IsValidESRBRating((int)eSRBRating))
                 throw new ServerError("Clasificación ESRB no válida");
             return eSRBRating;
         }
 
         private string ModifedValidGenre(string genre)
         {
-            if (!Validation.isValidGenre(genre))
+            if (!Validation.IsValidGenre(genre))
                 throw new ServerError("Genero no válido");
             return genre;
         }

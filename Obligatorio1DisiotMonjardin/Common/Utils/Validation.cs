@@ -9,26 +9,26 @@ namespace Common.Utils
     public static class Validation
     {
 
-        public static bool isValidId(int id)
+        public static bool IsValidId(int id)
         {
             return id >= 0;
         }
 
-        public static bool isValidTitle(string title)
+        public static bool IsValidTitle(string title)
         {
             return IsValidEntry(title);
         }
-        public static bool isValidSynopsis(string syn)
+        public static bool IsValidSynopsis(string syn)
         {
             return IsValidEntry(syn);
         }
 
-        public static bool isValidGenre(string genre)
+        public static bool IsValidGenre(string genre)
         {
             return Game.genres.Contains(genre);
         }
 
-        public static bool isValidESRBRating(int rating)
+        public static bool IsValidESRBRating(int rating)
         {
             return rating > 0 && rating < Enum.GetValues(typeof(ESRBRating)).Length - 1;
         }
