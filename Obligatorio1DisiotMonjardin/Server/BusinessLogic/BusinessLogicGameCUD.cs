@@ -37,7 +37,7 @@ namespace Server.BusinessLogic
         public string PublishGame(Game newGame, INetworkStreamHandler nwsh)
         {
             BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
-            //VerifyGame(newGame); todo
+            VerifyGame(newGame); 
             List<Game> games = da.Games;
             lock (games)
             {
@@ -54,7 +54,20 @@ namespace Server.BusinessLogic
         }
         private void VerifyGame(Game newGame)
         {
-            throw new NotImplementedException(); //TODO 
+            if (!Validation.isValidTitle(newGame.Title))
+                throw new ServerError("Título no válido");
+
+            if (!Validation.isValidSynopsis(newGame.Synopsis))
+                throw new ServerError("Sinopsis no válida");
+
+            if (!Validation.isValidESRBRating((int)newGame.ESRBRating))
+                throw new ServerError("Clasificación ESRB no válida");
+
+            if (!Validation.isValidGenre(newGame.Genre))
+                throw new ServerError("Genero no válido");
+
+            if (!File.Exists(newGame.CoverFilePath))
+                throw new ServerError("CoverPath no válido");
         }
 
         public string ModifyGame(int gameToModId, Game modifiedGame)
