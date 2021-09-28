@@ -46,7 +46,7 @@ namespace Server
             bool exit = false;
             while (!exit)
             {
-                Console.WriteLine("Escribir exit para salir");
+                Console.WriteLine("Write exit to shutdown server");
                 string entry = Console.ReadLine();
                 if (entry == "exit")
                 {

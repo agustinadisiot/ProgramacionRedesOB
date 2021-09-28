@@ -22,7 +22,6 @@ namespace Server.Commands
             GamePage = BusinessLogicGamePage.GetInstance();
             GamePage gamePage = GetGamePage(pageNumber, unParsedfilter);
             Respond(gamePage);
-            Console.WriteLine("This is the game list");
         }
 
         protected abstract GamePage GetGamePage(int pageNumber, string unParsedfilter);
