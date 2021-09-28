@@ -2,9 +2,7 @@
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Common.Utils;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Server.BusinessLogic
 {
@@ -35,7 +33,7 @@ namespace Server.BusinessLogic
         public string WriteReview(Review newReview, int gameId, INetworkStreamHandler nwsh)
         {
             BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
-            newReview.Author = utils.GetUser(nwsh); 
+            newReview.Author = utils.GetUser(nwsh);
             List<Game> games = da.Games;
             lock (games)
             {
@@ -75,7 +73,7 @@ namespace Server.BusinessLogic
                     ReviewPage ret = new ReviewPage()
                     {
                         Reviews = reviewsInPage,
-                        HasNextPage = utils.ExistsNextPage(allReviews, pageNumber), 
+                        HasNextPage = utils.ExistsNextPage(allReviews, pageNumber),
                         HasPreviousPage = pageNumber > 1
                     };
                     return ret;
@@ -83,6 +81,6 @@ namespace Server.BusinessLogic
             }
         }
 
-        
+
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.Utils
+﻿namespace Common.Utils
 {
     public static class LogicSpecification
     {
