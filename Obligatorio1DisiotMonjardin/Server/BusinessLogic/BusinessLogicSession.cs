@@ -8,11 +8,31 @@ namespace Server.BusinessLogic
 {
     public class BusinessLogicSession
     {
-        DataAccess db = DataAccess.GetInstance();
+        private DataAccess da;
+        private static BusinessLogicSession instance;
+
+        private static readonly object singletonPadlock = new object();
+
+        public static BusinessLogicSession GetInstance()
+        {
+            lock (singletonPadlock)
+            {
+
+                if (instance == null)
+                    instance = new BusinessLogicSession();
+            }
+            return instance;
+        }
+
+
+        public BusinessLogicSession()
+        {
+            da = DataAccess.GetInstance();
+        }
         
         public bool Login(string newUserName, INetworkStreamHandler nwsh)
         {
-            List<User> users = db.Users;
+            List<User> users = da.Users;
             lock (users)
             {
                 User newUser = new User(newUserName);
@@ -21,7 +41,7 @@ namespace Server.BusinessLogic
                 {
                     users.Add(newUser);
                 }
-                db.Connections.Add(nwsh, newUserName);
+                da.Connections.Add(nwsh, newUserName);
 
                 return !alreadyExists;
             }
@@ -29,7 +49,7 @@ namespace Server.BusinessLogic
 
         public bool Logout(INetworkStreamHandler nwsh)
         {
-            var connections = db.Connections;
+            var connections = da.Connections;
             lock (connections)
             {
                 return connections.Remove(nwsh);

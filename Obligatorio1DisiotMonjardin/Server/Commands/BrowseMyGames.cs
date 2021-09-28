@@ -15,7 +15,7 @@ namespace Server.Commands
 
         protected override GamePage GetGamePage(int pageNumber, string unParsedfilter)
         {
-            return steamInstance.BrowseMyGames(pageNumber, networkStreamHandler);
+            return GamePage.BrowseMyGames(pageNumber, networkStreamHandler);
         }
     }
 }

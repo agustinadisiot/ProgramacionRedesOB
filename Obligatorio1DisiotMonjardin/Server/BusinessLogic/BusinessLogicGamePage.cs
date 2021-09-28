@@ -1,4 +1,5 @@
 ﻿using Common.Domain;
+using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,32 @@ namespace Server.BusinessLogic
 {
     public class BusinessLogicGamePage
     {
-        DataAccess db = DataAccess.GetInstance();
+
+        private DataAccess da;
+        private static BusinessLogicGamePage instance;
+
+        private static readonly object singletonPadlock = new object();
+
+        public static BusinessLogicGamePage GetInstance()
+        {
+            lock (singletonPadlock)
+            {
+
+                if (instance == null)
+                    instance = new BusinessLogicGamePage();
+            }
+            return instance;
+        }
 
 
+        public BusinessLogicGamePage()
+        {
+            da = DataAccess.GetInstance();
+        }
         // PRE: Requires lock on filteredList TODO ver si esta bien poner esto
         private GamePage CreateGamePage(List<Game> filteredList, int pageNumber)
         {
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             if (pageNumber <= 0)
                 throw new ServerError("Número de Página no válido");
 
@@ -31,7 +52,7 @@ namespace Server.BusinessLogic
             {
                 GamesTitles = gameTitles,
                 GamesIds = gameIds,
-                HasNextPage = ExistsNextPage(filteredList, pageNumber),
+                HasNextPage = utils.ExistsNextPage(filteredList, pageNumber),
                 HasPreviousPage = pageNumber > 1
             };
             return ret;
@@ -39,7 +60,7 @@ namespace Server.BusinessLogic
 
         public GamePage BrowseGames(int pageNumber)
         {
-            List<Game> games = db.Games;
+            List<Game> games = da.Games;
             lock (games)
             {
                 return CreateGamePage(games, pageNumber);
@@ -48,8 +69,9 @@ namespace Server.BusinessLogic
 
         public GamePage BrowseMyGames(int pageNumber, INetworkStreamHandler nwsh)
         {
-            User CurrentUser = GetUser(nwsh);
-            List<Game> games = db.Games;
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            User CurrentUser = utils.GetUser(nwsh);
+            List<Game> games = da.Games;
             lock (games)
             {
                 return CreateGamePage(CurrentUser.GamesOwned, pageNumber);
@@ -58,7 +80,7 @@ namespace Server.BusinessLogic
 
         public GamePage SearchByTitle(int pageNumber, string title)
         {
-            List<Game> games = db.Games;
+            List<Game> games = da.Games;
             lock (games)
             {
                 List<Game> filteredList = games.FindAll(game => TextSearchIsMatch(game.Title, title));
@@ -68,7 +90,7 @@ namespace Server.BusinessLogic
 
         public GamePage SearchByRating(int pageNumber, int minRating)
         {
-            List<Game> games = db.Games;
+            List<Game> games = da.Games;
             lock (games)
             {
                 List<Game> filteredList = games.FindAll(game => game.ReviewsRating >= minRating);
@@ -78,7 +100,7 @@ namespace Server.BusinessLogic
 
         public GamePage SearchByGenre(int pageNumber, string genre)
         {
-            List<Game> games = db.Games;
+            List<Game> games = da.Games;
             lock (games)
             {
                 List<Game> filteredList = games.FindAll(game => game.Genre == genre);
@@ -91,13 +113,6 @@ namespace Server.BusinessLogic
             return (real.ToLower().Contains(search.ToLower()));
         }
 
-        private bool ExistsNextPage<T>(List<T> fullList, int pageNumber)
-        {
-            int maxPageNumber = fullList.Count / Specification.PAGE_SIZE;
-            if (fullList.Count % Specification.PAGE_SIZE != 0)
-                maxPageNumber++;
-
-            return pageNumber < maxPageNumber;
-        }
+       
     }
 }

@@ -17,7 +17,7 @@ namespace Server.Commands
         protected override GamePage GetGamePage(int pageNumber, string unParsedfilter)
         {
             string titleToSearch = unParsedfilter;
-            return steamInstance.SearchByTitle(pageNumber, titleToSearch);
+            return GamePage.SearchByTitle(pageNumber, titleToSearch);
         }
     }
 }

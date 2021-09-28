@@ -7,15 +7,35 @@ using System.Text;
 
 namespace Server.BusinessLogic
 {
-    public class BusinessLogicReviews
+    public class BusinessLogicReview
     {
-        DataAccess db = DataAccess.GetInstance();
+        private DataAccess da;
+        private static BusinessLogicReview instance;
+
+        private static readonly object singletonPadlock = new object();
+
+        public static BusinessLogicReview GetInstance()
+        {
+            lock (singletonPadlock)
+            {
+
+                if (instance == null)
+                    instance = new BusinessLogicReview();
+            }
+            return instance;
+        }
+
+
+        public BusinessLogicReview()
+        {
+            da = DataAccess.GetInstance();
+        }
 
         public string WriteReview(Review newReview, int gameId, INetworkStreamHandler nwsh)
         {
-
-            newReview.Author = GetUser(nwsh); //getUser esta en businessLogicUtils
-            List<Game> games = db.Games;
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            newReview.Author = utils.GetUser(nwsh); 
+            List<Game> games = da.Games;
             lock (games)
             {
                 Game gameToAddReview = games[gameId];
@@ -31,11 +51,12 @@ namespace Server.BusinessLogic
 
         public ReviewPage BrowseReviews(int pageNumber, int gameId)
         {
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             if (pageNumber <= 0)
                 throw new ServerError($"Número de página {pageNumber} no válido");
-            lock (db.Games)
+            lock (da.Games)
             {
-                Game gameToGetReviews = GetGameById(gameId);
+                Game gameToGetReviews = utils.GetGameById(gameId);
                 lock (gameToGetReviews.Reviews)
                 {
                     List<Review> allReviews = gameToGetReviews.Reviews;
@@ -53,7 +74,7 @@ namespace Server.BusinessLogic
                     ReviewPage ret = new ReviewPage()
                     {
                         Reviews = reviewsInPage,
-                        HasNextPage = ExistsNextPage(allReviews, pageNumber), //existNextPage esta en gamePage
+                        HasNextPage = utils.ExistsNextPage(allReviews, pageNumber), 
                         HasPreviousPage = pageNumber > 1
                     };
                     return ret;
@@ -61,13 +82,6 @@ namespace Server.BusinessLogic
             }
         }
 
-        // PRE: Requires lock on db.Games TODO ver si esta bien poner esto
-        private Game GetGameById(int gameId)
-        {
-            Game gameFound = db.Games.Find(game => game.Id == gameId);
-            if (gameFound == null)
-                throw new ServerError($"{gameId} No es una id de juego válida");
-            return gameFound;
-        }
+        
     }
 }

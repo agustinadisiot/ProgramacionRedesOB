@@ -1,5 +1,6 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,8 +16,8 @@ namespace Server.Commands.BaseCommands
 
         public override void ParsedRequestHandler(string[] req)
         {
-            Steam Steam = Steam.GetInstance();
-            bool success = Steam.Logout(networkStreamHandler);
+            BusinessLogicSession Session = BusinessLogicSession.GetInstance();
+            bool success = Session.Logout(networkStreamHandler);
             Respond(success);
         }
 

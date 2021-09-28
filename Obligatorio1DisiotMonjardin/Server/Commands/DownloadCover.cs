@@ -1,5 +1,6 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 
 namespace Server
@@ -13,8 +14,8 @@ namespace Server
         public override void ParsedRequestHandler(string[] req)
         {
             int gameId = parseInt(req[0]);
-            Steam SteamInstance = Steam.GetInstance();
-            string coverPath = SteamInstance.GetCoverPath(gameId);
+            BusinessLogicGameInfo GameInfo = BusinessLogicGameInfo.GetInstance();
+            string coverPath = GameInfo.GetCoverPath(gameId);
             Respond(coverPath);
         }
 

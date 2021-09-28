@@ -1,5 +1,6 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,9 +16,9 @@ namespace Server.Commands.BaseCommands
 
         public override void ParsedRequestHandler(string[] req)
         {
-            Steam Steam = Steam.GetInstance();
+            BusinessLogicSession Session = BusinessLogicSession.GetInstance();
             string newUser = req[0];
-            bool added = Steam.Login(newUser, networkStreamHandler);
+            bool added = Session.Login(newUser, networkStreamHandler);
             Respond(added);
         }
 

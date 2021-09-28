@@ -8,14 +8,36 @@ namespace Server.BusinessLogic
 {
     public class BusinessLogicGameInfo
     {
-        DataAccess db = DataAccess.GetInstance();
+
+        private DataAccess da;
+        private static BusinessLogicGameInfo instance;
+
+        private static readonly object singletonPadlock = new object();
+
+        public static BusinessLogicGameInfo GetInstance()
+        {
+            lock (singletonPadlock)
+            {
+
+                if (instance == null)
+                    instance = new BusinessLogicGameInfo();
+            }
+            return instance;
+        }
+
+
+        public BusinessLogicGameInfo()
+        {
+            da = DataAccess.GetInstance();
+        }
 
         public GameView ViewGame(int gameId, INetworkStreamHandler nwsh)
         {
-            lock (db.Games)
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            lock (da.Games)
             {
-                Game game = GetGameById(gameId);
-                User actualUser = GetUser(nwsh);
+                Game game = utils.GetGameById(gameId);
+                User actualUser = utils.GetUser(nwsh);
                 GameView gameView = new GameView()
                 {
                     Game = CreateGameCopy(game),
@@ -26,7 +48,7 @@ namespace Server.BusinessLogic
                 return gameView;
             }
         }
-        private Game CreateGameCopy(Game gameToCopy) // TODO sacar de steam
+        private Game CreateGameCopy(Game gameToCopy) 
         {
             return new Game
             {
@@ -41,7 +63,7 @@ namespace Server.BusinessLogic
         }
         public string GetCoverPath(int gameId)
         {
-            List<Game> games = db.Games;
+            List<Game> games = da.Games;
             lock (games)
             {
                 Game gameToGetCover = games.Find(game => game.Id == gameId);
@@ -51,10 +73,11 @@ namespace Server.BusinessLogic
         }
         public bool BuyGame(int gameID, INetworkStreamHandler nwsh)
         {
-            lock (db.Games)
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            lock (da.Games)
             {
-                Game gameToBuy = GetGameById(gameID); //esta en reviews
-                User userToBuyGame = GetUser(nwsh);
+                Game gameToBuy = utils.GetGameById(gameID); 
+                User userToBuyGame = utils.GetUser(nwsh);
 
                 if (userToBuyGame.GamesOwned.Contains(gameToBuy))
                     return false;

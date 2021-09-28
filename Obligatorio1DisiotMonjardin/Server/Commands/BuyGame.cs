@@ -2,6 +2,7 @@
 using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,8 +18,8 @@ namespace Server.Commands
         public override void ParsedRequestHandler(string[] req)
         {
             int gameId = parseInt(req[0]);
-            Steam SteamInstance = Steam.GetInstance();
-            bool success = SteamInstance.BuyGame(gameId, networkStreamHandler);
+            BusinessLogicGameInfo GameInfo = BusinessLogicGameInfo.GetInstance();
+            bool success = GameInfo.BuyGame(gameId, networkStreamHandler);
             string message;
             if (success)
                 message = "Juego comprado correctamente";

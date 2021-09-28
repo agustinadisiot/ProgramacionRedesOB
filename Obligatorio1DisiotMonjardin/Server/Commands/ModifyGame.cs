@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 using System.IO;
 
@@ -30,13 +31,13 @@ namespace Server
                 modifiedGame.CoverFilePath = coverPath;
             }
 
-            Steam SteamInstance = Steam.GetInstance();
+            BusinessLogicGameCUD GameCUD = BusinessLogicGameCUD.GetInstance();
             string message;
             try
             {
                 int gameId = parseInt(req[0]); // can thow serverError
                 modifiedGame.ESRBRating = (Common.ESRBRating)parseInt(req[3]);
-                message = SteamInstance.ModifyGame(gameId, modifiedGame);
+                message = GameCUD.ModifyGame(gameId, modifiedGame);
             }
             catch (Exception e) when (e is TitleAlreadyExistsException || e is ServerError)
             {

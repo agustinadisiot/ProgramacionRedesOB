@@ -11,20 +11,42 @@ namespace Server.BusinessLogic
 {
     public class BusinessLogicGameCUD
     {
-        DataAccess db = DataAccess.GetInstance();
+
+        private DataAccess da;
+        private static BusinessLogicGameCUD instance;
+
+        private static readonly object singletonPadlock = new object();
+
+        public static BusinessLogicGameCUD GetInstance()
+        {
+            lock (singletonPadlock)
+            {
+
+                if (instance == null)
+                    instance = new BusinessLogicGameCUD();
+            }
+            return instance;
+        }
+
+
+        public BusinessLogicGameCUD()
+        {
+            da = DataAccess.GetInstance();
+        }
 
         public string PublishGame(Game newGame, INetworkStreamHandler nwsh)
         {
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             //VerifyGame(newGame); todo
-            List<Game> games = db.Games;
+            List<Game> games = da.Games;
             lock (games)
             {
                 var gameWithSameTitle = games.Find(i => i.Title == newGame.Title);
                 if (gameWithSameTitle != null)
                     throw new TitleAlreadyExistsException();
-                newGame.Id = db.NextGameID;
+                newGame.Id = da.NextGameID;
                 newGame.ReviewsRating = 0;
-                newGame.Publisher = GetUser(nwsh);
+                newGame.Publisher = utils.GetUser(nwsh);
                 newGame.Reviews = new List<Review>();
                 games.Add(newGame);
                 return $"Se publicó el juego {newGame.Title} correctamente";
@@ -37,10 +59,11 @@ namespace Server.BusinessLogic
 
         public string ModifyGame(int gameToModId, Game modifiedGame)
         {
-            List<Game> games = db.Games;
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            List<Game> games = da.Games;
             lock (games)
             {
-                Game gameToMod = GetGameById(gameToModId);
+                Game gameToMod = utils.GetGameById(gameToModId);
 
                 if (modifiedGame.Title != "")
                 {
@@ -84,11 +107,13 @@ namespace Server.BusinessLogic
 
         public bool DeleteGame(int gameId)
         {
-            List<Game> games = db.Games;
+            List<Game> games = da.Games;
             lock (games)
             {
-                return games.Remove(games.Find(i => i.Id == gameId));
-                // TODO eliminar caratula
+                Game gameToDelete = games.Find(i => i.Id == gameId);
+                string pathToDelete = gameToDelete.CoverFilePath;
+                File.Delete(pathToDelete); // TODO capaz no tendria que ir en Steam TODO lock
+                return games.Remove(gameToDelete);
             }
         }
 

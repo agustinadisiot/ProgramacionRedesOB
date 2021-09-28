@@ -2,6 +2,7 @@
 using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Server.Commands
     {
         public CreateGamePage(INetworkStreamHandler nwsh) : base(nwsh) { }
 
-        protected Steam steamInstance;
+        protected BusinessLogicGamePage GamePage;
         public override void ParsedRequestHandler(string[] req)
         {
             int pageNumber = parseInt(req[0]); ;
@@ -21,7 +22,7 @@ namespace Server.Commands
             if (req.Length > 1)
                 unParsedfilter = req[1];
 
-            steamInstance = Steam.GetInstance();
+            GamePage = BusinessLogicGamePage.GetInstance();
             GamePage gamePage = GetGamePage(pageNumber, unParsedfilter);
             Respond(gamePage);
             Console.WriteLine("This is the game list");

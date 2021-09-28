@@ -17,6 +17,6 @@ namespace Common.Protocol
 
         public const string IMAGE_EXTENSION = ".jpg";
         public const int MAX_RATING = 10;
-        public const int MIN_RATING = 10;
+        public const int MIN_RATING = 1;
     };
 }

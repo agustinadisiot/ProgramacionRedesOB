@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 using System.Text;
 
@@ -14,10 +15,10 @@ namespace Server
 
         public override void ParsedRequestHandler(string[] req)
         {
-            Steam Steam = Steam.GetInstance();
+            BusinessLogicGameInfo GameInfo = BusinessLogicGameInfo.GetInstance();
             int gameId = parseInt(req[0]);
 
-            GameView gameView = Steam.ViewGame(gameId, networkStreamHandler);
+            GameView gameView = GameInfo.ViewGame(gameId, networkStreamHandler);
             Respond(gameView);
         }
 

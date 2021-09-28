@@ -2,6 +2,7 @@
 using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Server.BusinessLogic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,12 +27,12 @@ namespace Server.Commands
             string coverPath = fileNetworkStreamHandler.ReceiveFile(ServerConfig.GameCoverPath); // TODO ver donde si dejamos el serverConfig aca
             newGame.CoverFilePath = coverPath;
 
-            Steam SteamInstance = Steam.GetInstance();
+            BusinessLogicGameCUD GameCUD = BusinessLogicGameCUD.GetInstance();
             string message;
             try
             {
                 newGame.ESRBRating = (Common.ESRBRating)parseInt(req[2]); // can thow server error if not a number
-                message = SteamInstance.PublishGame(newGame, networkStreamHandler);
+                message = GameCUD.PublishGame(newGame, networkStreamHandler);
             }
             catch (Exception e) when (e is TitleAlreadyExistsException || e is ServerError)
             {
