@@ -280,7 +280,7 @@ namespace Client
         {
             Console.WriteLine("Escriba la carpeta donde quiere guardar la caratula");
             string folderPath = Validation.ReadValidDirectory("No se encontro tal carpeta, ingrese de nuevo", fileHandler);
-            Console.WriteLine("Escriba el nombre que quiere para el archivo");
+            Console.WriteLine("Escriba el nombre que quiere para el archivo (sin la extensión)");
             string fileName = Validation.ReadValidString("Escriba un nombre válido para su archivo");
 
             var commandHandler = (DownloadCover)CommandFactory.GetCommandHandler(Command.DOWNLOAD_COVER, networkStreamHandler);

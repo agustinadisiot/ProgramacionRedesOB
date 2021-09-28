@@ -32,7 +32,7 @@ namespace Common.NetworkUtils
                 if (fileName == "")
                     fileName = Guid.NewGuid().ToString();
 
-                if ((!folderPath.Trim().EndsWith("\\")) || (!folderPath.Trim().EndsWith("/")))
+                if ((!folderPath.Trim().EndsWith("\\")) && (!folderPath.Trim().EndsWith("/")))
                     folderPath += "\\";
 
                 string completeFileName = folderPath + fileName + LogicSpecification.IMAGE_EXTENSION;

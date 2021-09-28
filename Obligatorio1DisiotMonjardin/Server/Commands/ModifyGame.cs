@@ -19,7 +19,6 @@ namespace Server
 
         public override void ParsedRequestHandler(string[] req)
         {
-            int Id = int.Parse(req[0]);
             Game modifiedGame = new Game
             {
                 Title = req[1],
