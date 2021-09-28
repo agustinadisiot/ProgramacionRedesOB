@@ -32,7 +32,7 @@ namespace Client
         }
         private void EndConnection()
         {
-            Console.WriteLine("Seguro que quiere cerrar la conexion?");
+            Console.WriteLine("¿Seguro que quiere cerrar la conexión?");
             Console.WriteLine("1.Si");
             Console.WriteLine("2.No");
             int input = Validation.ReadValidNumber("Ingrese una opción correcta", 1, 2);
@@ -52,26 +52,26 @@ namespace Client
                 { "Iniciar Sesión", () => Login() },
                 { "Salir", () => EndConnection()}
             };
-            CliMenu.showMenu(menuOptions, "Menu Inicial");
+            CliMenu.showMenu(menuOptions, "Menú Inicial");
 
         }
         public void MainMenu()
         {
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>
             {
-                { "Ver catalogo", () => BrowseCatalogue() },
+                { "Ver catálogo", () => BrowseCatalogue() },
                 { "Publicar Juego", () => Publish() },
                 { "Buscar por título", () => SearchByTitle() },
                 { "Buscar por género", () => SearchByGenre() },
                 { "Buscar por clasificación", () => SearchByRating() },
                 { "Ver mis juegos", () => BrowseMyGames() },
                 { "Cerrar Sesión", () => Logout() },
-                { "Menu de desarrollador", () => DeveloperMenu() },
+                { "Menú de desarrollador", () => DeveloperMenu() },
             };
             Console.WriteLine();
             try
             {
-                CliMenu.showMenu(menuOptions, "Menu");
+                CliMenu.showMenu(menuOptions, "Menú");
             }
             catch (ServerError e)
             {
@@ -89,9 +89,9 @@ namespace Client
             {
                 { "Enviar parámetro incorrecto", () => BrowseMyGames(-1) },
                 { "Cargar datos de prueba", () => TestData() },
-                { "Volver al menu principal", () => MainMenu() },
+                { "Volver al menú principal", () => MainMenu() },
             };
-            CliMenu.showMenu(developerOptions, "Menu de desarrollador");
+            CliMenu.showMenu(developerOptions, "Menú de desarrollador");
         }
 
 
@@ -237,7 +237,7 @@ namespace Client
             if (gamePage.HasPreviousPage)
                 menuOptions.Add("Página Anterior", () => previousPage());
 
-            menuOptions.Add("Volver al Menu Principal", () => MainMenu());
+            menuOptions.Add("Volver al Menú Principal", () => MainMenu());
 
             CliMenu.showMenu(menuOptions, title);
         }
@@ -252,10 +252,10 @@ namespace Client
             Console.WriteLine();
             Console.WriteLine($"Título: {gameInfo.Game.Title}");
             Console.WriteLine($"Sinopsis: {gameInfo.Game.Synopsis}");
-            if (gameInfo.Game.ReviewsRating == 0) { Console.WriteLine($"Calificacion: -"); }
-            else { Console.WriteLine($"Calificacion: {gameInfo.Game.ReviewsRating}"); }
-            Console.WriteLine($"Clasificacion ESRB: {gameInfo.Game.ESRBRating}");
-            Console.WriteLine($"Genero: {gameInfo.Game.Genre}");
+            if (gameInfo.Game.ReviewsRating == 0) { Console.WriteLine($"Calificación: -"); }
+            else { Console.WriteLine($"Calificación: {gameInfo.Game.ReviewsRating}"); }
+            Console.WriteLine($"Clasificación ESRB: {gameInfo.Game.ESRBRating}");
+            Console.WriteLine($"Género: {gameInfo.Game.Genre}");
 
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
             if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(gameId));
@@ -266,8 +266,8 @@ namespace Client
                 menuOptions.Add("Modificar Juego", () => ModifyGame(gameId));
                 menuOptions.Add("Eliminar Juego", () => DeleteGame(gameId));
             }
-            menuOptions.Add("Descargar Caratula", () => DownloadCover(gameId));
-            menuOptions.Add("Volver al Menu Pricipal", () => MainMenu());
+            menuOptions.Add("Descargar Carátula", () => DownloadCover(gameId));
+            menuOptions.Add("Volver al Menú Pricipal", () => MainMenu());
 
             CliMenu.showMenu(menuOptions, "");
 
@@ -341,8 +341,8 @@ namespace Client
             if (reviewPage.HasPreviousPage)
                 menuOptions.Add("Página Anterior", () => ShowBrowseReviewsMenu(reviewPage.CurrentPage - 1, gameId));
 
-            menuOptions.Add("Volver al Menu Del Juego", () => ShowGameInfo(gameId));
-            menuOptions.Add("Volver al Menu Principal", () => MainMenu());
+            menuOptions.Add("Volver al Menú Del Juego", () => ShowGameInfo(gameId));
+            menuOptions.Add("Volver al Menú Principal", () => MainMenu());
 
             CliMenu.showMenu(menuOptions, "");
         }
@@ -354,15 +354,15 @@ namespace Client
             string title = Validation.ReadValidString("Escriba un título del juego válido");
 
             Console.WriteLine("Escriba la sinopsis del juego:");
-            string synopsis = Validation.ReadValidString("Escriba una sinopsis del juego valida");
+            string synopsis = Validation.ReadValidString("Escriba una sinopsis del juego válida");
 
             Console.WriteLine("Elija el ESRBrating del juego:");
             int ESRBRating = Validation.ReadValidESRB();
 
-            Console.WriteLine("Elija el genero del juego:");
+            Console.WriteLine("Elija el género del juego:");
             string genre = Validation.ReadValidGenre();
 
-            Console.WriteLine("Escriba la dirección del archivo de la caratula:");
+            Console.WriteLine("Escriba la dirección del archivo de la carátula:");
             string coverPath = Validation.ReadValidPath("Escriba un archivo válido", fileHandler);
 
             Game newGame = new Game
@@ -380,19 +380,19 @@ namespace Client
         private void ModifyGame(int gameId)
         {
             ModifyGame commandHandler = (ModifyGame)CommandFactory.GetCommandHandler(Command.MODIFY_GAME, networkStreamHandler);
-            Console.WriteLine("Escriba el nuevo título del juego: (vacio si no lo quiere modificar)");
+            Console.WriteLine("Escriba el nuevo título del juego: (vacío si no lo quiere modificar)");
             string title = Validation.ContainsDelimiter("Escriba un nuevo título del juego válido");
 
-            Console.WriteLine("Escriba la nueva sinopsis del juego: (vacio si no lo quiere modificar)");
-            string synopsis = Validation.ContainsDelimiter("Escriba una nueva sinopsis del juego valida");
+            Console.WriteLine("Escriba la nueva sinopsis del juego: (vacío si no lo quiere modificar)");
+            string synopsis = Validation.ContainsDelimiter("Escriba una nueva sinopsis del juego válida");
 
-            Console.WriteLine("Elija el nuevo ESRBrating del juego:");
+            Console.WriteLine("Elija el nuevo ESRBrating del juego: (vacío si no lo quiere modificar)");
             int ESRBRating = Validation.ReadValidESRBModify();
 
-            Console.WriteLine("Elija el nuevo genero del juego:");
+            Console.WriteLine("Elija el nuevo genero del juego: (vacío si no lo quiere modificar)");
             string genre = Validation.ReadValidGenreModify();
 
-            Console.WriteLine("Escriba la nueva dirección del archivo de la caratula: (vacio si no lo quiere modificar)");
+            Console.WriteLine("Escriba la nueva dirección del archivo de la carátula: (vacio si no lo quiere modificar)");
             string coverPath = Console.ReadLine();
             if (coverPath.Length == 0) { coverPath = ""; } else { coverPath = Validation.ReadValidPathModify(coverPath, "Escriba un archivo válido", fileHandler); }
 
@@ -412,10 +412,10 @@ namespace Client
         private void DeleteGame(int gameId)
         {
             DeleteGame commandHandler = (DeleteGame)CommandFactory.GetCommandHandler(Command.DELETE_GAME, networkStreamHandler);
-            Console.WriteLine("Seguro que quiere eliminar el juego?");
+            Console.WriteLine("¿Seguro que quiere eliminar el juego?");
             Console.WriteLine("1.Si");
             Console.WriteLine("2.No");
-            int response = Validation.ReadValidNumber("Elija una opción valida", 1, 2);
+            int response = Validation.ReadValidNumber("Elija una opción válida", 1, 2);
             if (response == 1)
             {
                 string returnMessage = commandHandler.SendRequest(gameId);
