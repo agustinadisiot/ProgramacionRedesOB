@@ -32,7 +32,8 @@ namespace Server.BusinessLogic
         {
             da = DataAccess.GetInstance();
         }
-        // PRE: Requires lock on filteredList TODO ver si esta bien poner esto
+
+        // PRE: Requires lock on filteredList 
         private GamePage CreateGamePage(List<Game> filteredList, int pageNumber)
         {
             BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
@@ -114,6 +115,6 @@ namespace Server.BusinessLogic
             return (real.ToLower().Contains(search.ToLower()));
         }
 
-       
+
     }
 }

@@ -48,7 +48,7 @@ namespace Server.BusinessLogic
                 return gameView;
             }
         }
-        private Game CreateGameCopy(Game gameToCopy) 
+        private Game CreateGameCopy(Game gameToCopy)
         {
             return new Game
             {
@@ -67,7 +67,7 @@ namespace Server.BusinessLogic
             lock (games)
             {
                 Game gameToGetCover = games.Find(game => game.Id == gameId);
-                return gameToGetCover.CoverFilePath; // TODO lock
+                return gameToGetCover.CoverFilePath;
             }
 
         }
@@ -76,7 +76,7 @@ namespace Server.BusinessLogic
             BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             lock (da.Games)
             {
-                Game gameToBuy = utils.GetGameById(gameID); 
+                Game gameToBuy = utils.GetGameById(gameID);
                 User userToBuyGame = utils.GetUser(nwsh);
 
                 if (userToBuyGame.GamesOwned.Contains(gameToBuy))
