@@ -62,9 +62,9 @@ namespace Common.NetworkUtils
         public void SendFile(string path)
         {
             if (!fileHandler.FileExists(path))
-                throw new Exception("File does not exists"); // TODO catchear capaz 
+                throw new Exception("File does not exists"); 
 
-            long fileSize = fileHandler.GetFileSize(path); // cathear permisos
+            long fileSize = fileHandler.GetFileSize(path); 
             networkStreamHandler.WriteFileSize(fileSize);
 
             var parts = SpecificationHelper.GetParts(fileSize);

@@ -27,7 +27,7 @@ namespace Server
 
             while (acceptingConnections)
             {
-                var acceptedTcpClient = tcpListener.AcceptTcpClient(); // Gets the first client in the queue
+                var acceptedTcpClient = tcpListener.AcceptTcpClient(); 
                 if (acceptingConnections)
                 {
                     Console.WriteLine("Accepted new client connection");

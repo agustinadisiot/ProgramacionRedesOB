@@ -8,7 +8,7 @@ namespace Client
         {
             Console.WriteLine("Client starting...");
             ClientPresentation client = new ClientPresentation();
-            Console.WriteLine("Trying to connect to server"); // TODO catcher excepciones de cuando el server se apaga 
+            Console.WriteLine("Trying to connect to server");  
             client.StartConnection();
             client.StartMenu();
 
