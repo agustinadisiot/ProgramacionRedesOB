@@ -29,7 +29,7 @@ namespace Server.BusinessLogic
         {
             da = DataAccess.GetInstance();
         }
-        
+
         public bool Login(string newUserName, INetworkStreamHandler nwsh)
         {
             List<User> users = da.Users;
@@ -43,7 +43,7 @@ namespace Server.BusinessLogic
                 }
                 da.Connections.Add(nwsh, newUserName);
 
-                return true;
+                return !alreadyExists;
             }
         }
 

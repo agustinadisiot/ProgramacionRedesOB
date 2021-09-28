@@ -155,6 +155,32 @@ namespace Common.Utils
             return folderPath;
         }
 
+
+        public static string ReadValidFileName(string errorMessage, string folderPath, FileHandler.FileHandler fileHandler)
+        {
+            string name = Console.ReadLine();
+            string completeFileName = GetValidCompleteFileName(folderPath, name);
+
+            bool validFullPath = fileHandler.FileExists(completeFileName) && IsValidEntry(name);
+            while (validFullPath)
+            {
+                Console.WriteLine(errorMessage);
+                name = Console.ReadLine();
+                completeFileName = GetValidCompleteFileName(folderPath, name);
+                validFullPath = fileHandler.FileExists(completeFileName) && IsValidEntry(name);
+            }
+            return name;
+        }
+
+        public static string GetValidCompleteFileName(string path, string name)
+        {
+            if ((!path.Trim().EndsWith("\\")) && (!path.Trim().EndsWith("/")))
+                path += "\\";
+
+            string completeFileName = path + name + LogicSpecification.IMAGE_EXTENSION;
+            return completeFileName;
+        }
+
         public static int ReadValidESRBModify()
         {
             List<ESRBRating> possibleESRB = Enum.GetValues(typeof(ESRBRating)).Cast<ESRBRating>().ToList();
@@ -223,7 +249,6 @@ namespace Common.Utils
             }
             return word;
         }
-
 
     }
 }

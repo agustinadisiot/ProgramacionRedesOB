@@ -88,7 +88,8 @@ namespace Client
             Dictionary<string, Action> developerOptions = new Dictionary<string, Action>
             {
                 { "Enviar parámetro incorrecto", () => BrowseMyGames(-1) },
-                { "Datos de prueba", () => TestData() },
+                { "Cargar datos de prueba", () => TestData() },
+                { "Volver al menu principal", () => MainMenu() },
             };
             CliMenu.showMenu(developerOptions, "Menu de desarrollador");
         }
@@ -116,17 +117,13 @@ namespace Client
             Console.WriteLine("Ingrese nombre de usuario: ");
             string username = Validation.ReadValidString("Reingrese un nombre de usuario válido");
             var commandHandler = (Login)CommandFactory.GetCommandHandler(Command.LOGIN, networkStreamHandler);
-            bool success = commandHandler.SendRequest(username);
-            if (success)
-            {
-                Console.WriteLine("Se inicio sesión correctamente");
-                MainMenu();
-            }
+            bool firstTimeUser = commandHandler.SendRequest(username);
+            Console.WriteLine("Se inició sesión correctamente");
+            if (firstTimeUser)
+                Console.WriteLine("Bienvenido por primera vez!");
             else
-            {
-                Console.WriteLine("No se pudo iniciar sesión");
-                Login();
-            }
+                Console.WriteLine("Bienvenido de vuelta!");
+            MainMenu();
 
         }
 
@@ -253,7 +250,7 @@ namespace Client
             GameView gameInfo = commandHandler.SendRequest(gameID);
 
             Console.WriteLine();
-            Console.WriteLine($"título: {gameInfo.Game.Title}");
+            Console.WriteLine($"Título: {gameInfo.Game.Title}");
             Console.WriteLine($"Sinopsis: {gameInfo.Game.Synopsis}");
             if (gameInfo.Game.ReviewsRating == 0) { Console.WriteLine($"Calificacion: -"); }
             else { Console.WriteLine($"Calificacion: {gameInfo.Game.ReviewsRating}"); }
@@ -281,7 +278,8 @@ namespace Client
             Console.WriteLine("Escriba la carpeta donde quiere guardar la caratula");
             string folderPath = Validation.ReadValidDirectory("No se encontro tal carpeta, ingrese de nuevo", fileHandler);
             Console.WriteLine("Escriba el nombre que quiere para el archivo (sin la extensión)");
-            string fileName = Validation.ReadValidString("Escriba un nombre válido para su archivo");
+            string fileName = Validation.ReadValidFileName("Escriba un nombre válido para su archivo", folderPath, fileHandler);
+
 
             var commandHandler = (DownloadCover)CommandFactory.GetCommandHandler(Command.DOWNLOAD_COVER, networkStreamHandler);
             string completePath = commandHandler.SendRequest(gameId, folderPath, fileName);
