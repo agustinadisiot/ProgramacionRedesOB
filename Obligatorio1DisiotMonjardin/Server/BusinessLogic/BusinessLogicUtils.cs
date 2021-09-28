@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -67,8 +68,8 @@ namespace Server.BusinessLogic
 
         public bool ExistsNextPage<T>(List<T> fullList, int pageNumber)
         {
-            int maxPageNumber = fullList.Count / Specification.PAGE_SIZE;
-            if (fullList.Count % Specification.PAGE_SIZE != 0)
+            int maxPageNumber = fullList.Count / LogicSpecification.PAGE_SIZE;
+            if (fullList.Count % LogicSpecification.PAGE_SIZE != 0)
                 maxPageNumber++;
 
             return pageNumber < maxPageNumber;

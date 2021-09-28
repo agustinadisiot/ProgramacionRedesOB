@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -61,12 +62,12 @@ namespace Server.BusinessLogic
                 {
                     List<Review> allReviews = gameToGetReviews.Reviews;
 
-                    int firstReviewPos = (pageNumber - 1) * Specification.PAGE_SIZE;
+                    int firstReviewPos = (pageNumber - 1) * LogicSpecification.PAGE_SIZE;
                     int pageSize;
-                    if (firstReviewPos + Specification.PAGE_SIZE > allReviews.Count)
+                    if (firstReviewPos + LogicSpecification.PAGE_SIZE > allReviews.Count)
                         pageSize = allReviews.Count - firstReviewPos;
                     else
-                        pageSize = Specification.PAGE_SIZE;
+                        pageSize = LogicSpecification.PAGE_SIZE;
 
 
                     List<Review> reviewsInPage = allReviews.GetRange(firstReviewPos, pageSize);

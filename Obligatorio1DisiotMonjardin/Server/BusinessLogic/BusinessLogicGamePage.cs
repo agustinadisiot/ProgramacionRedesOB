@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -38,8 +39,8 @@ namespace Server.BusinessLogic
             if (pageNumber <= 0)
                 throw new ServerError("Número de Página no válido");
 
-            int firstGamePos = (pageNumber - 1) * Specification.PAGE_SIZE;
-            int lastGamePos = firstGamePos + Specification.PAGE_SIZE;
+            int firstGamePos = (pageNumber - 1) * LogicSpecification.PAGE_SIZE;
+            int lastGamePos = firstGamePos + LogicSpecification.PAGE_SIZE;
             List<string> gameTitles = new List<string>();
             List<int> gameIds = new List<int>();
 
