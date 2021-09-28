@@ -36,7 +36,7 @@ namespace Client
             if (cmd == Command.ERROR)
                 HandleError();
             if (cmd == Command.SERVER_SHUTDOWN)
-                throw new ServerShutDown();
+                throw new ServerShutDownException();
         }
 
         private void HandleError()

@@ -15,15 +15,14 @@ using System.Text;
 
 namespace Client
 {
-    public class Client // TODO cambiar nombre de client y clienteProgram
-                        // TODO organizar funciones
+    public class ClientPresentation
     {
         private NetworkStreamHandler networkStreamHandler;
         private readonly TcpClient tcpClient;
         private readonly IPEndPoint serverIpEndPoint;
         private readonly FileHandler fileHandler;
 
-        public Client()
+        public ClientPresentation()
         {
             var clientIpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 0); // Puerto 0 -> usa el primer puerto disponible
             tcpClient = new TcpClient(clientIpEndPoint);
@@ -34,28 +33,6 @@ namespace Client
         {
             tcpClient.Connect(serverIpEndPoint);
             networkStreamHandler = new NetworkStreamHandler(tcpClient.GetStream());
-        }
-
-        public void StartMenu()
-        {
-            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>
-            {
-                { "Iniciar Sesión", () => Login() },
-                { "Salir", () => EndConnection()}
-            };
-            CliMenu.showMenu(menuOptions, "Menu Inicial");
-
-        }
-
-        private void DeveloperMenu()
-        {
-            // Se dejó para mostrar en la defensa y para facilitar la correción
-            Dictionary<string, Action> developerOptions = new Dictionary<string, Action>
-            {
-                { "Enviar parámetro incorrecto", () => BrowseMyGames(-1) },
-                { "Datos de prueba", () => TestData() },
-            };
-            CliMenu.showMenu(developerOptions, "Menu de desarrollador");
         }
         private void EndConnection()
         {
@@ -72,6 +49,16 @@ namespace Client
             else { StartMenu(); }
         }
 
+        public void StartMenu()
+        {
+            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>
+            {
+                { "Iniciar Sesión", () => Login() },
+                { "Salir", () => EndConnection()}
+            };
+            CliMenu.showMenu(menuOptions, "Menu Inicial");
+
+        }
         public void MainMenu()
         {
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>
@@ -94,11 +81,23 @@ namespace Client
             {
                 HandleServerError(e.Message);
             }
-            catch (ServerShutDown)
+            catch (ServerShutDownException)
             {
                 HandleServerShutDown();
             }
         }
+        private void DeveloperMenu()
+        {
+            // Se dejó para mostrar en la defensa y para facilitar la correción
+            Dictionary<string, Action> developerOptions = new Dictionary<string, Action>
+            {
+                { "Enviar parámetro incorrecto", () => BrowseMyGames(-1) },
+                { "Datos de prueba", () => TestData() },
+            };
+            CliMenu.showMenu(developerOptions, "Menu de desarrollador");
+        }
+
+
 
         private void HandleServerShutDown()
         {
@@ -114,6 +113,7 @@ namespace Client
             Console.WriteLine();
             MainMenu();
         }
+
 
         private void Login()
         {
@@ -190,6 +190,7 @@ namespace Client
             string gamePageTitle = $"Juegos con \"{title}\" - Página {pageNumber}";
             ShowGamePage(newGamePage, gamePageTitle, nextPageOption, previousPageOption);
         }
+
         private void SearchByRating()
         {
             Console.WriteLine("Escriba la clasificación mínima del juego: ");
@@ -226,7 +227,6 @@ namespace Client
 
             ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
         }
-
 
         private void ShowGamePage(GamePage gamePage, string title, Action nextPage, Action previousPage)
         {
@@ -433,13 +433,11 @@ namespace Client
             }
 
         }
-
         public void ShowServerMessage(string message)
         {
             Console.WriteLine(message);
             MainMenu();
         }
-
 
         private void TestData()
         {

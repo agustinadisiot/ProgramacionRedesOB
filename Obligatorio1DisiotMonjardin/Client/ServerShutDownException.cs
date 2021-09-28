@@ -4,8 +4,8 @@ using System.Runtime.Serialization;
 namespace Client
 {
     [Serializable]
-    internal class ServerShutDown : Exception
+    internal class ServerShutDownException : Exception
     {
-        public ServerShutDown() { }
+        public ServerShutDownException() { }
     }
 }
