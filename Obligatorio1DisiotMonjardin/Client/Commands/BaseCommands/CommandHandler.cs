@@ -2,6 +2,7 @@
 using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System;
 
 namespace Client
 {
@@ -19,8 +20,15 @@ namespace Client
 
         protected void SendHeader()
         {
-            networkStreamHandler.WriteString(Specification.REQUEST_HEADER);
-            networkStreamHandler.WriteCommand(cmd);
+            try
+            {
+                networkStreamHandler.WriteString(Specification.REQUEST_HEADER);
+                networkStreamHandler.WriteCommand(cmd);
+            }
+            catch (System.IO.IOException e)
+            {
+                throw new ServerShutDownException();
+            }
         }
 
 
@@ -34,8 +42,6 @@ namespace Client
             Command cmd = networkStreamHandler.ReadCommand();
             if (cmd == Command.ERROR)
                 HandleError();
-            if (cmd == Command.SERVER_SHUTDOWN)
-                throw new ServerShutDownException();
         }
 
         private void HandleError()

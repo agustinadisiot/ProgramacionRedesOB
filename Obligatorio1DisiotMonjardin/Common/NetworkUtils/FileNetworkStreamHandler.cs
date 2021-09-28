@@ -64,7 +64,7 @@ namespace Common.NetworkUtils
             if (!fileHandler.FileExists(path))
                 throw new Exception("File does not exists"); // TODO catchear capaz 
 
-            long fileSize = fileHandler.GetFileSize(path);
+            long fileSize = fileHandler.GetFileSize(path); // cathear permisos
             networkStreamHandler.WriteFileSize(fileSize);
 
             var parts = SpecificationHelper.GetParts(fileSize);

@@ -57,7 +57,7 @@ namespace Server.BusinessLogic
             }
         }
 
-        // PRE: Requires lock on da.Games TODO ver si esta bien poner esto
+        // PRE: Requires lock on da.Games 
         public Game GetGameById(int gameId)
         {
             Game gameFound = da.Games.Find(game => game.Id == gameId);

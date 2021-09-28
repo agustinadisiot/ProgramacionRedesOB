@@ -10,15 +10,12 @@ namespace Server
     public class ClientHandler
     {
         private readonly TcpClient _acceptedTcpClient;
-        private readonly IFileStreamHandler _fileStreamHandler;
         private INetworkStreamHandler networkStreamHandler;
         private bool isClientConnected;
-        private bool isServerClosing;
 
         public ClientHandler(TcpClient newAcceptedTcpClient)
         {
             _acceptedTcpClient = newAcceptedTcpClient;
-            isServerClosing = false;
         }
 
         public void StartHandling()
@@ -45,26 +42,18 @@ namespace Server
                     }
                 }
             }
-            catch (SocketException se)
+            catch (Exception e) when (e is SocketException || e is System.IO.IOException)
             {
-                Console.WriteLine($"The client connection was interrupted, message {se.Message}");
+                Console.WriteLine($"The connection was closed");
             }
-
-            if (isServerClosing)
-            {
-                networkStreamHandler.WriteString(Specification.REQUEST_HEADER);
-                networkStreamHandler.WriteCommand(Command.SERVER_SHUTDOWN);
-                Console.WriteLine("Client connection was close by the server");
-            }
-            _acceptedTcpClient.Close();
         }
 
         public void StopHandling()
         {
             if (isClientConnected)
             {
-                isServerClosing = true;
                 isClientConnected = false;
+                _acceptedTcpClient.Close();
             }
         }
 
