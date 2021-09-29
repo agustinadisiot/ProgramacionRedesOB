@@ -258,7 +258,7 @@ namespace Client
             Console.WriteLine($"Género: {gameInfo.Game.Genre}");
 
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
-            if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => ShowBuyGameMenu(gameId));
+            if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => BuyGame(gameId));
             menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, gameId));
             if (gameInfo.IsOwned) menuOptions.Add("Escribir Review", () => ShowWriteReviewMenu(gameId));
             if (gameInfo.IsPublisher)
@@ -288,7 +288,7 @@ namespace Client
             ShowGameInfo(gameId);
         }
 
-        private void ShowBuyGameMenu(int gameId)
+        private void BuyGame(int gameId)
         {
             var commandHandler = (BuyGame)CommandFactory.GetCommandHandler(Command.BUY_GAME, networkStreamHandler);
             string message = commandHandler.SendRequest(gameId);
