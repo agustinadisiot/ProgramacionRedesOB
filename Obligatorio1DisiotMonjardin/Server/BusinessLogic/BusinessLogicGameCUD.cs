@@ -77,13 +77,21 @@ namespace Server.BusinessLogic
         public bool DeleteGame(int gameId)
         {
             List<Game> games = da.Games;
+            bool success;
             lock (games)
             {
                 Game gameToDelete = games.Find(i => i.Id == gameId);
                 string pathToDelete = gameToDelete.CoverFilePath;
                 DeleteFile.DeleteFileInAnotherThread(pathToDelete);
-                return games.Remove(gameToDelete);
+                success = games.Remove(gameToDelete);
             }
+            List<User> users = da.Users;
+            lock (users)
+            {
+                foreach (User user in users)
+                    user.DeleteGame(gameId);
+            }
+            return success;
         }
 
         public string ModifyGame(int gameToModId, Game modifiedGame)

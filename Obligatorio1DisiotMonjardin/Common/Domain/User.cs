@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Common.Domain
 {
@@ -17,6 +18,15 @@ namespace Common.Domain
         {
             User compare = (User)obj;
             return compare.Name == this.Name;
+        }
+
+        public void DeleteGame(int gameId)
+        {
+            lock (GamesOwned)
+            {
+                Game gameToDelete = GamesOwned.Find(i => i.Id == gameId);
+                GamesOwned.Remove(gameToDelete);
+            }
         }
     }
 }
