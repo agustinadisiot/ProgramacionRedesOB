@@ -11,11 +11,9 @@ namespace Server
 
         public override void HandleRequest()
         {
-            byte[] dataLength = networkStreamHandler.Read(Specification.DATA_SIZE_LENGTH);
-            int parsedLength = BitConverter.ToInt32(dataLength);
+            int length = networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
 
-            byte[] data = networkStreamHandler.Read(parsedLength);
-            string unparsedData = Encoding.UTF8.GetString(data);
+            string unparsedData = networkStreamHandler.ReadString(length);
 
             string[] parsedData = Parse(unparsedData);
             try
