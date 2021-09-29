@@ -259,8 +259,8 @@ namespace Client
 
             Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
             if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", () => BuyGame(gameId));
-            menuOptions.Add("Ver Reviews", () => ShowBrowseReviewsMenu(1, gameId));
-            if (gameInfo.IsOwned) menuOptions.Add("Escribir Review", () => ShowWriteReviewMenu(gameId));
+            menuOptions.Add("Ver Reseñas", () => ShowBrowseReviewsMenu(1, gameId));
+            if (gameInfo.IsOwned) menuOptions.Add("Escribir Reseña", () => ShowWriteReviewMenu(gameId));
             if (gameInfo.IsPublisher)
             {
                 menuOptions.Add("Modificar Juego", () => ModifyGame(gameId));

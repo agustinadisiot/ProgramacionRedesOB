@@ -1,0 +1,32 @@
+@startuml
+actor  Usuario #LightBlue
+agent ClientPresentation #LightBlue
+agent CommandHandlersClient #LightBlue
+agent CommandHandlersServer #LightGreen
+cloud "Red (TCP y Protocolo)" as Red #Yellow
+database DataAccess #LightGreen
+agent BusinessLogic #LightGreen
+
+
+Usuario -up-> ClientPresentation: 1
+ClientPresentation -down-> Usuario : 12
+
+ClientPresentation -up-> CommandHandlersClient: 2
+CommandHandlersClient -down-> ClientPresentation : 11
+
+CommandHandlersClient -right-> Red: 3
+Red -left-> CommandHandlersClient : 10
+Red -right-> CommandHandlersServer: 4
+CommandHandlersServer -left-> Red : 9
+
+CommandHandlersServer -right-> BusinessLogic: 5
+BusinessLogic -left-> CommandHandlersServer : 8
+
+BusinessLogic -down-> DataAccess: 6
+DataAccess -up-> BusinessLogic : 7
+
+/'one -right-> two: message 1-->2
+two -right-> three: message 2-->3
+two --> four: message 2-->4
+three -[hidden]- four'/
+@enduml
