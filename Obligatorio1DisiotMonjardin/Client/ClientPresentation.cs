@@ -52,7 +52,18 @@ namespace Client
                 { "Iniciar Sesión", () => Login() },
                 { "Salir", () => EndConnection()}
             };
-            CliMenu.showMenu(menuOptions, "Menú Inicial");
+            try
+            {
+                CliMenu.showMenu(menuOptions, "Menú Inicial"); ;
+            }
+            catch (ServerError e)
+            {
+                HandleServerError(e.Message);
+            }
+            catch (ServerShutDownException)
+            {
+                HandleServerShutDown();
+            }
 
         }
         public void MainMenu()
