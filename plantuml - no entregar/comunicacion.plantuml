@@ -1,26 +1,26 @@
 @startuml
-actor  Usuario #LightBlue
-agent ClientPresentation #LightBlue
-agent CommandHandlersClient #LightBlue
-agent CommandHandlersServer #LightGreen
-cloud "Red (TCP y Protocolo)" as Red #Yellow
-database DataAccess #LightGreen
-agent BusinessLogic #LightGreen
+actor  Usuario 
+agent ClientPresentation #Violet
+agent CommandHandlersClient #Orange
+agent CommandHandlersServer  #Violet
+cloud "Red (TCP y Protocolo)" as Red
+database DataAccess 
+agent BusinessLogic  #Orange
 
 
 Usuario -up-> ClientPresentation: 1
 ClientPresentation -down-> Usuario : 12
 
 ClientPresentation -up-> CommandHandlersClient: 2
-CommandHandlersClient -down-> ClientPresentation : 11
+CommandHandlersClient -down-> ClientPresentation : 11 ServerError
 
 CommandHandlersClient -right-> Red: 3
-Red -left-> CommandHandlersClient : 10
+Red -left-> CommandHandlersClient : 10 Command.Error
 Red -right-> CommandHandlersServer: 4
-CommandHandlersServer -left-> Red : 9
+CommandHandlersServer -left-> Red : 9 Command.Error
 
-CommandHandlersServer -right-> BusinessLogic: 5
-BusinessLogic -left-> CommandHandlersServer : 8
+CommandHandlersServer -down-> BusinessLogic: 5
+BusinessLogic -up-> CommandHandlersServer : 8 ServerError
 
 BusinessLogic -down-> DataAccess: 6
 DataAccess -up-> BusinessLogic : 7
