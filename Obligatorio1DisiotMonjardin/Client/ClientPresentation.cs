@@ -456,7 +456,7 @@ namespace Client
         {
             PublishGame commandHandler = (PublishGame)CommandFactory.GetCommandHandler(Command.PUBLISH_GAME, networkStreamHandler);
             string currentDict = Directory.GetCurrentDirectory();
-            currentDict = currentDict.Remove(currentDict.Length - 31) + "\\";
+            currentDict = Path.GetFullPath(Path.Combine(currentDict, @"..\..\..\..\"));
             Game newGame = new Game
             {
                 Title = "PUBG",
