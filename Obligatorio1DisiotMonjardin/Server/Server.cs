@@ -27,7 +27,16 @@ namespace Server
 
             while (acceptingConnections)
             {
-                var acceptedTcpClient = tcpListener.AcceptTcpClient();
+                TcpClient acceptedTcpClient = null;
+                try
+                {
+                    acceptedTcpClient = tcpListener.AcceptTcpClient();
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine("Server no longer accept request");
+                    acceptingConnections = false;
+                }
                 if (acceptingConnections)
                 {
                     Console.WriteLine("Accepted new client connection");
@@ -53,13 +62,14 @@ namespace Server
                     exit = true;
                 }
             }
-            acceptingConnections = false;
 
             Console.WriteLine("Server closing");
             foreach (ClientHandler clientHandler in clientHandlers)
             {
                 clientHandler.StopHandling();
             }
+            acceptingConnections = false;
+            tcpListener.Stop();
         }
     }
 

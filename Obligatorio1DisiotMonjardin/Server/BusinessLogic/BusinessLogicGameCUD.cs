@@ -84,12 +84,13 @@ namespace Server.BusinessLogic
                 string pathToDelete = gameToDelete.CoverFilePath;
                 DeleteFile.DeleteFileInAnotherThread(pathToDelete);
                 success = games.Remove(gameToDelete);
-            }
-            List<User> users = da.Users;
-            lock (users)
-            {
-                foreach (User user in users)
-                    user.DeleteGame(gameId);
+
+                List<User> users = da.Users;
+                lock (users)
+                {
+                    foreach (User user in users)
+                        user.DeleteGame(gameId);
+                }
             }
             return success;
         }

@@ -27,7 +27,15 @@ namespace Client
         }
         public void StartConnection()
         {
-            tcpClient.Connect(serverIpEndPoint);
+            try
+            {
+                tcpClient.Connect(serverIpEndPoint);
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("No se pudo conectar con el servidor");
+                Environment.Exit(0);
+            }
             networkStreamHandler = new NetworkStreamHandler(tcpClient.GetStream());
         }
         private void EndConnection()
