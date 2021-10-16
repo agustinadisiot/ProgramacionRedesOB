@@ -8,13 +8,13 @@ namespace Server
 {
     public class ClientHandler
     {
-        private readonly TcpClient _acceptedTcpClient;
+        private readonly Socket acceptedSocketClient;
         private INetworkStreamHandler networkStreamHandler;
         private bool isClientConnected;
 
-        public ClientHandler(TcpClient newAcceptedTcpClient)
+        public ClientHandler(Socket newAcceptedSocketClient)
         {
-            _acceptedTcpClient = newAcceptedTcpClient;
+            acceptedSocketClient = newAcceptedSocketClient;
         }
 
         public void StartHandling()
@@ -22,7 +22,7 @@ namespace Server
             isClientConnected = true;
             try
             {
-                networkStreamHandler = new NetworkStreamHandler(_acceptedTcpClient.GetStream());
+                networkStreamHandler = new NetworkStreamHandler(new NetworkStream(acceptedSocketClient));
 
                 while (isClientConnected)
                 {
@@ -52,7 +52,8 @@ namespace Server
             if (isClientConnected)
             {
                 isClientConnected = false;
-                _acceptedTcpClient.Close();
+                acceptedSocketClient.Shutdown(SocketShutdown.Both);
+                acceptedSocketClient.Close();
             }
         }
 

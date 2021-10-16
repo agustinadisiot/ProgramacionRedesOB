@@ -8,7 +8,7 @@ namespace Server
 {
     public class Server
     {
-        private readonly TcpListener tcpListener;
+        private readonly Socket server;
         public const int maxClientsInQ = 100;
         public bool acceptingConnections;
         public List<ClientHandler> clientHandlers;
@@ -17,20 +17,23 @@ namespace Server
 
             clientHandlers = new List<ClientHandler>();
             var ipEndPoint = new IPEndPoint(IPAddress.Parse(serverIpAddress), int.Parse(serverPort));
-            tcpListener = new TcpListener(ipEndPoint);
+            server = new Socket(AddressFamily.InterNetwork,
+                SocketType.Stream, 
+                ProtocolType.Tcp);
+            server.Bind(ipEndPoint);
             acceptingConnections = true;
         }
 
         public void StartReceivingConnections()
         {
-            tcpListener.Start(maxClientsInQ);
+            server.Listen(maxClientsInQ);
 
             while (acceptingConnections)
             {
-                TcpClient acceptedTcpClient = null;
+                Socket acceptedClient = null;
                 try
                 {
-                    acceptedTcpClient = tcpListener.AcceptTcpClient();
+                    acceptedClient = server.Accept();
                 }
                 catch (SocketException e)
                 {
@@ -40,7 +43,7 @@ namespace Server
                 if (acceptingConnections)
                 {
                     Console.WriteLine("Accepted new client connection");
-                    ClientHandler newHandler = new ClientHandler(acceptedTcpClient);
+                    ClientHandler newHandler = new ClientHandler(acceptedClient);
                     clientHandlers.Add(newHandler);
                     Thread clientThread = new Thread(() => newHandler.StartHandling());
                     clientThread.Start();
@@ -69,7 +72,9 @@ namespace Server
                 clientHandler.StopHandling();
             }
             acceptingConnections = false;
-            tcpListener.Stop();
+            server.Dispose();
+           // server.Shutdown(SocketShutdown.Both);
+            server.Close();
         }
     }
 

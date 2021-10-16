@@ -15,13 +15,13 @@ namespace Client
     public class ClientPresentation
     {
         private NetworkStreamHandler networkStreamHandler;
-        private readonly TcpClient tcpClient;
+        private readonly Socket socketClient;
         private readonly IPEndPoint serverIpEndPoint;
         private readonly FileHandler fileHandler;
 
         public ClientPresentation()
         {
-            tcpClient = ClientNetworkUtil.GetNewClientTcpEndpoint();
+            socketClient = ClientNetworkUtil.GetNewSocketClient();
             serverIpEndPoint = ClientNetworkUtil.GetServerEndpoint();
             fileHandler = new FileHandler();
         }
@@ -29,14 +29,14 @@ namespace Client
         {
             try
             {
-                tcpClient.Connect(serverIpEndPoint);
+                socketClient.Connect(serverIpEndPoint);
             }
             catch (SocketException e)
             {
                 Console.WriteLine("No se pudo conectar con el servidor");
                 Environment.Exit(0);
             }
-            networkStreamHandler = new NetworkStreamHandler(tcpClient.GetStream());
+            networkStreamHandler = new NetworkStreamHandler(new NetworkStream(socketClient));
         }
         private void EndConnection()
         {
@@ -48,7 +48,8 @@ namespace Client
             {
                 var commandHandler = (Exit)CommandFactory.GetCommandHandler(Command.EXIT, networkStreamHandler);
                 commandHandler.SendRequest();
-                tcpClient.Close();
+                socketClient.Shutdown(SocketShutdown.Both); 
+                socketClient.Close();
             }
             else { StartMenu(); }
         }

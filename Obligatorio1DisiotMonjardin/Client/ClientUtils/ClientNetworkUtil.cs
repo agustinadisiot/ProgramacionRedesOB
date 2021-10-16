@@ -10,12 +10,11 @@ namespace Client
     {
         static readonly ISettingsManager SettingsMgr = new SettingsManager();
 
-        public static TcpClient GetNewClientTcpEndpoint()
+        public static Socket GetNewSocketClient()
         {
-            var clientIpAddress = SettingsMgr.ReadSetting(ClientConfig.ClientIpConfigKey);
-            var clientPort = SettingsMgr.ReadSetting(ClientConfig.ClientPortConfigKey);
-            var clientIpEndPoint = new IPEndPoint(IPAddress.Parse(clientIpAddress), int.Parse(clientPort));
-            return new TcpClient(clientIpEndPoint);
+            return new Socket(AddressFamily.InterNetwork, 
+                SocketType.Stream, 
+                ProtocolType.Tcp);
         }
 
         public static IPEndPoint GetServerEndpoint()
