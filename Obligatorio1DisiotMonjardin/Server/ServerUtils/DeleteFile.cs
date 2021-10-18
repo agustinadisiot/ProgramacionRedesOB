@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace Server.Utils
 {
@@ -7,8 +7,7 @@ namespace Server.Utils
     {
         public static void DeleteFileInAnotherThread(string path)
         {
-            Thread deletingFileThread = new Thread(() => DeleteMutexFile(path));
-            deletingFileThread.Start();
+            Task.Run(() => DeleteMutexFile(path));
 
         }
 

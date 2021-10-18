@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -24,7 +25,7 @@ namespace Server
             acceptingConnections = true;
         }
 
-        public void StartReceivingConnections()
+        public async void StartReceivingConnections()
         {
             server.Listen(maxClientsInQ);
 
@@ -45,8 +46,7 @@ namespace Server
                     Console.WriteLine("Accepted new client connection");
                     ClientHandler newHandler = new ClientHandler(acceptedClient);
                     clientHandlers.Add(newHandler);
-                    Thread clientThread = new Thread(() => newHandler.StartHandling());
-                    clientThread.Start();
+                    await Task.Run(() => newHandler.StartHandling());
                 }
             }
 
@@ -73,6 +73,7 @@ namespace Server
             }
             acceptingConnections = false;
             server.Close();
+            Console.WriteLine("Press enter to close window");
         }
     }
 
