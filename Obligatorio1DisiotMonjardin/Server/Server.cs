@@ -72,8 +72,6 @@ namespace Server
                 clientHandler.StopHandling();
             }
             acceptingConnections = false;
-            server.Dispose();
-           // server.Shutdown(SocketShutdown.Both);
             server.Close();
         }
     }
