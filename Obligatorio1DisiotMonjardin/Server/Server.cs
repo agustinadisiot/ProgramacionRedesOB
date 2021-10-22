@@ -31,26 +31,31 @@ namespace Server
 
             while (acceptingConnections)
             {
-                Socket acceptedClient = null;
                 try
                 {
-                    acceptedClient = server.Accept();
+                    Socket acceptedClient = await server.AcceptAsync().ConfigureAwait(false);
+                    var task = Task.Run(async()=> await handleAcceptedConection(acceptedClient));
                 }
                 catch (SocketException e)
                 {
                     Console.WriteLine("Server no longer accept request");
                     acceptingConnections = false;
                 }
-                if (acceptingConnections)
-                {
-                    Console.WriteLine("Accepted new client connection");
-                    ClientHandler newHandler = new ClientHandler(acceptedClient);
-                    clientHandlers.Add(newHandler);
-                    await Task.Run(() => newHandler.StartHandling());
-                }
+               
             }
 
 
+        }
+
+        public async Task handleAcceptedConection(Socket acceptedSocket)
+        {
+            if (acceptingConnections)
+            {
+                Console.WriteLine("Accepted new client connection");
+                ClientHandler newHandler = new ClientHandler(acceptedSocket);
+                clientHandlers.Add(newHandler);
+                await Task.Run(() => newHandler.StartHandling());
+            }
         }
 
         public void ExitPrompt()
