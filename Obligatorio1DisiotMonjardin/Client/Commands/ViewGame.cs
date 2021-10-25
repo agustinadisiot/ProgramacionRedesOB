@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System.Threading.Tasks;
 
 namespace Client
 {
@@ -10,22 +11,21 @@ namespace Client
 
         public override Command cmd => Command.VIEW_GAME;
 
-        public GameView SendRequest(string gameId)
+        public async Task<GameView> SendRequest(string gameId)
         {
-            SendHeader();
+            await SendHeader ();
 
-            SendData(gameId);
-            return ResponseHandler();
+            await SendData(gameId);
+            return await ResponseHandler();
         }
 
-        private GameView ResponseHandler()
+        private async Task<GameView> ResponseHandler()
         {
+            await ReadHeader();
+            await ReadCommand();
 
-            ReadHeader();
-            ReadCommand();
-
-            int dataLength = networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
-            string data = networkStreamHandler.ReadString(dataLength);
+            int dataLength = await networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
+            string data = await networkStreamHandler.ReadString(dataLength);
 
 
             string[] parsedData = ParseByFirstDelimiter(data);

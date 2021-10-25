@@ -4,6 +4,7 @@ using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Common.Utils;
 using System;
+using System.Threading.Tasks;
 
 namespace Common.NetworkUtils
 {
@@ -19,10 +20,10 @@ namespace Common.NetworkUtils
             fileHandler = new FileHandler.FileHandler();
 
         }
-        public string ReceiveFile(string folderPath, string fileName = "")
+        public async Task<string> ReceiveFile(string folderPath, string fileName = "")
         {
             {
-                long fileSize = networkStreamHandler.ReadFileSize();
+                long fileSize = await networkStreamHandler.ReadFileSize();
 
                 long parts = SpecificationHelper.GetParts(fileSize);
                 long offset = 0;
@@ -43,12 +44,12 @@ namespace Common.NetworkUtils
                     if (currentPart == parts)
                     {
                         var lastPartSize = (int)(fileSize - offset);
-                        data = networkStreamHandler.Read(lastPartSize);
+                        data = await networkStreamHandler.Read(lastPartSize);
                         offset += lastPartSize;
                     }
                     else
                     {
-                        data = networkStreamHandler.Read(Specification.MAX_PACKET_SIZE);
+                        data = await networkStreamHandler.Read(Specification.MAX_PACKET_SIZE);
                         offset += Specification.MAX_PACKET_SIZE;
                     }
                     fileStreamHandler.Write(completeFileName, data);
@@ -59,13 +60,13 @@ namespace Common.NetworkUtils
         }
 
 
-        public void SendFile(string path)
+        public async Task SendFile(string path)
         {
-            if (!fileHandler.FileExists(path))
+            if (!await fileHandler .FileExists(path))
                 throw new Exception("File does not exists"); 
 
-            long fileSize = fileHandler.GetFileSize(path); 
-            networkStreamHandler.WriteFileSize(fileSize);
+            long fileSize = await fileHandler .GetFileSize(path); 
+            await networkStreamHandler.WriteFileSize(fileSize);
 
             var parts = SpecificationHelper.GetParts(fileSize);
             long offset = 0;
@@ -86,7 +87,7 @@ namespace Common.NetworkUtils
                     offset += Specification.MAX_PACKET_SIZE;
                 }
 
-                networkStreamHandler.Write(data);
+                await networkStreamHandler.Write(data);
                 currentPart++;
             }
         }

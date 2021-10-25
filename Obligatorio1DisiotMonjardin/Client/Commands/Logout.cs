@@ -1,5 +1,6 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System.Threading.Tasks;
 
 namespace Client
 {
@@ -9,16 +10,16 @@ namespace Client
 
         public override Command cmd => Command.LOGOUT;
 
-        public bool SendRequest()
+        public async Task<bool> SendRequest()
         {
-            SendHeader();
-            SendData("");
-            return ResponseHandler();
+            await SendHeader();
+            await SendData("");
+            return await ResponseHandler();
         }
 
-        private bool ResponseHandler()
+        private async Task<bool> ResponseHandler()
         {
-            string[] data = GetData();
+            string[] data = await GetData();
             bool response = ToBooleanFromString(data[0]);
             return response;
         }

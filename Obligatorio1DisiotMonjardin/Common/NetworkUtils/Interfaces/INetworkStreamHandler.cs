@@ -1,21 +1,22 @@
 using Common.Protocol;
+using System.Threading.Tasks;
 
 namespace Common.NetworkUtils.Interfaces
 {
     public interface INetworkStreamHandler
 
     {
-        void Write(byte[] data);
-        void WriteInt(int data);
-        void WriteFileSize(long data);
-        void WriteString(string data);
-        void WriteCommand(Command data);
+        Task Write(byte[] data);
+        Task WriteInt(int data);
+        Task WriteFileSize(long data);
+        Task WriteString(string data);
+        Task WriteCommand(Command data);
 
 
-        byte[] Read(int length);
-        int ReadInt(int length);
-        long ReadFileSize();
-        string ReadString(int length);
-        Command ReadCommand();
+        Task<byte[]> Read(int length);
+        Task<int> ReadInt(int length);
+        Task<long> ReadFileSize();
+        Task<string> ReadString(int length);
+        Task<Command> ReadCommand();
     }
 }

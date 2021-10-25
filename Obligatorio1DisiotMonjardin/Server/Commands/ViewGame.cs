@@ -3,6 +3,7 @@ using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Server.BusinessLogic;
 using System;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -12,18 +13,18 @@ namespace Server
 
         public override Command cmd => Command.VIEW_GAME;
 
-        public override void ParsedRequestHandler(string[] req)
+        public override async Task ParsedRequestHandler(string[] req)
         {
             BusinessLogicGameInfo GameInfo = BusinessLogicGameInfo.GetInstance();
             int gameId = parseInt(req[0]);
 
             GameView gameView = GameInfo.ViewGame(gameId, networkStreamHandler);
-            Respond(gameView);
+            await Respond(gameView);
         }
 
-        private void Respond(GameView gameView)
+        private async Task Respond(GameView gameView)
         {
-            SendResponseHeader();
+            await SendResponseHeader();
 
             string data = "";
             data += gameView.Game.Title;
@@ -40,7 +41,7 @@ namespace Server
             data += Specification.FIRST_DELIMITER;
             data += Convert.ToInt32(gameView.IsPublisher);
 
-            SendData(data);
+            await SendData(data);
         }
     }
 }

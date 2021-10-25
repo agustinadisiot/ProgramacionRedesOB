@@ -3,6 +3,7 @@ using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Server.BusinessLogic;
 using System;
+using System.Threading.Tasks;
 
 namespace Server.Commands
 {
@@ -12,16 +13,16 @@ namespace Server.Commands
 
         public override Command cmd => Command.BROWSE_REVIEWS;
 
-        public override void ParsedRequestHandler(string[] req)
+        public override async Task ParsedRequestHandler(string[] req)
         {
             BusinessLogicReview Review = BusinessLogicReview.GetInstance();
             int pageNumber = parseInt(req[0]);
             int gameId = parseInt(req[1]);
             ReviewPage reviewPage = Review.BrowseReviews(pageNumber, gameId);
-            Respond(reviewPage);
+            await Respond(reviewPage);
         }
 
-        private void Respond(ReviewPage reviewPage)
+        private async Task Respond(ReviewPage reviewPage)
         {
             string data = "";
             foreach (Review review in reviewPage.Reviews)
@@ -39,8 +40,8 @@ namespace Server.Commands
             data += Specification.FIRST_DELIMITER;
             data += Convert.ToInt32(reviewPage.HasPreviousPage);
 
-            SendResponseHeader();
-            SendData(data);
+            await SendResponseHeader();
+            await SendData(data);
 
         }
     }

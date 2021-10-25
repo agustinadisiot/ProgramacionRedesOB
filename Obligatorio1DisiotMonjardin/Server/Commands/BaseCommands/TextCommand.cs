@@ -2,6 +2,7 @@
 using Common.Protocol;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -9,11 +10,11 @@ namespace Server
     {
         public TextCommand(INetworkStreamHandler nwsh) : base(nwsh) { }
 
-        public override void HandleRequest()
+        public override async Task HandleRequest()
         {
-            int length = networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
+            int length = await networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
 
-            string unparsedData = networkStreamHandler.ReadString(length);
+            string unparsedData = await networkStreamHandler .ReadString(length);
 
             string[] parsedData = Parse(unparsedData);
             try
@@ -22,16 +23,16 @@ namespace Server
             }
             catch (ServerError e)
             {
-                SendErrorToClient(e.Message);
+                await SendErrorToClient(e.Message);
             }
 
         }
 
-        private void SendErrorToClient(string message)
+        private async Task SendErrorToClient(string message)
         {
-            networkStreamHandler.WriteString(Specification.RESPONSE_HEADER);
-            networkStreamHandler.WriteCommand(Command.ERROR);
-            SendData(message);
+            await networkStreamHandler.WriteString(Specification.RESPONSE_HEADER);
+            await networkStreamHandler.WriteCommand(Command.ERROR);
+            await SendData(message);
         }
 
         private string[] Parse(string unparsedData)
@@ -49,7 +50,7 @@ namespace Server
             return result;
         }
 
-        public abstract void ParsedRequestHandler(string[] req);
+        public abstract Task ParsedRequestHandler(string[] req);
 
     }
 }

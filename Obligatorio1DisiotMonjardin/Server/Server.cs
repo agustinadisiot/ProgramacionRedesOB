@@ -34,7 +34,7 @@ namespace Server
                 try
                 {
                     Socket acceptedClient = await server.AcceptAsync().ConfigureAwait(false);
-                    var task = Task.Run(async()=> await handleAcceptedConection(acceptedClient));
+                    var task = Task.Run(async()=> await HandleAcceptedConection(acceptedClient));
                 }
                 catch (SocketException e)
                 {
@@ -47,7 +47,7 @@ namespace Server
 
         }
 
-        public async Task handleAcceptedConection(Socket acceptedSocket)
+        public async Task HandleAcceptedConection(Socket acceptedSocket)
         {
             if (acceptingConnections)
             {

@@ -1,5 +1,6 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System.Threading.Tasks;
 
 namespace Client
 {
@@ -11,9 +12,9 @@ namespace Client
 
         public override Command cmd => Command.EXIT;
 
-        public void SendRequest()
+        public async Task SendRequest()
         {
-            SendHeader();
+            await SendHeader();
         }
     }
 }

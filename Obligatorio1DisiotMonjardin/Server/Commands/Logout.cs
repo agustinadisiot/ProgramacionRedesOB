@@ -1,6 +1,7 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Server.BusinessLogic;
+using System.Threading.Tasks;
 
 namespace Server.Commands.BaseCommands
 {
@@ -11,18 +12,18 @@ namespace Server.Commands.BaseCommands
 
         public override Command cmd => Command.LOGOUT;
 
-        public override void ParsedRequestHandler(string[] req)
+        public override async Task ParsedRequestHandler(string[] req)
         {
             BusinessLogicSession Session = BusinessLogicSession.GetInstance();
             bool success = Session.Logout(networkStreamHandler);
-            Respond(success);
+            await Respond (success);
         }
 
-        private void Respond(bool resp)
+        private async Task Respond(bool resp)
         {
-            SendResponseHeader();
+            await SendResponseHeader ();
             string stringResp = resp ? "1" : "0";
-            SendData(stringResp);
+            await SendData (stringResp);
         }
     }
 }

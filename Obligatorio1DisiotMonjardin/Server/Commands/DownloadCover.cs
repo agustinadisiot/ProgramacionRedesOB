@@ -1,6 +1,7 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Server.BusinessLogic;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -10,7 +11,7 @@ namespace Server
 
         public override Command cmd => Command.DOWNLOAD_COVER;
 
-        public override void ParsedRequestHandler(string[] req)
+        public override async Task ParsedRequestHandler(string[] req)
         {
             int gameId = parseInt(req[0]);
             BusinessLogicGameInfo GameInfo = BusinessLogicGameInfo.GetInstance();
@@ -26,10 +27,10 @@ namespace Server
 
 
 
-        private void Respond(string coverPath)
+        private async Task Respond(string coverPath)
         {
-            SendResponseHeader();
-            fileNetworkStreamHandler.SendFile(coverPath);
+            await SendResponseHeader();
+            await fileNetworkStreamHandler.SendFile(coverPath);
 
         }
     }

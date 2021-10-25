@@ -1,24 +1,25 @@
 using Common.FileHandler.Interfaces;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Common.FileHandler
 {
     public class FileHandler : IFileHandler
     {
-        public bool FileExists(string path)
+        public async Task<bool> FileExists(string path)
         {
-            return File.Exists(path);
+            return await Task.Run(()=>File.Exists(path));
         }
 
-        public bool PathExists(string directory)
+        public async Task<bool> PathExists(string directory)
         {
-            return !File.Exists(directory) && Directory.Exists(directory);
+            return await Task.Run(()=>!File.Exists(directory) && Directory.Exists(directory));
         }
 
-        public string GetFileName(string path)
+        public async Task<string> GetFileName(string path)
         {
-            if (FileExists(path))
+            if (await FileExists(path))
             {
                 return new FileInfo(path).Name;
             }
@@ -26,9 +27,9 @@ namespace Common.FileHandler
             throw new Exception("File does not exist");
         }
 
-        public long GetFileSize(string path)
+        public async Task<long> GetFileSize(string path)
         {
-            if (FileExists(path))
+            if (await FileExists(path))
             {
                 return new FileInfo(path).Length;
             }

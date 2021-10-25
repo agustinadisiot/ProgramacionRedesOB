@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System.Threading.Tasks;
 
 namespace Client
 {
@@ -11,9 +12,9 @@ namespace Client
 
         public override Command cmd => Command.MODIFY_GAME;
 
-        public string SendRequest(int gameId, Game gameToMod)
+        public async Task<string> SendRequest(int gameId, Game gameToMod)
         {
-            SendHeader();
+            await SendHeader();
 
             string data = "";
             data += gameId.ToString();
@@ -30,20 +31,20 @@ namespace Client
             if (gameToMod.CoverFilePath == "")
             {
                 data += 0;
-                SendData(data);
+                await SendData(data);
             }
             else
             {
                 data += 1;
-                SendData(data);
-                fileNetworkStreamHandler.SendFile(gameToMod.CoverFilePath);
+                await SendData(data);
+                await fileNetworkStreamHandler.SendFile(gameToMod.CoverFilePath);
             }
 
-            return ResponseHandler();
+            return await ResponseHandler();
         }
-        private string ResponseHandler()
+        private async Task<string> ResponseHandler()
         {
-            string[] data = GetData();
+            string[] data = await GetData();
             string message = data[0];
             return message;
 

@@ -6,6 +6,7 @@ using Common.Protocol;
 using Server.BusinessLogic;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Server.Commands
 {
@@ -15,7 +16,7 @@ namespace Server.Commands
 
         public override Command cmd => Command.PUBLISH_GAME;
 
-        public override void ParsedRequestHandler(string[] req)
+        public override async Task ParsedRequestHandler(string[] req)
         {
             Game newGame = new Game
             {
@@ -25,7 +26,7 @@ namespace Server.Commands
             };
             ISettingsManager SettingsMgr = new SettingsManager();
             string folderPath = SettingsMgr.ReadSetting(ServerConfig.GameCoverPathKey);
-            string coverPath = fileNetworkStreamHandler.ReceiveFile(folderPath);
+            string coverPath = await fileNetworkStreamHandler.ReceiveFile(folderPath);
             newGame.CoverFilePath = coverPath;
 
             BusinessLogicGameCUD GameCUD = BusinessLogicGameCUD.GetInstance();
@@ -38,15 +39,15 @@ namespace Server.Commands
             catch (Exception e) when (e is TitleAlreadyExistsException || e is ServerError)
             {
                 message = e.Message;
-                File.Delete(coverPath);
+                Task.Run(()=>File.Delete(coverPath));
             }
-            Respond(message);
+            await Respond(message);
         }
 
-        private void Respond(string message)
+        private async Task Respond(string message)
         {
-            SendResponseHeader();
-            SendData(message);
+            await SendResponseHeader();
+            await SendData(message);
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System.Threading.Tasks;
 
 namespace Client
 {
@@ -9,21 +10,20 @@ namespace Client
 
         public override Command cmd => Command.DOWNLOAD_COVER;
 
-        public string SendRequest(int gameId, string folderPath, string fileName)
+        public async Task<string> SendRequest(int gameId, string folderPath, string fileName)
         {
-            SendHeader();
+            await SendHeader ();
 
-            SendData(gameId.ToString());
-            return ResponseHandler(folderPath, fileName);
+            await SendData(gameId.ToString());
+            return await ResponseHandler(folderPath, fileName);
         }
 
-        private string ResponseHandler(string folderPath, string fileName)
+        private async Task<string> ResponseHandler(string folderPath, string fileName)
         {
+            await ReadHeader();
+            await ReadCommand ();
 
-            ReadHeader();
-            ReadCommand();
-
-            string completePath = fileNetworkStreamHandler.ReceiveFile(folderPath, fileName);
+            string completePath = await fileNetworkStreamHandler.ReceiveFile(folderPath, fileName);
             return completePath;
         }
 

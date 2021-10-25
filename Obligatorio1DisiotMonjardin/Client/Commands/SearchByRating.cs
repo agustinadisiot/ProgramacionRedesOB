@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System.Threading.Tasks;
 
 namespace Client.Commands
 {
@@ -10,13 +11,13 @@ namespace Client.Commands
 
         public override Command cmd => Command.SEARCH_BY_RATING;
 
-        public GamePage SendRequest(int pageNumber, int rating)
+        public async Task<GamePage> SendRequest(int pageNumber, int rating)
         {
-            SendHeader();
+            await SendHeader();
 
             string pageNumberText = pageNumber.ToString();
-            SendData(pageNumberText + Specification.FIRST_DELIMITER + rating);
-            return ResponseHandler(pageNumber);
+            await SendData(pageNumberText + Specification.FIRST_DELIMITER + rating);
+            return await ResponseHandler(pageNumber);
         }
 
 

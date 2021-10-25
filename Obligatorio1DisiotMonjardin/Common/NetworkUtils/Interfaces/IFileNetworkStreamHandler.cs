@@ -1,8 +1,10 @@
-﻿namespace Common.FileHandler.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace Common.FileHandler.Interfaces
 {
     public interface IFileNetworkStreamHandler
     {
-        string ReceiveFile(string folderPath, string fileName = "");
-        void SendFile(string fileName);
+        Task<string> ReceiveFile(string folderPath, string fileName = "");
+        Task SendFile(string fileName);
     }
 }

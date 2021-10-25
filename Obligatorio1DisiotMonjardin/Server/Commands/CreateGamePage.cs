@@ -3,6 +3,7 @@ using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Server.BusinessLogic;
 using System;
+using System.Threading.Tasks;
 
 namespace Server.Commands
 {
@@ -11,7 +12,7 @@ namespace Server.Commands
         public CreateGamePage(INetworkStreamHandler nwsh) : base(nwsh) { }
 
         protected BusinessLogicGamePage GamePage;
-        public override void ParsedRequestHandler(string[] req)
+        public override async Task ParsedRequestHandler(string[] req)
         {
             int pageNumber = parseInt(req[0]); ;
 
@@ -21,14 +22,14 @@ namespace Server.Commands
 
             GamePage = BusinessLogicGamePage.GetInstance();
             GamePage gamePage = GetGamePage(pageNumber, unParsedfilter);
-            Respond(gamePage);
+            await Respond(gamePage);
         }
 
         protected abstract GamePage GetGamePage(int pageNumber, string unParsedfilter);
 
-        protected void Respond(GamePage gamePage)
+        protected async Task Respond(GamePage gamePage)
         {
-            SendResponseHeader();
+            await SendResponseHeader ();
             string data = "";
             for (int i = 0; i < gamePage.GamesTitles.Count; i++)
             {
@@ -41,7 +42,7 @@ namespace Server.Commands
             data += Specification.FIRST_DELIMITER;
             data += Convert.ToInt32(gamePage.HasPreviousPage);
 
-            SendData(data);
+            await SendData (data);
 
         }
     }

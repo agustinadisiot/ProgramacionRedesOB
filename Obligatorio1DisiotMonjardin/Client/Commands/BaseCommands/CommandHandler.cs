@@ -2,6 +2,7 @@
 using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System.Threading.Tasks;
 
 namespace Client
 {
@@ -17,12 +18,12 @@ namespace Client
             fileNetworkStreamHandler = new FileNetworkStreamHandler(nwsh);
         }
 
-        protected void SendHeader()
+        protected async Task SendHeader()
         {
             try
             {
-                networkStreamHandler.WriteString(Specification.REQUEST_HEADER);
-                networkStreamHandler.WriteCommand(cmd);
+                await networkStreamHandler.WriteString(Specification.REQUEST_HEADER);
+                await networkStreamHandler.WriteCommand(cmd);
             }
             catch (System.IO.IOException e)
             {
@@ -31,22 +32,22 @@ namespace Client
         }
 
 
-        protected void ReadHeader()
+        protected async Task ReadHeader()
         {
-            networkStreamHandler.ReadString(Specification.HEADER_LENGTH);
+            await networkStreamHandler.ReadString(Specification.HEADER_LENGTH);
         }
 
-        protected void ReadCommand()
+        protected async Task ReadCommand()
         {
-            Command cmd = networkStreamHandler.ReadCommand();
+            Command cmd = await networkStreamHandler.ReadCommand();
             if (cmd == Command.ERROR)
-                HandleError();
+                await HandleError();
         }
 
-        private void HandleError()
+        private async Task HandleError()
         {
-            int messageErrorLength = networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
-            string errorMessage = networkStreamHandler.ReadString(messageErrorLength);
+            int messageErrorLength = await networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
+            string errorMessage = await networkStreamHandler.ReadString(messageErrorLength);
             throw new ServerError(errorMessage);
         }
     }

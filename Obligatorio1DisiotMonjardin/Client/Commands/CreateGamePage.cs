@@ -2,6 +2,7 @@
 using Common.NetworkUtils.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Client.Commands
 {
@@ -10,9 +11,9 @@ namespace Client.Commands
         protected CreateGamePage(INetworkStreamHandler nwsh) : base(nwsh) { }
 
 
-        protected GamePage ReadGamePage(int pageNumber)
+        protected async Task<GamePage> ReadGamePage(int pageNumber)
         {
-            string[] data = GetData();
+            string[] data = await GetData();
 
             List<string> gamesInfo = data.ToList();
             gamesInfo.RemoveRange((data.Length - 2), 2);
@@ -37,9 +38,9 @@ namespace Client.Commands
             };
             return gamePage;
         }
-        protected GamePage ResponseHandler(int pageNumber)
+        protected async Task<GamePage> ResponseHandler(int pageNumber)
         {
-            GamePage gamePage = ReadGamePage(pageNumber);
+            GamePage gamePage = await ReadGamePage(pageNumber);
             return gamePage;
 
         }

@@ -1,10 +1,12 @@
+using System.Threading.Tasks;
+
 namespace Common.FileHandler.Interfaces
 {
     public interface IFileHandler
     {
-        bool FileExists(string path);
-        public bool PathExists(string directory);
-        string GetFileName(string path);
-        long GetFileSize(string path);
+        Task<bool> FileExists(string path);
+        public Task<bool> PathExists(string directory);
+        Task<string> GetFileName(string path);
+        Task<long> GetFileSize(string path);
     }
 }

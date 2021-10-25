@@ -1,5 +1,6 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System.Threading.Tasks;
 
 namespace Client.Commands
 {
@@ -9,21 +10,21 @@ namespace Client.Commands
 
         public override Command cmd => Command.BUY_GAME;
 
-        public string SendRequest(int gameId)
+        public async Task<string> SendRequest(int gameId)
         {
-            SendHeader();
+            await SendHeader();
 
             string data = "";
             data += gameId;
 
-            SendData(data);
-            return ResponseHandler();
+            await SendData(data);
+            return await ResponseHandler ();
         }
 
 
-        private string ResponseHandler()
+        private async Task<string> ResponseHandler()
         {
-            string[] data = GetData();
+            string[] data = await GetData();
             string message = data[0];
             return message;
 

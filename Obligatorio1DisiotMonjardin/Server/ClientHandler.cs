@@ -3,6 +3,7 @@ using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -17,7 +18,7 @@ namespace Server
             acceptedSocketClient = newAcceptedSocketClient;
         }
 
-        public void StartHandling()
+        public async Task StartHandling()
         {
             isClientConnected = true;
             try
@@ -27,8 +28,8 @@ namespace Server
                 while (isClientConnected)
                 {
 
-                    string header = networkStreamHandler.ReadString(Specification.HEADER_LENGTH);
-                    Command cmd = networkStreamHandler.ReadCommand();
+                    string header = await networkStreamHandler.ReadString(Specification.HEADER_LENGTH);
+                    Command cmd = await networkStreamHandler.ReadCommand();
                     if (cmd == Command.EXIT)
                     {
                         isClientConnected = false;

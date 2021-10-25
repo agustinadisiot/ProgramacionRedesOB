@@ -6,6 +6,7 @@ using Common.Protocol;
 using Server.BusinessLogic;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -17,7 +18,7 @@ namespace Server
 
         public override Command cmd => Command.MODIFY_GAME;
 
-        public override void ParsedRequestHandler(string[] req)
+        public override async Task ParsedRequestHandler(string[] req)
         {
             Game modifiedGame = new Game
             {
@@ -30,7 +31,7 @@ namespace Server
             {
                 ISettingsManager SettingsMgr = new SettingsManager();
                 string folderPath = SettingsMgr.ReadSetting(ServerConfig.GameCoverPathKey);
-                string coverPath = fileNetworkStreamHandler.ReceiveFile(folderPath);
+                string coverPath = await fileNetworkStreamHandler.ReceiveFile(folderPath);
                 modifiedGame.CoverFilePath = coverPath;
             }
 
@@ -48,13 +49,13 @@ namespace Server
                 if (req[5] == "1")
                     File.Delete(modifiedGame.CoverFilePath);
             }
-            Respond(message);
+            await Respond(message);
         }
 
-        private void Respond(string message)
+        private async Task Respond(string message)
         {
-            SendResponseHeader();
-            SendData(message);
+            await SendResponseHeader();
+            await SendData(message);
 
         }
     }

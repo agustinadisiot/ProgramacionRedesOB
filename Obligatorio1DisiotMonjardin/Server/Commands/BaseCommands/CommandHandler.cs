@@ -3,6 +3,7 @@ using Common.NetworkUtils;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -16,25 +17,25 @@ namespace Server
             networkStreamHandler = nwsh;
             fileNetworkStreamHandler = new FileNetworkStreamHandler(nwsh);
         }
-        public abstract void HandleRequest();
+        public abstract Task HandleRequest();
 
-        protected void SendResponseHeader()
+        protected async Task SendResponseHeader()
         {
-            networkStreamHandler.WriteString(Specification.RESPONSE_HEADER);
-            networkStreamHandler.WriteCommand(cmd);
+            await networkStreamHandler.WriteString(Specification.RESPONSE_HEADER);
+            await networkStreamHandler.WriteCommand(cmd);
         }
 
-        protected void ReadHeader()
+        protected async Task ReadHeader()
         {
-            networkStreamHandler.ReadString(Specification.HEADER_LENGTH);
-            networkStreamHandler.ReadCommand();
+            await networkStreamHandler .ReadString(Specification.HEADER_LENGTH);
+            await networkStreamHandler.ReadCommand();
         }
 
-        protected void SendData(string data)
+        protected async Task SendData(string data)
         {
             int dataLengthInBytes = Encoding.UTF8.GetBytes(data).Length;
-            networkStreamHandler.WriteInt(dataLengthInBytes);
-            networkStreamHandler.WriteString(data);
+            await networkStreamHandler.WriteInt(dataLengthInBytes);
+            await networkStreamHandler .WriteString(data);
         }
     }
 }

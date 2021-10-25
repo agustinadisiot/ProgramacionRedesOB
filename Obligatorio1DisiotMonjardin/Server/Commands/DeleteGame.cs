@@ -1,6 +1,7 @@
 ﻿using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Server.BusinessLogic;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -12,20 +13,20 @@ namespace Server
 
         public override Command cmd => Command.DELETE_GAME;
 
-        public override void ParsedRequestHandler(string[] req)
+        public override async Task ParsedRequestHandler(string[] req)
         {
             int gameId = parseInt(req[0]);
 
             BusinessLogicGameCUD GameCUD = BusinessLogicGameCUD.GetInstance();
             GameCUD.DeleteGame(gameId);
             string message = "Juego borrado exitosamente";
-            Respond(message);
+            await Respond(message);
         }
 
-        private void Respond(string message)
+        private async Task Respond(string message)
         {
-            SendResponseHeader();
-            SendData(message);
+            await SendResponseHeader();
+            await SendData(message);
         }
     }
 }

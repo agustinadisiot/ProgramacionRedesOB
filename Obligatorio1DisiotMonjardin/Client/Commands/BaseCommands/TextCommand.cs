@@ -2,6 +2,7 @@
 using Common.Protocol;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Client
 {
@@ -20,8 +21,7 @@ namespace Client
         {
             string[] parsedData = unparsedData.Split(Specification.FIRST_DELIMITER);
             return parsedData;
-        } //
-          // poner en common(el server tambien la tiene)
+        }
 
         public string[] ParseBySecondDelimiter(string unparsedData)
         {
@@ -29,20 +29,20 @@ namespace Client
             return parsedData;
         }
 
-        protected void SendData(string data)
+        protected async Task SendData(string data)
         {
             int dataLengthInBytes = Encoding.UTF8.GetBytes(data).Length;
-            networkStreamHandler.WriteInt(dataLengthInBytes);
-            networkStreamHandler.WriteString(data);
+            await networkStreamHandler.WriteInt(dataLengthInBytes);
+            await networkStreamHandler.WriteString(data);
         }
 
-        protected string[] GetData()
+        protected async Task<string[]> GetData()
         {
-            ReadHeader();
-            ReadCommand();
+            await ReadHeader();
+            await ReadCommand();
 
-            int dataLength = networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
-            string data = networkStreamHandler.ReadString(dataLength);
+            int dataLength = await networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
+            string data = await networkStreamHandler.ReadString(dataLength);
 
 
             string[] parsedData = ParseByFirstDelimiter(data);

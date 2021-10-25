@@ -3,6 +3,7 @@ using Common.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Common.Utils
 {
@@ -113,61 +114,61 @@ namespace Common.Utils
             return int.Parse(number);
         }
 
-        public static string ReadValidPath(string errorMessage, FileHandler.FileHandler fileHandler)
+        public static async Task<string> ReadValidPath(string errorMessage, FileHandler.FileHandler fileHandler)
         {
             string coverPath = Console.ReadLine();
-            bool isValidPath = fileHandler.FileExists(coverPath);
+            bool isValidPath = await fileHandler.FileExists(coverPath);
             bool isCorrectFormat = coverPath.EndsWith(LogicSpecification.IMAGE_EXTENSION);
             while (!(isValidPath && isCorrectFormat))
             {
                 Console.WriteLine(errorMessage);
                 coverPath = Console.ReadLine();
-                isValidPath = fileHandler.FileExists(coverPath);
+                isValidPath = await fileHandler.FileExists(coverPath);
                 isCorrectFormat = coverPath.EndsWith(LogicSpecification.IMAGE_EXTENSION);
             }
             return coverPath;
         }
-        public static string ReadValidPathModify(string coverPath, string errorMessage, FileHandler.FileHandler fileHandler)
+        public static async Task<string> ReadValidPathModify(string coverPath, string errorMessage, FileHandler.FileHandler fileHandler)
         {
-            bool isValidPath = fileHandler.FileExists(coverPath);
+            bool isValidPath = await fileHandler.FileExists(coverPath);
             bool isCorrectFormat = coverPath.EndsWith(LogicSpecification.IMAGE_EXTENSION);
             while (!isValidPath && !isCorrectFormat)
             {
                 Console.WriteLine(errorMessage);
                 coverPath = Console.ReadLine();
-                isValidPath = fileHandler.FileExists(coverPath);
+                isValidPath = await fileHandler.FileExists(coverPath);
                 isCorrectFormat = coverPath.EndsWith(LogicSpecification.IMAGE_EXTENSION);
             }
             return coverPath;
         }
 
 
-        public static string ReadValidDirectory(string errorMessage, FileHandler.FileHandler fileHandler)
+        public static async Task<string> ReadValidDirectory(string errorMessage, FileHandler.FileHandler fileHandler)
         {
             string folderPath = Console.ReadLine();
-            bool isValidPath = fileHandler.PathExists(folderPath);
+            bool isValidPath = await fileHandler.PathExists(folderPath);
             while (!isValidPath)
             {
                 Console.WriteLine(errorMessage);
                 folderPath = Console.ReadLine();
-                isValidPath = fileHandler.PathExists(folderPath);
+                isValidPath = await fileHandler.PathExists(folderPath);
             }
             return folderPath;
         }
 
 
-        public static string ReadValidFileName(string errorMessage, string folderPath, FileHandler.FileHandler fileHandler)
+        public static async Task<string> ReadValidFileName(string errorMessage, string folderPath, FileHandler.FileHandler fileHandler)
         {
             string name = Console.ReadLine();
             string completeFileName = GetValidCompleteFileName(folderPath, name);
 
-            bool validFullPath = fileHandler.FileExists(completeFileName) && IsValidEntry(name);
+            bool validFullPath = await fileHandler.FileExists(completeFileName) && IsValidEntry(name);
             while (validFullPath)
             {
                 Console.WriteLine(errorMessage);
                 name = Console.ReadLine();
                 completeFileName = GetValidCompleteFileName(folderPath, name);
-                validFullPath = fileHandler.FileExists(completeFileName) && IsValidEntry(name);
+                validFullPath = await fileHandler.FileExists(completeFileName) && IsValidEntry(name);
             }
             return name;
         }
@@ -225,9 +226,9 @@ namespace Common.Utils
 
         }
 
-        public static void CouldDownload(string completePath, FileHandler.FileHandler fileHandler)
+        public static async Task CouldDownload(string completePath, FileHandler.FileHandler fileHandler)
         {
-            if (fileHandler.FileExists(completePath))
+            if (await fileHandler.FileExists(completePath))
                 Console.WriteLine($"Se descargó la caratula en {completePath}");
             else
                 Console.WriteLine($"Se intento descragar la caratula a {completePath} pero ocurrió un error y no se descargo");

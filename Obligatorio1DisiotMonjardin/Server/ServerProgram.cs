@@ -18,11 +18,11 @@ namespace Server
             Console.WriteLine($"Server is starting in address {serverIpAddress} and port {serverPort}");
 
             Server server = new Server(serverIpAddress, serverPort);
-            StartServer(server);
+            await StartServer(server);
             await Task.Run(() => server.ExitPrompt());
         }
 
-        public static async void StartServer(Server server)
+        public static async Task StartServer(Server server)
         {
             Console.WriteLine("Server will start accepting connections from the clients");
 

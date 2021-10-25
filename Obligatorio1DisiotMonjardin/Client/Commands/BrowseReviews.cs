@@ -3,6 +3,7 @@ using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Client.Commands
 {
@@ -12,18 +13,18 @@ namespace Client.Commands
 
         public override Command cmd => Command.BROWSE_REVIEWS;
 
-        public ReviewPage SendRequest(int pageNumber, int gameId)
+        public async Task<ReviewPage> SendRequest(int pageNumber, int gameId)
         {
-            SendHeader();
+            await SendHeader();
 
             string pageNumberText = pageNumber.ToString();
-            SendData(pageNumberText + Specification.FIRST_DELIMITER + gameId);
-            return ResponseHandler(pageNumber);
+            await SendData (pageNumberText + Specification.FIRST_DELIMITER + gameId);
+            return await ResponseHandler(pageNumber);
         }
 
-        private ReviewPage ResponseHandler(int pageNumber)
+        private async Task<ReviewPage> ResponseHandler(int pageNumber)
         {
-            string[] parsedData = GetData();
+            string[] parsedData = await GetData();
             List<string> unParsedReviews = parsedData.ToList();
             unParsedReviews.RemoveRange(parsedData.Length - 2, 2);
             List<Review> parsedReviews = ParseReviews(unParsedReviews);

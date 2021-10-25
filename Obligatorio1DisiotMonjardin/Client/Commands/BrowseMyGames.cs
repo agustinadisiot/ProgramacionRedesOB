@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
+using System.Threading.Tasks;
 
 namespace Client.Commands
 {
@@ -10,13 +11,13 @@ namespace Client.Commands
 
         public override Command cmd => Command.BROWSE_MY_GAMES;
 
-        public GamePage SendRequest(int pageNumber)
+        public async Task<GamePage> SendRequest(int pageNumber)
         {
-            SendHeader();
+            await SendHeader();
 
             string pageNumberText = pageNumber.ToString();
-            SendData(pageNumberText);
-            return ResponseHandler(pageNumber);
+            await SendData(pageNumberText);
+            return await ResponseHandler(pageNumber);
         }
 
 
