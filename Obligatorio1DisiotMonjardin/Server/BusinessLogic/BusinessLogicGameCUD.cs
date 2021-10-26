@@ -82,7 +82,7 @@ namespace Server.BusinessLogic
             {
                 Game gameToDelete = games.Find(i => i.Id == gameId);
                 string pathToDelete = gameToDelete.CoverFilePath;
-                DeleteFile.DeleteFileInAnotherThread(pathToDelete);
+                DeleteFile.DeleteFileAsync(pathToDelete);
                 success = games.Remove(gameToDelete);
             }
             List<User> users = da.Users;
@@ -118,7 +118,7 @@ namespace Server.BusinessLogic
                 {
                     string pathToDelete = gameToMod.CoverFilePath;
                     gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
-                    DeleteFile.DeleteFileInAnotherThread(pathToDelete);
+                    DeleteFile.DeleteFileAsync(pathToDelete);
                 }
                 return $"Se modificó el juego {gameToMod.Title} correctamente";
             }

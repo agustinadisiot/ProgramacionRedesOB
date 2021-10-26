@@ -5,7 +5,7 @@ namespace Server.Utils
 {
     public static class DeleteFile
     {
-        public static void DeleteFileInAnotherThread(string path)
+        public static void DeleteFileAsync(string path)
         {
             Task.Run(() => DeleteMutexFile(path));
 

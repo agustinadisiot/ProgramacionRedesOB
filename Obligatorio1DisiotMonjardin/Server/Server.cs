@@ -38,7 +38,7 @@ namespace Server
                 }
                 catch (SocketException)
                 {
-                    Console.WriteLine("Server no longer accept request");
+                    Console.WriteLine("Server no longer accepts requests");
                     acceptingConnections = false;
                 }
 
