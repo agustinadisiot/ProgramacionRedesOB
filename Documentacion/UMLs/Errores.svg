@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="329px" preserveAspectRatio="none" style="width:896px;height:329px;background:#FFFFFF;" version="1.1" viewBox="0 0 896 329" width="896px" zoomAndPan="magnify"><defs><filter height="300%" id="f186fsh1mlzcmx" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[128f0757cf0ea77f14e95a88885fd9f7]
+entity Usuario--><ellipse cx="102.5" cy="252.1548" fill="#FEFECE" filter="url(#f186fsh1mlzcmx)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><path d="M102.5,260.1548 L102.5,287.1548 M89.5,268.1548 L115.5,268.1548 M102.5,287.1548 L89.5,302.1548 M102.5,287.1548 L115.5,302.1548 " fill="none" filter="url(#f186fsh1mlzcmx)" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="52" x="76.5" y="320.6499">Usuario</text><!--MD5=[2d0d93c38ab0925713fa31291f1ad442]
+entity ClientPresentation--><rect fill="#EE82EE" filter="url(#f186fsh1mlzcmx)" height="36.2969" style="stroke:#A80036;stroke-width:1.5;" width="147" x="29" y="129.6548"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="127" x="39" y="152.6499">ClientPresentation</text><!--MD5=[466c151e0018cae0d41d61dfcc647844]
+entity CommandHandlersClient--><rect fill="#FFA500" filter="url(#f186fsh1mlzcmx)" height="36.2969" style="stroke:#A80036;stroke-width:1.5;" width="191" x="7" y="11.6548"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="171" x="17" y="34.6499">CommandHandlersClient</text><!--MD5=[218297df4b0221a8eb959a4bf7e6c793]
+entity CommandHandlersServer--><rect fill="#EE82EE" filter="url(#f186fsh1mlzcmx)" height="36.2969" style="stroke:#A80036;stroke-width:1.5;" width="196" x="688.5" y="11.6548"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="176" x="698.5" y="34.6499">CommandHandlersServer</text><!--MD5=[aa159adfb5981873c8dd6a33b674688c]
+entity Red--><path d="M366.5345,15.0003 C370.12,10.3321 373.6339,9.191 377.4044,14.8047 C381.5842,8.6464 387.0067,10.0846 390.3798,15.6941 C393.23,10.2422 397.2682,9.6468 400.9484,14.8725 C403.9847,8.8988 409.6941,7.7831 413.7508,13.7812 C417.6894,9.0147 421.0959,9.7534 424.5657,14.3242 C427.9357,6.9827 432.9662,7.2499 437.6761,12.9803 C441.0554,8.1961 444.8149,8.6471 448.084,13.1043 C451.846,7.8551 455.3959,7.059 460.0017,12.1298 C463.8189,6.5821 468.8588,6 472.5282,12.2861 C476.5261,7.9321 480.9231,9.4043 483.0827,14.3683 C486.8454,8.5137 493.1379,7.81 496.2758,15.0002 C500.1612,10.4802 503.6563,10.2767 506.7216,15.8491 C510.7362,10.5827 515.2717,10.9817 518.8993,16.2947 C522.0667,10.5118 526.7325,11.2993 530.1045,16.0776 C541.8555,14.995 545.2504,21.9667 541.2929,31.9542 C544.5995,41.3031 542.3597,45.8434 531.8425,45.6616 C529.538,52.5095 523.5292,52.1161 519.9154,46.9629 C518.0658,53.9441 511.7424,55.3988 507.2136,49.6324 C503.4923,54.9802 499.0307,54.0789 495.8673,49.0239 C493.1935,55.669 487.9752,57.7765 482.8752,51.4548 C480.0677,56.1371 476.2422,56.3504 472.6934,52.3212 C469.8881,59.137 463.8824,59.5576 459.4428,54.0833 C456.8023,59.4552 452.6552,59.375 448.7847,55.5011 C443.9463,59.107 439.7656,58.9504 437.4777,52.6036 C433.4087,57.8289 428.8798,59.0321 425.0362,52.3677 C420.8328,57.6468 416.6758,56.182 414.3054,50.5628 C409.0131,56.6618 404.9649,56.4699 401.1379,49.1274 C397.6991,54.5922 393.4768,52.8643 390.7762,48.3602 C385.296,53.3385 380.9527,53.7811 377.4589,46.2461 C373.7781,51.4264 368.1316,51.6783 365.0777,45.5592 C357.633,42.8207 356.0374,37.3942 360.8874,31.0942 C355.7722,23.5879 356.2525,17.1039 366.5345,15.0003 " fill="#FEFECE" filter="url(#f186fsh1mlzcmx)" style="stroke:#000000;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="151" x="372" y="34.6499">Red (TCP y Protocolo)</text><!--MD5=[b7189af1184f0077b348ad6ea2b0555f]
+entity DataAccess--><path d="M735.5,270.6548 C735.5,260.6548 786.5,260.6548 786.5,260.6548 C786.5,260.6548 837.5,260.6548 837.5,270.6548 L837.5,295.9517 C837.5,305.9517 786.5,305.9517 786.5,305.9517 C786.5,305.9517 735.5,305.9517 735.5,295.9517 L735.5,270.6548 " fill="#FEFECE" filter="url(#f186fsh1mlzcmx)" style="stroke:#000000;stroke-width:1.5;"/><path d="M735.5,270.6548 C735.5,280.6548 786.5,280.6548 786.5,280.6548 C786.5,280.6548 837.5,280.6548 837.5,270.6548 " fill="none" style="stroke:#000000;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="82" x="745.5" y="297.6499">DataAccess</text><!--MD5=[c74a98954e9ea47a4d31897c9094f7bb]
+entity BusinessLogic--><rect fill="#FFA500" filter="url(#f186fsh1mlzcmx)" height="36.2969" style="stroke:#A80036;stroke-width:1.5;" width="120" x="726.5" y="129.6548"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="736.5" y="152.6499">BusinessLogic</text><!--MD5=[556aa68fcf35c28d638e448cb1c46551]
+reverse link ClientPresentation to Usuario--><path d="M87.7133,170.5872 C83.5627,178.2499 79.6092,187.0389 77.5,195.6548 C73.7432,211.0005 76.7361,227.7088 81.7788,242.3736 " fill="none" id="ClientPresentation-backto-Usuario" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="90.3084,165.9733,82.41,171.8568,87.8573,170.3313,89.3827,175.7786,90.3084,165.9733" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="8" x="78.5" y="208.7217">1</text><!--MD5=[ccb8ed593cfb78828ec45562f19c5af1]
+link ClientPresentation to Usuario--><path d="M102.5,165.9289 C102.5,184.1379 102.5,212.8311 102.5,237.2716 " fill="none" id="ClientPresentation-to-Usuario" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="102.5,242.4171,106.5,233.4171,102.5,237.4171,98.5,233.4171,102.5,242.4171" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="16" x="103.5" y="208.7217">12</text><!--MD5=[5eb7451adb58f6582e1079fc7354fb74]
+reverse link CommandHandlersClient to ClientPresentation--><path d="M87.2876,52.1884 C79.9577,65.7346 73.5301,83.4384 77.5,99.6548 C80.047,110.0589 85.2832,120.7154 90.3084,129.3363 " fill="none" id="CommandHandlersClient-backto-ClientPresentation" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="89.7942,47.7621,81.8787,53.6225,87.3304,52.1129,88.84,57.5646,89.7942,47.7621" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="8" x="78.5" y="95.7217">2</text><!--MD5=[082c93f892b952715b7e04a79ec80a39]
+link CommandHandlersClient to ClientPresentation--><path d="M102.5,47.8337 C102.5,68.4222 102.5,102.0185 102.5,124.4752 " fill="none" id="CommandHandlersClient-to-ClientPresentation" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="102.5,129.6489,106.5,120.6489,102.5,124.6489,98.5,120.6489,102.5,129.6489" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="93" x="103.5" y="95.7217">11 ServerError</text><!--MD5=[064656dfe25767b9afd8dabd7f38f4dd]
+link CommandHandlersClient to Red--><path d="M198.0972,46.3978 C225.3203,49.5013 255.038,51.3131 282.5,49.6548 C304.9934,48.2965 329.1179,45.9058 351.7852,43.2389 " fill="none" id="CommandHandlersClient-to-Red" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="356.9019,42.6294,347.4919,39.7221,351.937,43.2209,348.4382,47.6659,356.9019,42.6294" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="8" x="273.5" y="45.7217">3</text><!--MD5=[c12e8a27fd400a23cc92b2ddc8f38d93]
+reverse link CommandHandlersClient to Red--><path d="M203.4086,29.6548 C251.9166,29.6548 309.6068,29.6548 356.7201,29.6548 " fill="none" id="CommandHandlersClient-backto-Red" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="198.1436,29.6548,207.1436,33.6548,203.1436,29.6548,207.1436,25.6548,198.1436,29.6548" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="122" x="216.5" y="22.7217">10 Command.Error</text><!--MD5=[e90095e66a45c78983ca77e7d6f62861]
+link Red to CommandHandlersServer--><path d="M538.2807,42.9399 C561.0723,45.7262 585.5139,48.2459 608.25,49.6548 C632.479,51.1563 658.4807,49.8887 682.9287,47.3994 " fill="none" id="Red-to-CommandHandlersServer" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="688.1208,46.8502,678.7499,43.8192,683.1485,47.3762,679.5915,51.7748,688.1208,46.8502" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="8" x="609.25" y="45.7217">4</text><!--MD5=[93ad7f110df9d57954f35e7b4c098698]
+reverse link Red to CommandHandlersServer--><path d="M543.5392,29.6548 C588.8002,29.6548 642.7259,29.6548 688.2622,29.6548 " fill="none" id="Red-backto-CommandHandlersServer" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="538.3458,29.6548,547.3458,33.6548,543.3458,29.6548,547.3458,25.6548,538.3458,29.6548" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="114" x="556.25" y="22.7217">9 Command.Error</text><!--MD5=[0ed16207b6d042243bbca43215b99279]
+link CommandHandlersServer to BusinessLogic--><path d="M773.7942,47.7621 C765.5438,61.713 757.0813,81.6052 761.5,99.6548 C763.6092,108.2707 767.5627,117.0597 771.7133,124.7224 " fill="none" id="CommandHandlersServer-to-BusinessLogic" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="774.3084,129.3363,773.3827,119.5311,771.8573,124.9783,766.41,123.4529,774.3084,129.3363" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="8" x="762.5" y="95.7217">5</text><!--MD5=[7de28f859baad7a23f8033baf1725009]
+reverse link CommandHandlersServer to BusinessLogic--><path d="M786.5,53.0237 C786.5,75.5427 786.5,109.1336 786.5,129.6489 " fill="none" id="CommandHandlersServer-backto-BusinessLogic" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="786.5,47.8337,782.5,56.8337,786.5,52.8337,790.5,56.8337,786.5,47.8337" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="85" x="787.5" y="95.7217">8 ServerError</text><!--MD5=[ad2a1979f6ae581c9c41fec5128e9e76]
+link BusinessLogic to DataAccess--><path d="M774.3084,165.9733 C769.2832,174.5942 764.047,185.2507 761.5,195.6548 C756.5208,215.9938 763.3985,238.7265 771.1904,255.9226 " fill="none" id="BusinessLogic-to-DataAccess" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="773.4032,260.6193,773.1857,250.7729,771.2721,256.0962,765.9487,254.1827,773.4032,260.6193" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="8" x="762.5" y="208.7217">6</text><!--MD5=[a8b91615fc2b1f832a87b9f94cf43892]
+reverse link BusinessLogic to DataAccess--><path d="M786.5,171.0321 C786.5,196.0181 786.5,235.3778 786.5,260.2002 " fill="none" id="BusinessLogic-backto-DataAccess" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="786.5,165.9289,782.5,174.9289,786.5,170.9289,790.5,174.9289,786.5,165.9289" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="8" x="787.5" y="208.7217">7</text><!--MD5=[8d3b4eb146dbee0e0caedd5efab1f4e1]
+@startuml
+actor  Usuario 
+agent ClientPresentation #Violet
+agent CommandHandlersClient #Orange
+agent CommandHandlersServer  #Violet
+cloud "Red (TCP y Protocolo)" as Red
+database DataAccess 
+agent BusinessLogic  #Orange
+
+
+Usuario -up-> ClientPresentation: 1
+ClientPresentation -down-> Usuario : 12
+
+ClientPresentation -up-> CommandHandlersClient: 2
+CommandHandlersClient -down-> ClientPresentation : 11 ServerError
+
+CommandHandlersClient -right-> Red: 3
+Red -left-> CommandHandlersClient : 10 Command.Error
+Red -right-> CommandHandlersServer: 4
+CommandHandlersServer -left-> Red : 9 Command.Error
+
+CommandHandlersServer -down-> BusinessLogic: 5
+BusinessLogic -up-> CommandHandlersServer : 8 ServerError
+
+BusinessLogic -down-> DataAccess: 6
+DataAccess -up-> BusinessLogic : 7
+
+/'one -right-> two: message 1- ->2
+two -right-> three: message 2- ->3
+two - -> four: message 2- ->4
+three -[hidden]- four'/
+@enduml
+
+@startuml
+actor  Usuario 
+agent ClientPresentation #Violet
+agent CommandHandlersClient #Orange
+agent CommandHandlersServer  #Violet
+cloud "Red (TCP y Protocolo)" as Red
+database DataAccess 
+agent BusinessLogic  #Orange
+
+
+Usuario -up-> ClientPresentation: 1
+ClientPresentation -down-> Usuario : 12
+
+ClientPresentation -up-> CommandHandlersClient: 2
+CommandHandlersClient -down-> ClientPresentation : 11 ServerError
+
+CommandHandlersClient -right-> Red: 3
+Red -left-> CommandHandlersClient : 10 Command.Error
+Red -right-> CommandHandlersServer: 4
+CommandHandlersServer -left-> Red : 9 Command.Error
+
+CommandHandlersServer -down-> BusinessLogic: 5
+BusinessLogic -up-> CommandHandlersServer : 8 ServerError
+
+BusinessLogic -down-> DataAccess: 6
+DataAccess -up-> BusinessLogic : 7
+
+@enduml
+
+PlantUML version 1.2021.7(Sun May 23 12:40:07 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
