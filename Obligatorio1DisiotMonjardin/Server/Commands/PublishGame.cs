@@ -39,7 +39,7 @@ namespace Server.Commands
             catch (Exception e) when (e is TitleAlreadyExistsException || e is ServerError)
             {
                 message = e.Message;
-                Task.Run(()=>File.Delete(coverPath));
+                Task.Run(() => File.Delete(coverPath));
             }
             await Respond(message);
         }

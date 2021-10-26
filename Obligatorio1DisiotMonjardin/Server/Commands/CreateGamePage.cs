@@ -14,7 +14,7 @@ namespace Server.Commands
         protected BusinessLogicGamePage GamePage;
         public override async Task ParsedRequestHandler(string[] req)
         {
-            int pageNumber = parseInt(req[0]); ;
+            int pageNumber = parseInt(req[0]); 
 
             string unParsedfilter = "";
             if (req.Length > 1)

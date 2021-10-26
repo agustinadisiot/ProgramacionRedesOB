@@ -11,19 +11,8 @@ namespace Client
             Console.WriteLine("Client starting...");
             ClientPresentation client = new ClientPresentation();
             Console.WriteLine("Trying to connect to server");
-            client.StartConnection();
-            try
-            {
-                Task.Run(()=>client.StartMenu()).Wait();
-            }
-            catch(SocketException e)
-            {
-                Console.WriteLine(e.Message);
-                Console.ReadLine();
-            }
-            Console.WriteLine("se termino"); //TODO
-            
-
+            await client.StartConnection();
+            await client.StartMenu();
         }
 
     }

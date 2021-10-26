@@ -14,12 +14,12 @@ namespace Server
         {
             int length = await networkStreamHandler.ReadInt(Specification.DATA_SIZE_LENGTH);
 
-            string unparsedData = await networkStreamHandler .ReadString(length);
+            string unparsedData = await networkStreamHandler.ReadString(length);
 
             string[] parsedData = Parse(unparsedData);
             try
             {
-                ParsedRequestHandler(parsedData);
+                await ParsedRequestHandler(parsedData);
             }
             catch (ServerError e)
             {
@@ -43,8 +43,7 @@ namespace Server
 
         protected int parseInt(string unparsedInt)
         {
-            int result;
-            bool parseSuccessful = int.TryParse(unparsedInt, out result);
+            bool parseSuccessful = int.TryParse(unparsedInt, out int result);
             if (!parseSuccessful)
                 throw new ServerError($"Se esperaba un número pero no se recibió {unparsedInt}");
             return result;

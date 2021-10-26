@@ -38,7 +38,7 @@ namespace Server
                     else
                     {
                         CommandHandler commandHandler = CommandFactory.GetCommandHandler(cmd, networkStreamHandler);
-                        commandHandler.HandleRequest();
+                        await commandHandler.HandleRequest();
                     }
                 }
             }

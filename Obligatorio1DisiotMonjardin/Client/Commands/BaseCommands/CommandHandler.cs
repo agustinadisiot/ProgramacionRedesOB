@@ -25,7 +25,7 @@ namespace Client
                 await networkStreamHandler.WriteString(Specification.REQUEST_HEADER);
                 await networkStreamHandler.WriteCommand(cmd);
             }
-            catch (System.IO.IOException e)
+            catch (System.IO.IOException)
             {
                 throw new ServerShutDownException();
             }
@@ -39,8 +39,8 @@ namespace Client
 
         protected async Task ReadCommand()
         {
-            Command cmd = await networkStreamHandler.ReadCommand();
-            if (cmd == Command.ERROR)
+            Command readCommand = await networkStreamHandler.ReadCommand();
+            if (readCommand == Command.ERROR)
                 await HandleError();
         }
 

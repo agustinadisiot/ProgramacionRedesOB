@@ -12,10 +12,12 @@ namespace Client
 
         public async Task<bool> SendRequest(string username)
         {
+
             await SendHeader();
 
             await SendData(username);
-            return await ResponseHandler();
+            bool response = await ResponseHandler();
+            return response;
         }
 
         private async Task<bool> ResponseHandler()

@@ -25,13 +25,10 @@ namespace Server
 
         }
 
-
-
         private async Task Respond(string coverPath)
         {
             await SendResponseHeader();
             await fileNetworkStreamHandler.SendFile(coverPath);
-
         }
     }
 }

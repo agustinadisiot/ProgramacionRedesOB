@@ -8,7 +8,7 @@ namespace Client
 {
     public static class CliMenu
     {
-        public static async Task showMenu(Dictionary<string, Action> options, string message = "")
+        public static async Task showMenu(Dictionary<string, Func<Task>> options, string message = "")
         {
             if (message.Length > 0)
                 Console.WriteLine(message);
@@ -24,8 +24,7 @@ namespace Client
 
             var selectedOption = options.ElementAt(input - 1);
             var selectedAction = selectedOption.Value;
-            var optiond = Task.Run(()=>selectedAction());
-            optiond.Wait();
+            await selectedAction();
         }
     }
 }

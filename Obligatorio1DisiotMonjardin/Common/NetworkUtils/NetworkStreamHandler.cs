@@ -10,7 +10,7 @@ namespace Common.NetworkUtils
     public class NetworkStreamHandler : INetworkStreamHandler
     {
         private readonly NetworkStream _networkStream;
-        private const bool debugging = true;
+        private const bool debugging = false;
 
         public NetworkStreamHandler(NetworkStream networkStream)
         {

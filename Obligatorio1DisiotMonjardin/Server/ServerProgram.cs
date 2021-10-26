@@ -18,7 +18,7 @@ namespace Server
             Console.WriteLine($"Server is starting in address {serverIpAddress} and port {serverPort}");
 
             Server server = new Server(serverIpAddress, serverPort);
-            await StartServer(server);
+            StartServer(server);
             await Task.Run(() => server.ExitPrompt());
         }
 

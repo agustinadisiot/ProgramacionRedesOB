@@ -19,13 +19,13 @@ namespace Server
             clientHandlers = new List<ClientHandler>();
             var ipEndPoint = new IPEndPoint(IPAddress.Parse(serverIpAddress), int.Parse(serverPort));
             server = new Socket(AddressFamily.InterNetwork,
-                SocketType.Stream, 
+                SocketType.Stream,
                 ProtocolType.Tcp);
             server.Bind(ipEndPoint);
             acceptingConnections = true;
         }
 
-        public async void StartReceivingConnections()
+        public async Task StartReceivingConnections()
         {
             server.Listen(maxClientsInQ);
 
@@ -34,14 +34,14 @@ namespace Server
                 try
                 {
                     Socket acceptedClient = await server.AcceptAsync().ConfigureAwait(false);
-                    var task = Task.Run(async()=> await HandleAcceptedConection(acceptedClient));
+                    var task = Task.Run(async () => await HandleAcceptedConection(acceptedClient));
                 }
-                catch (SocketException e)
+                catch (SocketException)
                 {
                     Console.WriteLine("Server no longer accept request");
                     acceptingConnections = false;
                 }
-               
+
             }
 
 

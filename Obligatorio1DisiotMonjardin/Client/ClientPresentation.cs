@@ -26,17 +26,18 @@ namespace Client
             serverIpEndPoint = ClientNetworkUtil.GetServerEndpoint();
             fileHandler = new FileHandler();
         }
-        public void StartConnection()
+        public async Task StartConnection()
         {
             try
             {
-                socketClient.Connect(serverIpEndPoint);
+                await socketClient.ConnectAsync(serverIpEndPoint);
             }
-            catch (SocketException e)
+            catch (SocketException)
             {
                 Console.WriteLine("No se pudo conectar con el servidor");
-                //Environment.Exit(0);
+                Environment.Exit(0);
             }
+
             networkStreamHandler = new NetworkStreamHandler(new NetworkStream(socketClient));
         }
         private async Task EndConnection()
@@ -49,7 +50,7 @@ namespace Client
             {
                 var commandHandler = (Exit)CommandFactory.GetCommandHandler(Command.EXIT, networkStreamHandler);
                 await commandHandler.SendRequest();
-                socketClient.Shutdown(SocketShutdown.Both); 
+                socketClient.Shutdown(SocketShutdown.Both);
                 socketClient.Close();
             }
             else { await StartMenu(); }
@@ -57,14 +58,14 @@ namespace Client
 
         public async Task StartMenu()
         {
-            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>
+            Dictionary<string, Func<Task>> menuOptions = new Dictionary<string, Func<Task>>
             {
-                { "Iniciar Sesión", () => Login() },
-                { "Salir", () =>  EndConnection()}
+                { "Iniciar Sesión", Login },
+                { "Salir", EndConnection }
             };
             try
             {
-                await CliMenu.showMenu(menuOptions, "Menú Inicial"); ;
+                await CliMenu.showMenu(menuOptions, "Menú Inicial");
             }
             catch (ServerError e)
             {
@@ -74,11 +75,11 @@ namespace Client
             {
                 HandleServerShutDown();
             }
-
         }
+
         public async Task MainMenu()
         {
-            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>
+            Dictionary<string, Func<Task>> menuOptions = new Dictionary<string, Func<Task>>
             {
                 { "Ver catálogo", async() => await BrowseCatalogue() },
                 { "Publicar Juego", async () => await Publish() },
@@ -106,7 +107,7 @@ namespace Client
         private async Task DeveloperMenu()
         {
             // Se dejó para mostrar en la defensa y para facilitar la correción
-            Dictionary<string, Action> developerOptions = new Dictionary<string, Action>
+            Dictionary<string, Func<Task>> developerOptions = new Dictionary<string, Func<Task>>
             {
                 { "Enviar parámetro incorrecto", async () => await BrowseMyGames(-1) },
                 { "Cargar datos de prueba", async () => await TestData() },
@@ -170,8 +171,8 @@ namespace Client
             BrowseCatalogue commandHandler = (BrowseCatalogue)CommandFactory.GetCommandHandler(Command.BROWSE_CATALOGUE, networkStreamHandler);
             GamePage newGamePage = await commandHandler.SendRequest(pageNumber);
 
-            Action nextPageOption = async () => await BrowseCatalogue(pageNumber + 1);
-            Action previousPageOption = async () => await BrowseCatalogue(pageNumber - 1);
+            Func<Task> nextPageOption = async () => await BrowseCatalogue(pageNumber + 1);
+            Func<Task> previousPageOption = async () => await BrowseCatalogue(pageNumber - 1);
             string title = $"Catálogo de Juegos  - Página {pageNumber}";
             await ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
         }
@@ -181,8 +182,8 @@ namespace Client
             BrowseMyGames commandHandler = (BrowseMyGames)CommandFactory.GetCommandHandler(Command.BROWSE_MY_GAMES, networkStreamHandler);
             GamePage newGamePage = await commandHandler.SendRequest(pageNumber);
 
-            Action nextPageOption = async () => await BrowseMyGames(pageNumber + 1);
-            Action previousPageOption = async () => await BrowseMyGames(pageNumber - 1);
+            Func<Task> nextPageOption = async () => await BrowseMyGames(pageNumber + 1);
+            Func<Task> previousPageOption = async () => await BrowseMyGames(pageNumber - 1);
             string title = $"Mis Juegos - Página {pageNumber}";
             await ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
         }
@@ -199,8 +200,8 @@ namespace Client
             var commandHandler = (SearchByTitle)CommandFactory.GetCommandHandler(Command.SEARCH_BY_TITLE, networkStreamHandler);
             GamePage newGamePage = await commandHandler.SendRequest(pageNumber, title);
 
-            Action nextPageOption = async () => await ShowSearchByTitlePage(title, pageNumber + 1);
-            Action previousPageOption = async () => await ShowSearchByTitlePage(title, pageNumber - 1);
+            Func<Task> nextPageOption = async () => await ShowSearchByTitlePage(title, pageNumber + 1);
+            Func<Task> previousPageOption = async () => await ShowSearchByTitlePage(title, pageNumber - 1);
             string gamePageTitle = $"Juegos con \"{title}\" - Página {pageNumber}";
             await ShowGamePage(newGamePage, gamePageTitle, nextPageOption, previousPageOption);
         }
@@ -217,10 +218,10 @@ namespace Client
             var commandHandler = (SearchByRating)CommandFactory.GetCommandHandler(Command.SEARCH_BY_RATING, networkStreamHandler);
             GamePage newGamePage = await commandHandler.SendRequest(pageNumber, minRating);
 
-            Action nextPageOption = async  () => await ShowSearchByRatingPage(minRating, pageNumber + 1);
-            Action previousPageOption = async () => await ShowSearchByRatingPage(minRating, pageNumber - 1);
+            Func<Task> nextPageOption = async () => await ShowSearchByRatingPage(minRating, pageNumber + 1);
+            Func<Task> previousPageOption = async () => await ShowSearchByRatingPage(minRating, pageNumber - 1);
             string title = $"Juegos con clasificación {minRating} o más - Página {pageNumber}";
-            await ShowGamePage (newGamePage, title, nextPageOption, previousPageOption);
+            await ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
         }
 
         private async Task SearchByGenre()
@@ -235,21 +236,21 @@ namespace Client
             var commandHandler = (SearchByGenre)CommandFactory.GetCommandHandler(Command.SEARCH_BY_GENRE, networkStreamHandler);
             GamePage newGamePage = await commandHandler.SendRequest(pageNumber, genre);
 
-            Action nextPageOption = async () => await ShowSearchByGenrePage(genre, pageNumber + 1);
-            Action previousPageOption = async () => await ShowSearchByGenrePage(genre, pageNumber - 1);
+            Func<Task> nextPageOption = async () => await ShowSearchByGenrePage(genre, pageNumber + 1);
+            Func<Task> previousPageOption = async () => await ShowSearchByGenrePage(genre, pageNumber - 1);
             string title = $"Juegos de {genre}  - Página {pageNumber}";
 
             await ShowGamePage(newGamePage, title, nextPageOption, previousPageOption);
         }
 
-        private async Task ShowGamePage(GamePage gamePage, string title, Action nextPage, Action previousPage)
+        private async Task ShowGamePage(GamePage gamePage, string title, Func<Task> nextPage, Func<Task> previousPage)
         {
-            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
+            Dictionary<string, Func<Task>> menuOptions = new Dictionary<string, Func<Task>>();
 
             for (int i = 0; i < gamePage.GamesTitles.Count; i++)
             {
                 int idIndex = i;
-                menuOptions.Add(gamePage.GamesTitles[i], async() => await ShowGameInfo(gamePage.GamesIds[idIndex]));
+                menuOptions.Add(gamePage.GamesTitles[i], async () => await ShowGameInfo(gamePage.GamesIds[idIndex]));
             }
 
             if (gamePage.HasNextPage)
@@ -278,8 +279,8 @@ namespace Client
             Console.WriteLine($"Clasificación ESRB: {gameInfo.Game.ESRBRating}");
             Console.WriteLine($"Género: {gameInfo.Game.Genre}");
 
-            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
-            if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", async ()  => await BuyGame(gameId));
+            Dictionary<string, Func<Task>> menuOptions = new Dictionary<string, Func<Task>>();
+            if (!gameInfo.IsOwned) menuOptions.Add("Comprar Juego", async () => await BuyGame(gameId));
             menuOptions.Add("Ver Reseñas", async () => await ShowBrowseReviewsMenu(1, gameId));
             if (gameInfo.IsOwned) menuOptions.Add("Escribir Reseña", async () => await ShowWriteReviewMenu(gameId));
             if (gameInfo.IsPublisher)
@@ -347,7 +348,7 @@ namespace Client
         {
             Console.WriteLine($"Calificaciones - Página {reviewPage.CurrentPage}");
             Console.WriteLine();
-            Dictionary<string, Action> menuOptions = new Dictionary<string, Action>();
+            Dictionary<string, Func<Task>> menuOptions = new Dictionary<string, Func<Task>>();
 
             foreach (Review review in reviewPage.Reviews)
             {
