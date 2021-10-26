@@ -52,7 +52,7 @@ namespace Common.NetworkUtils
                         data = await networkStreamHandler.Read(Specification.MAX_PACKET_SIZE);
                         offset += Specification.MAX_PACKET_SIZE;
                     }
-                    fileStreamHandler.Write(completeFileName, data);
+                    await fileStreamHandler.Write(completeFileName, data);
                     currentPart++;
                 }
                 return completeFileName;
