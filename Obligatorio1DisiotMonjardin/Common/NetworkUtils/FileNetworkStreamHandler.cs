@@ -62,10 +62,10 @@ namespace Common.NetworkUtils
 
         public async Task SendFile(string path)
         {
-            if (!await fileHandler .FileExists(path))
-                throw new Exception("File does not exists"); 
+            if (!await fileHandler.FileExists(path))
+                throw new Exception("File does not exists");
 
-            long fileSize = await fileHandler .GetFileSize(path); 
+            long fileSize = await fileHandler.GetFileSize(path);
             await networkStreamHandler.WriteFileSize(fileSize);
 
             var parts = SpecificationHelper.GetParts(fileSize);
@@ -78,12 +78,12 @@ namespace Common.NetworkUtils
                 if (currentPart == parts)
                 {
                     var lastPartSize = (int)(fileSize - offset);
-                    data = fileStreamHandler.Read(path, offset, lastPartSize);
+                    data = await fileStreamHandler.Read(path, offset, lastPartSize);
                     offset += lastPartSize;
                 }
                 else
                 {
-                    data = fileStreamHandler.Read(path, offset, Specification.MAX_PACKET_SIZE);
+                    data = await fileStreamHandler.Read(path, offset, Specification.MAX_PACKET_SIZE);
                     offset += Specification.MAX_PACKET_SIZE;
                 }
 
