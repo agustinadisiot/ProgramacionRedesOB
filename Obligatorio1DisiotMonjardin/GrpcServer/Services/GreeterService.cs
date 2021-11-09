@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Server
+namespace GrpcServer
 {
     public class GreeterService : Greeter.GreeterBase
     {

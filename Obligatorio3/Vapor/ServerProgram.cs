@@ -1,7 +1,5 @@
 ﻿using Common;
 using Common.Interfaces;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +13,7 @@ namespace Server
 
         static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            //CreateHostBuilder(args).Build().Run();
 
             var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.ServerIpConfigKey);
             var serverPort = SettingsMgr.ReadSetting(ServerConfig.SeverPortConfigKey);
@@ -26,12 +24,12 @@ namespace Server
             await Task.Run(() => server.ExitPrompt());
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        /*public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                });*/
 
 
         public static async Task StartServer(Server server)
