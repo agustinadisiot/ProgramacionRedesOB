@@ -22,5 +22,6 @@ namespace GrpcServer
                 Message = "Hello " + request.Name
             });
         }
+
     }
 }
