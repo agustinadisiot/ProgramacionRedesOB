@@ -32,11 +32,10 @@ message GameDTO {
 	string title = 2;
 	string description = 3;
 	string synopsis = 4;
-	int32 reviewsRating = 5;
-	string coverFilePath = 6;
-	int32 esrbRating = 7;
-	string genre = 8;
-	int32 publisherId = 9;
+	string coverFilePath = 5;
+	int32 esrbRating = 6;
+	string genre = 7;
+	int32 publisherId = 8;
 }
 
 message UserDTO{

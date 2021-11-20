@@ -31,10 +31,9 @@ namespace GrpcServer
             BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             Game game = new Game()
             {
-                Id = request.Id,
+                //Id = request.Id,
                 Title = request.Title,
                 ESRBRating = (Common.ESRBRating)request.EsrbRating,
-                ReviewsRating = request.ReviewsRating,
                 CoverFilePath = request.CoverFilePath,
                 Genre = request.Genre,
                 Publisher = utils.GetUser(request.PublisherId),
@@ -45,7 +44,27 @@ namespace GrpcServer
             return Task.FromResult(new MessageReply
             {
                 Message = message
-            }); ;
+            }); 
+        }
+
+        public override Task<MessageReply> UpdateGame(GameDTO request, ServerCallContext context)
+        {
+            BusinessLogicGameCUD cud = BusinessLogicGameCUD.GetInstance();
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            Game game = new Game()
+            {
+                Id = request.Id,
+                Title = request.Title,
+                ESRBRating = (Common.ESRBRating)request.EsrbRating,
+                CoverFilePath = request.CoverFilePath,
+                Genre = request.Genre,
+                Synopsis = request.Synopsis
+            };
+            string message = cud.ModifyGame(request.Id, game);
+            return Task.FromResult(new MessageReply
+            {
+                Message = message
+            });
         }
     }
 }
