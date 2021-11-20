@@ -12,8 +12,8 @@ namespace Client
 
         public static Socket GetNewSocketClient()
         {
-            return new Socket(AddressFamily.InterNetwork, 
-                SocketType.Stream, 
+            return new Socket(AddressFamily.InterNetwork,
+                SocketType.Stream,
                 ProtocolType.Tcp);
         }
 

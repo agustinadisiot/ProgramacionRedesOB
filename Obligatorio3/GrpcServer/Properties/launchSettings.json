@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "GrpcServer": {
+    "Server": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": false,

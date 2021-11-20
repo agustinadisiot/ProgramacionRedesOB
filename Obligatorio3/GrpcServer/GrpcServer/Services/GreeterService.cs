@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GrpcServer
+namespace Server
 {
     public class GreeterService : Greeter.GreeterBase
     {
@@ -31,7 +31,6 @@ namespace GrpcServer
             BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             Game game = new Game()
             {
-                //Id = request.Id,
                 Title = request.Title,
                 ESRBRating = (Common.ESRBRating)request.EsrbRating,
                 CoverFilePath = request.CoverFilePath,
@@ -44,7 +43,7 @@ namespace GrpcServer
             return Task.FromResult(new MessageReply
             {
                 Message = message
-            }); 
+            });
         }
 
         public override Task<MessageReply> UpdateGame(GameDTO request, ServerCallContext context)

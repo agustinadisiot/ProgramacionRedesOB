@@ -1,19 +1,34 @@
+using Common;
+using Common.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
-namespace GrpcServer
+namespace Server
 {
     public class Program
     {
-        public static void Main(string[] args)
+        static readonly ISettingsManager SettingsMgr = new SettingsManager();
+
+        public static async Task Main(string[] args)
         {
+            var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.ServerIpConfigKey);
+            var serverPort = SettingsMgr.ReadSetting(ServerConfig.SeverPortConfigKey);
+            Console.WriteLine($"Server is starting in address {serverIpAddress} and port {serverPort}");
+
+            Server server = new Server(serverIpAddress, serverPort);
+            StartServer(server);
+            await Task.Run(() => server.ExitPrompt());
+
             CreateHostBuilder(args).Build().Run();
+        }
+
+        public static async Task StartServer(Server server)
+        {
+            Console.WriteLine("Server will start accepting connections from the clients");
+
+            await Task.Run(() => server.StartReceivingConnections());
         }
 
         // Additional configuration is required to successfully run gRPC on macOS.
