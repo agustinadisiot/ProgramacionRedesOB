@@ -19,9 +19,9 @@ namespace Server
 
             Server server = new Server(serverIpAddress, serverPort);
             StartServer(server);
-            await Task.Run(() => server.ExitPrompt());
 
             CreateHostBuilder(args).Build().Run();
+            await Task.Run(() => server.ExitPrompt());
         }
 
         public static async Task StartServer(Server server)

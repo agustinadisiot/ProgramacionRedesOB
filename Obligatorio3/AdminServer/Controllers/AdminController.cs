@@ -24,27 +24,31 @@ namespace AdminServer.Controllers
             var reply = await client.PostGameAsync(game);
             return Ok(reply.Message);
         }
-        /*
 
-                [HttpGet("games/{id}")]
-                public async Task<ActionResult<Game>> GetGame([FromRoute] int id)
+        [HttpPut("games")]
+        public async Task<ActionResult> UpdateGame([FromBody] GameDTO game)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.UpdateGameAsync(game);
+            return Ok(reply.Message);
+        }
+
+        /*        [HttpGet("games/{id}")]
+                public async Task<ActionResult<GameDTO>> GetGame([FromRoute] int id)
                 {
                     return await Ok(businessLogic.GetGame(id));
                 }
 
                 [HttpGet("games")]
-                public async Task<ActionResult<IEnumerable<Game>>> GetGames()
+                public async Task<ActionResult<IEnumerable<GameDTO>>> GetGames()
                 {
                     return await Ok(businessLogic.GetGames());
-                }
+                }*/
 
-                [HttpPut("games/{id}")]
-                public async Task<ActionResult> UpdateGame([FromRoute] int id)
-                {
-                    return await Ok(businessLogic.UpdateGame(id));
-                }
 
-                [HttpDelete("games/{id}")]
+
+        /*        [HttpDelete("games/{id}")]
                 public async Task<ActionResult> DeleteGame([FromRoute] int id)
                 {
                     return await Ok(businessLogic.DeleteGame(id));
@@ -58,13 +62,13 @@ namespace AdminServer.Controllers
                 }
 
                 [HttpGet("users/{id}")]
-                public async Task<ActionResult<User>> GetUser([FromRoute] int id)
+                public async Task<ActionResult<UserDTO>> GetUser([FromRoute] int id)
                 {
                     return await Ok(businessLogic.GetUser(id));
                 }
 
                 [HttpGet("users")]
-                public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+                public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
                 {
                     return await Ok(businessLogic.GetUsers());
                 }
@@ -72,19 +76,19 @@ namespace AdminServer.Controllers
                 [HttpPut("users/{id}")]
                 public async Task<ActionResult> UpdateUser([FromRoute] int id)
                 {
-                    return await Ok(businessLogic.UpdateUser(id));
+                    //return await Ok(businessLogic.UpdateUser(id));
                 }
 
                 [HttpDelete("users/{id}")]
                 public async Task<ActionResult> DeleteUser([FromRoute] int id)
                 {
-                    return await Ok(businessLogic.DeleteUser(id));
+                    //return await Ok(businessLogic.DeleteUser(id));
                 }
 
                 [HttpPost("games/{gameId}/users{userId}")]
                 public async Task<ActionResult> AssociateGameWithUser([FromRoute] int gameId, [FromRoute] int userId)
                 {
-                    return await Ok(businessLogic.AssociateGameWithUser(gameId, userId));
+                   // return await Ok(businessLogic.AssociateGameWithUser(gameId, userId));
                 }*/
     }
 }

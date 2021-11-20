@@ -23,7 +23,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+		<None Update="Protos\greet.proto">
+			<GrpcServices>Server</GrpcServices>
+		</None>
 	</ItemGroup>
 
 </Project>
