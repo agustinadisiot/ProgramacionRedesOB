@@ -48,7 +48,10 @@ namespace Client.Commands
 
                 for (int i = 0; i < reviewsInfoSepareted.Length; i += 3)
                 {
-                    User reviewWriter = new User(reviewsInfoSepareted[i]);
+                    User reviewWriter = new User()
+                    {
+                        Name = reviewsInfoSepareted[i],
+                    };
                     Review newReview = new Review
                     {
                         Author = reviewWriter,

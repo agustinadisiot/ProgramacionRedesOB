@@ -18,12 +18,14 @@ namespace Server.Commands
 
         public override async Task ParsedRequestHandler(string[] req)
         {
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             Game newGame = new Game
             {
                 Title = req[0],
                 Synopsis = req[1],
-                Genre = req[3]
-            };
+                Genre = req[3],
+                Publisher = utils.GetUser(networkStreamHandler)
+        };
             ISettingsManager SettingsMgr = new SettingsManager();
             string folderPath = SettingsMgr.ReadSetting(ServerConfig.GameCoverPathKey);
             string coverPath = await fileNetworkStreamHandler.ReceiveFile(folderPath);
@@ -34,7 +36,7 @@ namespace Server.Commands
             try
             {
                 newGame.ESRBRating = (Common.ESRBRating)parseInt(req[2]); // can thow server error if not a number
-                message = GameCUD.PublishGame(newGame, networkStreamHandler);
+                message = GameCUD.PublishGame(newGame);
             }
             catch (Exception e) when (e is TitleAlreadyExistsException || e is ServerError)
             {

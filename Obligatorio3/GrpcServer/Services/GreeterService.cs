@@ -1,5 +1,7 @@
+using Common.Domain;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
+using Server.BusinessLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +25,27 @@ namespace GrpcServer
             });
         }
 
+        public override Task<MessageReply> PostGame(GameDTO request, ServerCallContext context)
+        {
+            BusinessLogicGameCUD cud = BusinessLogicGameCUD.GetInstance();
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            Game game = new Game()
+            {
+                Id = request.Id,
+                Title = request.Title,
+                ESRBRating = (Common.ESRBRating)request.EsrbRating,
+                ReviewsRating = request.ReviewsRating,
+                CoverFilePath = request.CoverFilePath,
+                Genre = request.Genre,
+                Publisher = utils.GetUser(request.PublisherId),
+                Synopsis = request.Synopsis,
+                Reviews = new List<Review>()
+            };
+            string message = cud.PublishGame(game);
+            return Task.FromResult(new MessageReply
+            {
+                Message = message
+            }); ;
+        }
     }
 }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Common.Domain;
-using Microsoft.AspNetCore.Http;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminServer.Controllers
@@ -12,15 +9,19 @@ namespace AdminServer.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-
-        public AdminController() { }
+        private Greeter.GreeterClient client;
+        public AdminController() {
+            AppContext.SetSwitch(
+                    "System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+        }
 
         [HttpPost("games")]
-        public async Task<ActionResult> PostGame()
+        public async Task<ActionResult> PostGame([FromBody] GameDTO game)
         {
-            AdminBusinessLogic businessLogic = new AdminBusinessLogic();
-            string result = await businessLogic.PostGame();
-            return Ok(result);
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.PostGameAsync(game);
+            return Ok(reply.Message);
         }
 /*
 

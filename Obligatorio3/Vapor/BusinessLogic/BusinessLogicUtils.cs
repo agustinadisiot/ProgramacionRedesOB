@@ -41,7 +41,6 @@ namespace Server.BusinessLogic
                 return users.Find(i => i.Name == username);
             }
         }
-
         private string GetUsername(INetworkStreamHandler nwsh)
         {
             var connections = da.Connections;
@@ -54,6 +53,20 @@ namespace Server.BusinessLogic
                     throw new ServerError("No existe usuario con ese nombre");
             }
         }
+
+
+        public User GetUser(int Id)
+        {
+            List<User> users = da.Users;
+            lock (users)
+            {
+                User actualUser = users.Find(i => i.Id == Id);
+                if (actualUser == null) throw new ServerError("No se encontró el usuario, rehacer login");
+                return actualUser;
+            }
+        }
+
+   
 
         // PRE: Requires lock on da.Games 
         public Game GetGameById(int gameId)

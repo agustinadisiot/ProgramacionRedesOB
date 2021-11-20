@@ -25,6 +25,22 @@ namespace Server
                 gameId = value;
             }
         }
+
+        private int userId;
+        public int NextUserID
+        {
+            get
+            {
+                int res = userId;
+                userId++;
+                return res;
+
+            }
+            private set
+            {
+                userId = value;
+            }
+        }
         private static DataAccess instance;
 
         public Dictionary<INetworkStreamHandler, string> Connections { get; private set; }
@@ -47,6 +63,7 @@ namespace Server
             Games = new List<Game>();
             Users = new List<User>();
             gameId = 0;
+            userId = 0;
             Connections = new Dictionary<INetworkStreamHandler, string>();
 
         }

@@ -34,9 +34,8 @@ namespace Server.BusinessLogic
             da = DataAccess.GetInstance();
         }
 
-        public string PublishGame(Game newGame, INetworkStreamHandler nwsh)
+        public string PublishGame(Game newGame)
         {
-            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             VerifyGame(newGame);
             List<Game> games = da.Games;
             lock (games)
@@ -46,7 +45,6 @@ namespace Server.BusinessLogic
                     throw new TitleAlreadyExistsException();
                 newGame.Id = da.NextGameID;
                 newGame.ReviewsRating = 0;
-                newGame.Publisher = utils.GetUser(nwsh);
                 newGame.Reviews = new List<Review>();
                 games.Add(newGame);
                 return $"Se publicó el juego {newGame.Title} correctamente";

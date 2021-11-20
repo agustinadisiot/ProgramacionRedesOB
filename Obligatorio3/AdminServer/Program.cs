@@ -13,6 +13,9 @@ namespace AdminServer
     {
         public static void Main(string[] args)
         {
+            /*AppContext.SetSwitch(
+                "System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);*/
+            //args = new string[] { "urls=http\\localhost:5002" };
             CreateHostBuilder(args).Build().Run();
         }
 

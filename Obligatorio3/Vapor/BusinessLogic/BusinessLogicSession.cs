@@ -33,11 +33,15 @@ namespace Server.BusinessLogic
             List<User> users = da.Users;
             lock (users)
             {
-                User newUser = new User(newUserName);
+                User newUser = new User() { 
+                    Name = newUserName,
+                    Id = da.NextUserID
+                };
                 bool alreadyExists = users.Contains(newUser);
                 if (!alreadyExists)
                 {
-                    users.Add(newUser);
+                    //users.Add(newUser);
+                    da.Users.Add(newUser);
                 }
                 da.Connections.Add(nwsh, newUserName);
 

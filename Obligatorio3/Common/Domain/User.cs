@@ -5,12 +5,13 @@ namespace Common.Domain
 {
     public class User
     {
-        public string Name { get; private set; }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
         public List<Game> GamesOwned { get; private set; }
 
-        public User(string name)
+        public User()
         {
-            Name = name;
             GamesOwned = new List<Game>();
         }
 
