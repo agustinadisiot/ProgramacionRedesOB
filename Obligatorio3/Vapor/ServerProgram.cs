@@ -13,7 +13,6 @@ namespace Server
 
         static async Task Main(string[] args)
         {
-            //CreateHostBuilder(args).Build().Run();
 
             var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.ServerIpConfigKey);
             var serverPort = SettingsMgr.ReadSetting(ServerConfig.SeverPortConfigKey);
@@ -24,12 +23,6 @@ namespace Server
             await Task.Run(() => server.ExitPrompt());
         }
 
-        /*public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });*/
 
 
         public static async Task StartServer(Server server)
