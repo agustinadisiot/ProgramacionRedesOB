@@ -22,10 +22,6 @@ namespace GrpcServer
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                   /* webBuilder.ConfigureKestrel(options =>
-                    {
-                        options.Listen(IPAddress.Loopback, 5000);
-                    });*/
                     webBuilder.UseStartup<Startup>();
                 });
     }
