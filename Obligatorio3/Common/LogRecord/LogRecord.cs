@@ -3,7 +3,7 @@ using Common;
 using Common.Interfaces;
 using System;
 
-namespace Server
+namespace Common
 {
     public class LogRecord
     {
@@ -11,7 +11,7 @@ namespace Server
         public const string WarningSeverity = "warn";
         public const string InfoSeverity = "info";
 
-        public string Message { get; set;}
+        public string Message { get; set; }
         public int GameId { get; set; }
         public int UserId { get; set; }
         public string GameName { get; set; }

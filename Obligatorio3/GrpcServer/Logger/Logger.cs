@@ -1,3 +1,4 @@
+using Common;
 using RabbitMQ.Client;
 using System;
 using System.Text;
