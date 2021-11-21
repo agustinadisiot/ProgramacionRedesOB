@@ -76,7 +76,7 @@ namespace Server.BusinessLogic
                     da.Users.Add(newUser);
                 }
 
-                return alreadyExists ? "Could not create user" : "User created succesfully";
+                return alreadyExists ? "Ya existe el usuario" : "Usuario creado correctamente";
             }
         }
 
@@ -113,7 +113,7 @@ namespace Server.BusinessLogic
             if (userWithSameTitle != null)
                 throw new NameAlreadyExistsException();
             if (!Validation.IsValidTitle(name))
-                throw new ServerError("Título no válido");
+                throw new ServerError("Nombre no válido");
             return name;
         }
     }

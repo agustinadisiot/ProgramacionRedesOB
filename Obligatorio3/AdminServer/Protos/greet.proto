@@ -15,6 +15,7 @@ service Greeter {
   rpc UpdateUser(UserDTO) returns (MessageReply);
   rpc DeleteUser(Id) returns (MessageReply);
   rpc AssociateGameWithUser(Purchase) returns (MessageReply);
+  rpc DisassociateGameWithUser(Purchase) returns (MessageReply);
 }
 
 // The request message containing the user's name.

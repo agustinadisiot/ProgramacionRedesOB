@@ -71,12 +71,21 @@ namespace AdminServer.Controllers
             return Ok(reply.Message);
         }
 
-        [HttpPost("games/{gameId}/users{userId}")]
+        [HttpPost("games/{gameId}/users/{userId}")]
         public async Task<ActionResult> AssociateGameWithUser([FromRoute] int gameId, [FromRoute] int userId)
         {
             using var channel = GrpcChannel.ForAddress("http://localhost:5007");
             client = new Greeter.GreeterClient(channel);
             var reply = await client.AssociateGameWithUserAsync(new Purchase { IdUser = userId, IdGame = gameId });
+            return Ok(reply.Message);
+        }
+
+        [HttpDelete("games/{gameId}/users/{userId}")]
+        public async Task<ActionResult> DisassociateGameWithUser([FromRoute] int gameId, [FromRoute] int userId)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.DisassociateGameWithUserAsync(new Purchase { IdUser = userId, IdGame = gameId });
             return Ok(reply.Message);
         }
     }

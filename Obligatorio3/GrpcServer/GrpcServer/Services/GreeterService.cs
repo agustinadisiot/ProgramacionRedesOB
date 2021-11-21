@@ -1,4 +1,5 @@
 using Common.Domain;
+using Common.Protocol;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using Server.BusinessLogic;
@@ -29,34 +30,56 @@ namespace Server
         {
             BusinessLogicGameCUD cud = BusinessLogicGameCUD.GetInstance();
             BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
-            Game game = new Game()
+            try
             {
-                Title = request.Title,
-                ESRBRating = (Common.ESRBRating)request.EsrbRating,
-                CoverFilePath = request.CoverFilePath,
-                Genre = request.Genre,
-                Publisher = utils.GetUser(request.PublisherId),
-                Synopsis = request.Synopsis,
-                Reviews = new List<Review>()
-            };
-            string message = cud.PublishGame(game);
-            return Task.FromResult(new MessageReply{ Message = message});
+                Game game = new Game()
+                {
+                    Title = request.Title,
+                    ESRBRating = (Common.ESRBRating)request.EsrbRating,
+                    CoverFilePath = request.CoverFilePath,
+                    Genre = request.Genre,
+                    Publisher = utils.GetUser(request.PublisherId),
+                    Synopsis = request.Synopsis,
+                    Reviews = new List<Review>()
+                };
+                string message = cud.PublishGame(game);
+                return Task.FromResult(new MessageReply { Message = message });
+            }
+            catch (ServerError e)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message));
+            }
+            catch (TitleAlreadyExistsException e)
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, e.Message));
+            }
         }
 
         public override Task<MessageReply> UpdateGame(GameDTO request, ServerCallContext context)
         {
             BusinessLogicGameCUD cud = BusinessLogicGameCUD.GetInstance();
-            Game game = new Game()
+            try
             {
-                Id = request.Id,
-                Title = request.Title,
-                ESRBRating = (Common.ESRBRating)request.EsrbRating,
-                CoverFilePath = request.CoverFilePath,
-                Genre = request.Genre,
-                Synopsis = request.Synopsis
-            };
-            string message = cud.ModifyGame(request.Id, game);
-            return Task.FromResult(new MessageReply{Message = message});
+                Game game = new Game()
+                {
+                    Id = request.Id,
+                    Title = request.Title,
+                    ESRBRating = (Common.ESRBRating)request.EsrbRating,
+                    CoverFilePath = request.CoverFilePath,
+                    Genre = request.Genre,
+                    Synopsis = request.Synopsis
+                };
+                string message = cud.ModifyGame(request.Id, game);
+                return Task.FromResult(new MessageReply { Message = message });
+            }
+            catch (ServerError e)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message));
+            }
+            catch (TitleAlreadyExistsException e)
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, e.Message));
+            }
         }
 
         public override Task<MessageReply> DeleteGame(Id request, ServerCallContext context)
@@ -77,28 +100,57 @@ namespace Server
         public override Task<MessageReply> UpdateUser(UserDTO request, ServerCallContext context)
         {
             BusinessLogicSession session = BusinessLogicSession.GetInstance();
+            try { 
             User modifiedUser = new User()
             {
                 Id = request.Id,
                 Name = request.Name
             };
             string message = session.ModifyUser(request.Id, modifiedUser);
-            return Task.FromResult(new MessageReply{Message = message});
+            return Task.FromResult(new MessageReply { Message = message }); }
+            catch (ServerError e)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message));
+            }
+            catch (NameAlreadyExistsException e)
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, e.Message));
+            }
         }
 
         public override Task<MessageReply> DeleteUser(Id request, ServerCallContext context)
         {
             BusinessLogicSession session = BusinessLogicSession.GetInstance();
             bool couldDelete = session.DeleteUser(request.Id_);
-            string message = couldDelete ? "Usuario agregado correctamente" : "No se pudo eliminar usuario";
+            string message = couldDelete ? "Usuario eliminado correctamente" : "No se pudo eliminar usuario";
             return Task.FromResult(new MessageReply { Message = message });
         }
 
         public override Task<MessageReply> AssociateGameWithUser(Purchase request, ServerCallContext context)
         {
             BusinessLogicGameInfo info = BusinessLogicGameInfo.GetInstance();
-            info.BuyGame(request.IdGame, request.IdUser);
-            return base.AssociateGameWithUser(request, context);
+            try {
+                bool couldBuy = info.BuyGame(request.IdGame, request.IdUser);
+                string message = couldBuy ? "Juego comprado correctamente" : "No se pudo comprar juego";
+                return Task.FromResult(new MessageReply { Message = message });
+            }
+            catch (ServerError e)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message));
+            }
+        }
+
+        public override Task<MessageReply> DisassociateGameWithUser(Purchase request, ServerCallContext context)
+        {
+            BusinessLogicGameInfo info = BusinessLogicGameInfo.GetInstance();
+            try { 
+            bool couldReturn = info.ReturnGame(request.IdGame, request.IdUser);
+            string message = couldReturn ? "Se retorno el juego correctamente" : "No se pudo retornar el juego";
+            return Task.FromResult(new MessageReply { Message = message }); }
+            catch (ServerError e)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message));
+            }
         }
     }
 }

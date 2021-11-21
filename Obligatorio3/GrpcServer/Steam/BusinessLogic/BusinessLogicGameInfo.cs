@@ -1,5 +1,6 @@
 ﻿using Common.Domain;
 using Common.NetworkUtils.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace Server.BusinessLogic
@@ -98,6 +99,18 @@ namespace Server.BusinessLogic
 
                 userToBuyGame.GamesOwned.Add(gameToBuy);
                 return true;
+            }
+        }
+
+        internal bool ReturnGame(int idGame, int idUser)
+        {
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            lock (da.Games)
+            {
+                Game gameToReturn = utils.GetGameById(idGame);
+                User userToReturnGame = utils.GetUser(idUser);
+
+                return userToReturnGame.GamesOwned.Remove(gameToReturn);
             }
         }
     }
