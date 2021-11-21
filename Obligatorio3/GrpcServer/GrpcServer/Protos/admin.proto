@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-option csharp_namespace = "AdminServer";
+option csharp_namespace = "Server";
 
-package greet;
+package admin;
 
 // The greeting service definition.
-service Greeter {
+service Admin {
   rpc PostGame (GameDTO) returns (MessageReply);
   rpc GetGames (GamesRequest) returns (GamesResponseList);
   rpc GetGameById(Id) returns (GameDTO);

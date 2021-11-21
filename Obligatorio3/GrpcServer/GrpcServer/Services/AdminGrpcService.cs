@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    public class GreeterService : Greeter.GreeterBase
+    public class AdminGrpcService : Admin.AdminBase
     {
-        private readonly ILogger<GreeterService> _logger;
-        public GreeterService(ILogger<GreeterService> logger)
+        private readonly ILogger<AdminGrpcService> _logger;
+        public AdminGrpcService(ILogger<AdminGrpcService> logger)
         {
             _logger = logger;
         }
