@@ -1,4 +1,5 @@
 using Common.Protocol;
+using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Server;
@@ -18,7 +19,7 @@ namespace AdminServer
 
             if (context.Exception is Grpc.Core.RpcException e)
             {
-                statusCode = (int)e.Status.StatusCode;
+                if (e.Status.StatusCode == StatusCode.AlreadyExists) { statusCode = 400; } else { statusCode = 500; }
                 errorMessage = e.Status.Detail;
             }
             else
