@@ -8,7 +8,7 @@ namespace Server
     public static class Logger
     {
         // TODO pasar a app config
-        private const string host = "amqps://yqkizmwe:PLX7QHzf3_iKjXhKCgBcn_Lb3s6gbRKO@clam.rmq.cloudamqp.com/yqkizmwe"
+        private const string host = "amqps://yqkizmwe:PLX7QHzf3_iKjXhKCgBcn_Lb3s6gbRKO@clam.rmq.cloudamqp.com/yqkizmwe";
         private static IModel channel;
         
         public static void Log(Log log) {
@@ -35,7 +35,7 @@ namespace Server
             var newChannel = new ConnectionFactory() { HostName = host }.CreateConnection().CreateModel();
 
             newChannel.ExchangeDeclare(exchange: "logs", ExchangeType.Topic);
-            this.channel = newChannel;
+            channel = newChannel;
         }
     }
 }
