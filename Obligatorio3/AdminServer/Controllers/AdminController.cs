@@ -25,6 +25,24 @@ namespace AdminServer.Controllers
             return Ok(reply.Message);
         }
 
+        [HttpGet("games")]
+        public async Task<ActionResult> GetGames()
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.GetGamesAsync(new GamesRequest { });
+            return Ok(reply);
+        }
+
+        [HttpGet("games/{id}")]
+        public async Task<ActionResult> GetGameById([FromRoute] int id)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.GetGameByIdAsync(new Id { Id_ = id });
+            return Ok(reply);
+        }
+
         [HttpPut("games")]
         public async Task<ActionResult> UpdateGame([FromBody] GameDTO game)
         {
@@ -51,6 +69,24 @@ namespace AdminServer.Controllers
             client = new Greeter.GreeterClient(channel);
             var reply = await client.PostUserAsync(user);
             return Ok(reply.Message);
+        }
+
+        [HttpGet("users")]
+        public async Task<ActionResult> GetUsers()
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.GetUsersAsync(new UsersRequest { });
+            return Ok(reply);
+        }
+
+        [HttpGet("users/{id}")]
+        public async Task<ActionResult> GetUserById([FromRoute] int id)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.GetUserByIdAsync(new Id { Id_ = id });
+            return Ok(reply);
         }
 
         [HttpPut("users")]

@@ -116,5 +116,10 @@ namespace Server.BusinessLogic
                 throw new ServerError("Nombre no válido");
             return name;
         }
+
+        internal List<User> GetUsers()
+        {
+            return da.Users;
+        }
     }
 }
