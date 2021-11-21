@@ -3,6 +3,7 @@ using Common.Domain;
 using Common.Protocol;
 using Common.Utils;
 using Server.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -69,6 +70,11 @@ namespace Server.BusinessLogic
 
             if (!File.Exists(newGame.CoverFilePath))
                 throw new ServerError("CoverPath no válido");
+        }
+
+        internal List<Game> GetGames()
+        {
+            return da.Games;
         }
 
         public bool DeleteGame(int gameId)
