@@ -47,6 +47,13 @@ namespace Server.BusinessLogic
                 }
                 da.Connections.Add(nwsh, newUserName);
 
+                Logger.Log(new Log{ 
+                    Message= "User logged in",
+                    UserId = newUser.Id,
+                    Username = newUser.Name,
+                    Severity = Log.InfoSeverity
+                });
+
                 return !alreadyExists;
             }
         }
