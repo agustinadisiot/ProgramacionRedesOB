@@ -36,7 +36,8 @@ namespace Server.BusinessLogic
             List<User> users = da.Users;
             lock (users)
             {
-                User newUser = new User() { 
+                User newUser = new User()
+                {
                     Name = newUserName,
                     Id = da.NextUserID
                 };
@@ -47,11 +48,12 @@ namespace Server.BusinessLogic
                 }
                 da.Connections.Add(nwsh, newUserName);
 
-                Logger.Log(new Log{ 
-                    Message= "User logged in",
+                Logger.Log(new LogRecord
+                {
+                    Message = "User logged in",
                     UserId = newUser.Id,
                     Username = newUser.Name,
-                    Severity = Log.InfoSeverity
+                    Severity = LogRecord.InfoSeverity
                 });
 
                 return !alreadyExists;

@@ -5,7 +5,7 @@ using System;
 
 namespace Server
 {
-    public class Log
+    public class LogRecord
     {
         public const string ErrorSeverity = "error";
         public const string WarningSeverity = "warn";
