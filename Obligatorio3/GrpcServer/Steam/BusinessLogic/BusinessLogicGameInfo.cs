@@ -84,5 +84,21 @@ namespace Server.BusinessLogic
                 return true;
             }
         }
+
+        public bool BuyGame(int gameID, int userId)
+        {
+            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            lock (da.Games)
+            {
+                Game gameToBuy = utils.GetGameById(gameID);
+                User userToBuyGame = utils.GetUser(userId);
+
+                if (userToBuyGame.GamesOwned.Contains(gameToBuy))
+                    return false;
+
+                userToBuyGame.GamesOwned.Add(gameToBuy);
+                return true;
+            }
+        }
     }
 }

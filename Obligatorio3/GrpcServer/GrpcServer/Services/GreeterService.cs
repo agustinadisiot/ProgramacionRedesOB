@@ -40,16 +40,12 @@ namespace Server
                 Reviews = new List<Review>()
             };
             string message = cud.PublishGame(game);
-            return Task.FromResult(new MessageReply
-            {
-                Message = message
-            });
+            return Task.FromResult(new MessageReply{ Message = message});
         }
 
         public override Task<MessageReply> UpdateGame(GameDTO request, ServerCallContext context)
         {
             BusinessLogicGameCUD cud = BusinessLogicGameCUD.GetInstance();
-            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             Game game = new Game()
             {
                 Id = request.Id,
@@ -60,10 +56,49 @@ namespace Server
                 Synopsis = request.Synopsis
             };
             string message = cud.ModifyGame(request.Id, game);
-            return Task.FromResult(new MessageReply
+            return Task.FromResult(new MessageReply{Message = message});
+        }
+
+        public override Task<MessageReply> DeleteGame(Id request, ServerCallContext context)
+        {
+            BusinessLogicGameCUD cud = BusinessLogicGameCUD.GetInstance();
+            bool couldDelete = cud.DeleteGame(request.Id_);
+            string message = couldDelete ? "Juego eliminado corretamente" : "No se pudo eliminar el juego";
+            return Task.FromResult(new MessageReply{Message = message});
+        }
+
+        public override Task<MessageReply> PostUser(UserDTO request, ServerCallContext context)
+        {
+            BusinessLogicSession session = BusinessLogicSession.GetInstance();
+            string message = session.CreateUser(request.Name);
+            return Task.FromResult(new MessageReply { Message = message });
+        }
+
+        public override Task<MessageReply> UpdateUser(UserDTO request, ServerCallContext context)
+        {
+            BusinessLogicSession session = BusinessLogicSession.GetInstance();
+            User modifiedUser = new User()
             {
-                Message = message
-            });
+                Id = request.Id,
+                Name = request.Name
+            };
+            string message = session.ModifyUser(request.Id, modifiedUser);
+            return Task.FromResult(new MessageReply{Message = message});
+        }
+
+        public override Task<MessageReply> DeleteUser(Id request, ServerCallContext context)
+        {
+            BusinessLogicSession session = BusinessLogicSession.GetInstance();
+            bool couldDelete = session.DeleteUser(request.Id_);
+            string message = couldDelete ? "Usuario agregado correctamente" : "No se pudo eliminar usuario";
+            return Task.FromResult(new MessageReply { Message = message });
+        }
+
+        public override Task<MessageReply> AssociateGameWithUser(Purchase request, ServerCallContext context)
+        {
+            BusinessLogicGameInfo info = BusinessLogicGameInfo.GetInstance();
+            info.BuyGame(request.IdGame, request.IdUser);
+            return base.AssociateGameWithUser(request, context);
         }
     }
 }
