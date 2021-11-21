@@ -11,6 +11,7 @@ namespace Server
     {
         public static void Log(Log log) { 
             // send to Q
+            // adds dateTime to Log
         }
     }
 }
