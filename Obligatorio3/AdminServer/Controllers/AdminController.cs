@@ -34,61 +34,50 @@ namespace AdminServer.Controllers
             return Ok(reply.Message);
         }
 
-        /*        [HttpGet("games/{id}")]
-                public async Task<ActionResult<GameDTO>> GetGame([FromRoute] int id)
-                {
-                    return await Ok(businessLogic.GetGame(id));
-                }
-
-                [HttpGet("games")]
-                public async Task<ActionResult<IEnumerable<GameDTO>>> GetGames()
-                {
-                    return await Ok(businessLogic.GetGames());
-                }*/
+        [HttpDelete("games/{id}")]
+        public async Task<ActionResult> DeleteGame([FromRoute] int id)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.DeleteGameAsync(new Id { Id_ = id });
+            return Ok(reply.Message);
+        }
 
 
+        [HttpPost("users")]
+        public async Task<ActionResult> PostUser([FromBody] UserDTO user)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.PostUserAsync(user);
+            return Ok(reply.Message);
+        }
 
-        /*        [HttpDelete("games/{id}")]
-                public async Task<ActionResult> DeleteGame([FromRoute] int id)
-                {
-                    return await Ok(businessLogic.DeleteGame(id));
-                }
+        [HttpPut("users")]
+        public async Task<ActionResult> UpdateUser([FromBody] UserDTO user)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.UpdateUserAsync(user);
+            return Ok(reply.Message);
+        }
 
+        [HttpDelete("users/{id}")]
+        public async Task<ActionResult> DeleteUser([FromRoute] int id)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.DeleteUserAsync(new Id { Id_ = id });
+            return Ok(reply.Message);
+        }
 
-                [HttpPost("users")]
-                public async Task<ActionResult> PostUser()
-                {
-                    return await Ok(businessLogic.PostUser());
-                }
-
-                [HttpGet("users/{id}")]
-                public async Task<ActionResult<UserDTO>> GetUser([FromRoute] int id)
-                {
-                    return await Ok(businessLogic.GetUser(id));
-                }
-
-                [HttpGet("users")]
-                public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
-                {
-                    return await Ok(businessLogic.GetUsers());
-                }
-
-                [HttpPut("users/{id}")]
-                public async Task<ActionResult> UpdateUser([FromRoute] int id)
-                {
-                    //return await Ok(businessLogic.UpdateUser(id));
-                }
-
-                [HttpDelete("users/{id}")]
-                public async Task<ActionResult> DeleteUser([FromRoute] int id)
-                {
-                    //return await Ok(businessLogic.DeleteUser(id));
-                }
-
-                [HttpPost("games/{gameId}/users{userId}")]
-                public async Task<ActionResult> AssociateGameWithUser([FromRoute] int gameId, [FromRoute] int userId)
-                {
-                   // return await Ok(businessLogic.AssociateGameWithUser(gameId, userId));
-                }*/
+        [HttpPost("games/{gameId}/users{userId}")]
+        public async Task<ActionResult> AssociateGameWithUser([FromRoute] int gameId, [FromRoute] int userId)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5007");
+            client = new Greeter.GreeterClient(channel);
+            var reply = await client.AssociateGameWithUserAsync(new Purchase { IdUser = userId, IdGame = gameId });
+            return Ok(reply.Message);
+        }
     }
 }
