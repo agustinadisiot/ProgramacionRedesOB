@@ -46,11 +46,11 @@ namespace Server.BusinessLogic
                         Id = da.NextUserID
                     };
                     da.Users.Add(newUser);
-                    LogUser(newUser, "User created");
+                    LogUser(newUser, "Usuario creado");
                 }
                 da.Connections.Add(nwsh, newUserName);
                 User loggedInUser = users.Find(u => u.Name == newUserName);
-                LogUser(loggedInUser, "User logged in");
+                LogUser(loggedInUser, "Usuario inició sesióñ");
 
                 return !alreadyExists;
             }
@@ -63,7 +63,7 @@ namespace Server.BusinessLogic
             {
                 connections.TryGetValue(nwsh, out string username);
                 User loggedOutUser = da.Users.Find(u => u.Name == username);
-                LogUser(loggedOutUser, "User logged out");
+                LogUser(loggedOutUser, "Usuario cerró sesión");
             }
             lock (connections)
             {
@@ -87,16 +87,18 @@ namespace Server.BusinessLogic
                 if (!alreadyExists)
                 {
                     da.Users.Add(newUser);
-
+                    LogUser(newUser, "Usuario creado correctamente");
+                }
+                else
+                {
                     Logger.Log(new LogRecord
                     {
+                        Message = "Ya existe el usuario",
                         UserId = newUser.Id,
                         Username = newUser.Name,
-                        Severity = LogRecord.InfoSeverity,
-                        Message = $"Se  creo el usuario"
+                        Severity = LogRecord.WarningSeverity
                     });
                 }
-
                 return alreadyExists ? "Ya existe el usuario" : "Usuario creado correctamente";
             }
         }
