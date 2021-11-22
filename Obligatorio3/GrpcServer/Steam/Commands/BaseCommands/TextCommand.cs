@@ -1,4 +1,5 @@
-﻿using Common.NetworkUtils.Interfaces;
+﻿using Common;
+using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
 using System.Text;
@@ -23,6 +24,8 @@ namespace Server
             }
             catch (ServerError e)
             {
+
+                Logger.Log(new LogRecord { Message = $"Sever error: {e.Message}", Severity = LogRecord.ErrorSeverity });
                 await SendErrorToClient(e.Message);
             }
 

@@ -31,7 +31,7 @@ namespace Common.Utils
 
         public static bool IsValidESRBRating(int rating)
         {
-            return rating > 0 && rating < Enum.GetValues(typeof(ESRBRating)).Length - 1;
+            return rating >= 0 && rating < Enum.GetValues(typeof(ESRBRating)).Length - 1;
         }
 
         private static bool IsValidEntry(string word)

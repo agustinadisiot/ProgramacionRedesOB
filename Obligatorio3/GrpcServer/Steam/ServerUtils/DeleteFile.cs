@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Common;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Server.Utils
@@ -17,7 +18,7 @@ namespace Server.Utils
             {
                 File.Delete(pathToDelete);
             }
-
         }
+
     }
 }

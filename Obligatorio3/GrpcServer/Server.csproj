@@ -6,6 +6,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+		<PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -13,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="GrpcServer\Protos\greet.proto" GrpcServices="Server" />
+		<Protobuf Include="GrpcServer\Protos\admin.proto" GrpcServices="Server" />
 	</ItemGroup>
 
 

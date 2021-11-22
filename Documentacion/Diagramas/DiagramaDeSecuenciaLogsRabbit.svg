@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="405px" preserveAspectRatio="none" style="width:504px;height:405px;background:#FFFFFF;" version="1.1" viewBox="0 0 504 405" width="504px" zoomAndPan="magnify"><defs><filter height="300%" id="f16a0r9kz4nmey" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><rect fill="#FFFFFF" filter="url(#f16a0r9kz4nmey)" height="247.8125" style="stroke:#A80036;stroke-width:1.0;" width="10" x="65.5" y="78.6094"/><rect fill="#FFFFFF" filter="url(#f16a0r9kz4nmey)" height="247.8125" style="stroke:#A80036;stroke-width:1.0;" width="10" x="310.5" y="78.6094"/><rect fill="#FFFFFF" filter="url(#f16a0r9kz4nmey)" height="111.4063" style="stroke:#000000;stroke-width:2.0;" width="480" x="10" y="207.0156"/><rect fill="#FFFFFF" filter="url(#f16a0r9kz4nmey)" height="79.0547" style="stroke:#000000;stroke-width:2.0;" width="460" x="20" y="232.3672"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="70" x2="70" y1="68.6094" y2="335.4219"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="315.5" x2="315.5" y1="68.6094" y2="335.4219"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="429" x2="429" y1="68.6094" y2="335.4219"/><rect fill="#90EE90" filter="url(#f16a0r9kz4nmey)" height="31.6094" style="stroke:#A80036;stroke-width:1.5;" width="77" x="30" y="32"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="63" x="37" y="53.5332">RabbitMQ</text><rect fill="#90EE90" filter="url(#f16a0r9kz4nmey)" height="31.6094" style="stroke:#A80036;stroke-width:1.5;" width="77" x="30" y="334.4219"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="63" x="37" y="355.9551">RabbitMQ</text><rect fill="#ADD8E6" filter="url(#f16a0r9kz4nmey)" height="31.6094" style="stroke:#A80036;stroke-width:1.5;" width="114" x="256.5" y="32"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="263.5" y="53.5332">LogServerLogic</text><rect fill="#ADD8E6" filter="url(#f16a0r9kz4nmey)" height="31.6094" style="stroke:#A80036;stroke-width:1.5;" width="114" x="256.5" y="334.4219"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="263.5" y="355.9551">LogServerLogic</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="75" x="389" y="65.5332">DataAccess</text><path d="M411.5,15 C411.5,5 429.5,5 429.5,5 C429.5,5 447.5,5 447.5,15 L447.5,41 C447.5,51 429.5,51 429.5,51 C429.5,51 411.5,51 411.5,41 L411.5,15 " fill="#ADD8E6" filter="url(#f16a0r9kz4nmey)" style="stroke:#000000;stroke-width:1.5;"/><path d="M411.5,15 C411.5,25 429.5,25 429.5,25 C429.5,25 447.5,25 447.5,15 " fill="none" style="stroke:#000000;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="75" x="389" y="348.9551">DataAccess</text><path d="M411.5,362.0313 C411.5,352.0313 429.5,352.0313 429.5,352.0313 C429.5,352.0313 447.5,352.0313 447.5,362.0313 L447.5,388.0313 C447.5,398.0313 429.5,398.0313 429.5,398.0313 C429.5,398.0313 411.5,398.0313 411.5,388.0313 L411.5,362.0313 " fill="#ADD8E6" filter="url(#f16a0r9kz4nmey)" style="stroke:#000000;stroke-width:1.5;"/><path d="M411.5,362.0313 C411.5,372.0313 429.5,372.0313 429.5,372.0313 C429.5,372.0313 447.5,372.0313 447.5,362.0313 " fill="none" style="stroke:#000000;stroke-width:1.5;"/><rect fill="#FFFFFF" filter="url(#f16a0r9kz4nmey)" height="247.8125" style="stroke:#A80036;stroke-width:1.0;" width="10" x="65.5" y="78.6094"/><rect fill="#FFFFFF" filter="url(#f16a0r9kz4nmey)" height="247.8125" style="stroke:#A80036;stroke-width:1.0;" width="10" x="310.5" y="78.6094"/><polygon fill="#A80036" points="86.5,96.9609,76.5,100.9609,86.5,104.9609,82.5,100.9609" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="80.5" x2="309.5" y1="100.9609" y2="100.9609"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="7" x="92.5" y="96.1045">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="90" x="103.5" y="96.1045">QueueDeclare()</text><polygon fill="#A80036" points="86.5,127.3125,76.5,131.3125,86.5,135.3125,82.5,131.3125" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="80.5" x2="309.5" y1="131.3125" y2="131.3125"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="7" x="92.5" y="126.4561">2</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="183" x="103.5" y="126.4561">QueueBind( routingKey: "warn")</text><polygon fill="#A80036" points="86.5,157.6641,76.5,161.6641,86.5,165.6641,82.5,161.6641" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="80.5" x2="309.5" y1="161.6641" y2="161.6641"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="7" x="92.5" y="156.8076">3</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="200" x="103.5" y="156.8076">QueueBind( routingKey: "warning")</text><polygon fill="#A80036" points="86.5,188.0156,76.5,192.0156,86.5,196.0156,82.5,192.0156" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="80.5" x2="309.5" y1="192.0156" y2="192.0156"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="7" x="92.5" y="187.1592">4</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="176" x="103.5" y="187.1592">QueueBind( routingKey: "info")</text><path d="M10,207.0156 L83,207.0156 L83,215.0156 L73,225.0156 L10,225.0156 L10,207.0156 " fill="#EEEEEE" style="stroke:#000000;stroke-width:1.0;"/><rect fill="none" height="111.4063" style="stroke:#000000;stroke-width:2.0;" width="480" x="10" y="207.0156"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="28" x="25" y="221.5107">loop</text><text fill="#000000" font-family="sans-serif" font-size="11" font-weight="bold" lengthAdjust="spacing" textLength="169" x="98" y="220.4346">[Se publica un nuevo mensaje]</text><path d="M20,232.3672 L81,232.3672 L81,240.3672 L71,250.3672 L20,250.3672 L20,232.3672 " fill="#EEEEEE" style="stroke:#000000;stroke-width:1.0;"/><rect fill="none" height="79.0547" style="stroke:#000000;stroke-width:2.0;" width="460" x="20" y="232.3672"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="16" x="35" y="246.8623">alt</text><text fill="#000000" font-family="sans-serif" font-size="11" font-weight="bold" lengthAdjust="spacing" textLength="222" x="96" y="245.7861">[routing key del mensaje en QueueBind]</text><polygon fill="#A80036" points="298.5,269.0703,308.5,273.0703,298.5,277.0703,302.5,273.0703" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="75.5" x2="304.5" y1="273.0703" y2="273.0703"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="7" x="82.5" y="268.2139">5</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="113" x="93.5" y="268.2139">consumer.Received</text><polygon fill="#A80036" points="417.5,299.4219,427.5,303.4219,417.5,307.4219,421.5,303.4219" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="320.5" x2="423.5" y1="303.4219" y2="303.4219"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="7" x="327.5" y="298.5654">6</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="74" x="338.5" y="298.5654">SaveLog(log)</text><!--MD5=[c8e4fd3e8b8656a22ada282968c00fb8]
+@startuml
+'!theme metal
+Participant RabbitMQ #LightGreen
+Participant LogServerLogic #LightBlue
+Database DataAccess #LightBlue
+
+autonumber
+activate LogServerLogic
+activate RabbitMQ
+
+LogServerLogic -> RabbitMQ : QueueDeclare()
+LogServerLogic -> RabbitMQ : QueueBind( routingKey: "warn")
+LogServerLogic -> RabbitMQ : QueueBind( routingKey: "warning")
+LogServerLogic -> RabbitMQ : QueueBind( routingKey: "info")
+
+loop Se publica un nuevo mensaje
+  alt routing key del mensaje en QueueBind
+    RabbitMQ -> LogServerLogic : consumer.Received
+    LogServerLogic -> DataAccess: SaveLog(log)
+  end
+end
+
+@enduml
+
+@startuml
+Participant RabbitMQ #LightGreen
+Participant LogServerLogic #LightBlue
+Database DataAccess #LightBlue
+
+autonumber
+activate LogServerLogic
+activate RabbitMQ
+
+LogServerLogic -> RabbitMQ : QueueDeclare()
+LogServerLogic -> RabbitMQ : QueueBind( routingKey: "warn")
+LogServerLogic -> RabbitMQ : QueueBind( routingKey: "warning")
+LogServerLogic -> RabbitMQ : QueueBind( routingKey: "info")
+
+loop Se publica un nuevo mensaje
+  alt routing key del mensaje en QueueBind
+    RabbitMQ -> LogServerLogic : consumer.Received
+    LogServerLogic -> DataAccess: SaveLog(log)
+  end
+end
+
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 13:46:50 UYT 2021)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: GB
+--></g></svg>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="90px" preserveAspectRatio="none" style="width:519px;height:90px;background:#FFFFFF;" version="1.1" viewBox="0 0 519 90" width="519px" zoomAndPan="magnify"><defs><filter height="300%" id="fjr9jdg774nnp" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[128f0757cf0ea77f14e95a88885fd9f7]
+entity Usuario--><ellipse cx="457.5" cy="14" fill="#FEFECE" filter="url(#fjr9jdg774nnp)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><path d="M457.5,22 L457.5,49 M444.5,30 L470.5,30 M457.5,49 L444.5,64 M457.5,49 L470.5,64 " fill="none" filter="url(#fjr9jdg774nnp)" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="110" x="402.5" y="82.4951">Usuario de Logs</text><!--MD5=[b3c1be909746e9d5905c61ed679b686f]
+entity RabbitMQ--><path d="M128.5688,30.2794 C132.9965,23.6615 137.8843,23.0329 142.6663,29.9092 C145.8464,23.1798 150.4092,23.0651 155.3013,28.0649 C160.1417,21.9755 166.4803,21.1899 170.7318,28.7315 C174.4206,21.768 180.9464,23.6118 184.0309,29.3635 C189.4121,22.9702 195.9605,23.7025 200.0501,30.8873 C203.483,23.7668 209.7319,24.7252 213.2612,30.7907 C223.9273,31.5966 225.6688,37.295 222.3781,46.3033 C226.6738,55.2244 225.3932,61.2509 214.2556,62.3693 C208.9756,68.9354 204.2599,70.4147 199.2248,62.1216 C196.6374,69.583 189.5939,70.0545 184.7776,64.6183 C180.1901,71.6581 174.6008,71.8188 170.1517,64.4776 C166.3598,70.936 160.2866,72.0934 156.1358,64.8446 C149.3831,71.354 144.9267,68.9922 140.9551,61.77 C136.8877,67.8354 130.45,68.5566 126.5079,61.6307 C117.7312,58.7921 117.0605,53.6695 121.83,46.6118 C116.3594,39.5013 119.666,31.4594 128.5688,30.2794 " fill="#FFA500" filter="url(#fjr9jdg774nnp)" style="stroke:#000000;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="72" x="133.5" y="49.9951">RabbitMQ</text><!--MD5=[b1435b213846e3ddcd1e6c1cd6b83b9a]
+entity Server--><rect fill="#90EE90" filter="url(#fjr9jdg774nnp)" height="36.2969" style="stroke:#A80036;stroke-width:1.5;" width="67" x="7" y="27"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="47" x="17" y="49.9951">Server</text><!--MD5=[c22259efda9b7897cd4b33d7cad0b64e]
+entity LogServer--><rect fill="#87CEFA" filter="url(#fjr9jdg774nnp)" height="36.2969" style="stroke:#A80036;stroke-width:1.5;" width="93" x="265" y="27"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="73" x="275" y="49.9951">LogServer</text><!--MD5=[5f4475c45629b0aa07f1ce1f1bee7126]
+link Server to RabbitMQ--><path d="M74.0565,45 C85.9192,45 99.6121,45 112.856,45 " fill="none" id="Server-to-RabbitMQ" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="118.102,45,109.102,41,113.102,45,109.102,49,118.102,45" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="8" x="92.25" y="38.0669">1</text><!--MD5=[e04e991bd0c9b3f72a79ac193b379083]
+link RabbitMQ to LogServer--><path d="M220.765,45 C233.277,45 246.678,45 259.236,45 " fill="none" id="RabbitMQ-to-LogServer" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="264.561,45,255.561,41,259.561,45,255.561,49,264.561,45" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="8" x="238.75" y="38.0669">2</text><!--MD5=[23eaea314157668fb40d38fbc75aacd2]
+link Usuario to LogServer--><path d="M402.089,64.6496 C393.814,65.8803 385.345,66.204 377.25,65 C372.657,64.3168 367.94,63.3791 363.244,62.28 " fill="none" id="Usuario-to-LogServer" style="stroke:#0000FF;stroke-width:1.0;"/><polygon fill="#0000FF" points="358.163,61.0284,365.9453,67.0646,363.0179,62.2241,367.8584,59.2968,358.163,61.0284" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="4" x="378.25" y="61.0669">.</text><!--MD5=[66b13c8f7d80b4d963b94927e971f7d6]
+link LogServer to Usuario--><path d="M358.097,45 C370.548,45 384.183,45 397.255,45 " fill="none" id="LogServer-to-Usuario" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="402.426,45,393.426,41,397.426,45,393.426,49,402.426,45" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="8" x="376.25" y="38.0669">3</text><!--MD5=[c2d2eb127e9599ce81b8300d10f9fd00]
+@startuml
+actor  "Usuario de Logs" as Usuario 
+cloud RabbitMQ #Orange
+agent Server  #LightGreen
+agent LogServer  #LightSkyBlue
+' database DataAccess 
+
+
+
+Server -> RabbitMQ : 1
+RabbitMQ -> LogServer : 2
+' RabbitMQ -> Server
+' LogServer -> RabbitMQ
+Usuario -[#Blue]> LogServer:  .  
+LogServer -> Usuario : 3
+@enduml
+
+@startuml
+actor  "Usuario de Logs" as Usuario 
+cloud RabbitMQ #Orange
+agent Server  #LightGreen
+agent LogServer  #LightSkyBlue
+
+
+
+Server -> RabbitMQ : 1
+RabbitMQ -> LogServer : 2
+Usuario -[#Blue]> LogServer:  .  
+LogServer -> Usuario : 3
+@enduml
+
+PlantUML version 1.2021.15beta6(Unknown compile time)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

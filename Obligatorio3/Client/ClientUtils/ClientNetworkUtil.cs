@@ -1,6 +1,5 @@
 ﻿using Common;
 using Common.Interfaces;
-using Server;
 using System.Net;
 using System.Net.Sockets;
 
@@ -19,8 +18,8 @@ namespace Client
 
         public static IPEndPoint GetServerEndpoint()
         {
-            var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.ServerIpConfigKey);
-            var serverPort = SettingsMgr.ReadSetting(ServerConfig.SeverPortConfigKey);
+            var serverIpAddress = SettingsMgr.ReadSetting(ClientConfig.ServerIpConfigKey);
+            var serverPort = SettingsMgr.ReadSetting(ClientConfig.SeverPortConfigKey);
             return new IPEndPoint(IPAddress.Parse(serverIpAddress), int.Parse(serverPort));
         }
     }

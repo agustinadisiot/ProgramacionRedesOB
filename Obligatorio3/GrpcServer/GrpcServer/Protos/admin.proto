@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option csharp_namespace = "Server";
+
+package admin;
+
+// The greeting service definition.
+service Admin {
+  rpc PostGame (GameDTO) returns (MessageReply);
+  rpc GetGames (GamesRequest) returns (GamesResponseList);
+  rpc GetGameById(Id) returns (GameDTO);
+  rpc UpdateGame(GameDTO) returns (MessageReply);
+  rpc DeleteGame(Id) returns (MessageReply);
+  rpc PostUser(UserDTO) returns (MessageReply);
+  rpc GetUsers (UsersRequest) returns (UsersResponseList);
+  rpc GetUserById(Id) returns (UserDTO);
+  rpc UpdateUser(UserDTO) returns (MessageReply);
+  rpc DeleteUser(Id) returns (MessageReply);
+  rpc AssociateGameWithUser(Purchase) returns (MessageReply);
+  rpc DisassociateGameWithUser(Purchase) returns (MessageReply);
+}
+
+message GameDTO {
+	int32 id = 1;
+	string title = 2;
+	string synopsis = 3;
+	string coverFilePath = 4;
+	int32 esrbRating = 5;
+	string genre = 6;
+	int32 publisherId = 7;
+}
+
+message UserDTO{
+	int32 id = 1;
+	string name = 2;
+}
+
+message Id {
+	int32 id = 1;
+}
+
+message UsersRequest {}
+
+message GamesRequest{}
+
+message UsersResponseList{
+	repeated UserDTO users = 1;
+}
+
+message GamesResponseList{
+	repeated GameDTO games = 1;
+}
+
+
+message MessageReply {
+	string message = 1;
+}
+
+message Purchase {
+	int32 idGame = 1;
+	int32 idUser = 2;
+}
