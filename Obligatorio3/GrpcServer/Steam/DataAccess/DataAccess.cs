@@ -62,8 +62,8 @@ namespace Server
         {
             Games = new List<Game>();
             Users = new List<User>();
-            gameId = 0;
-            userId = 0;
+            gameId = 1;
+            userId = 1;
             Connections = new Dictionary<INetworkStreamHandler, string>();
 
         }

@@ -42,7 +42,6 @@ namespace Server.BusinessLogic
             }
             catch (Exception e) when (e is ServerError || e is TitleAlreadyExistsException)
             {
-                newGame.Id = -1;
                 LogGameWarning(newGame, $"Se intento crear un nuevo juego '{newGame.Title}' pero ocurrió el error: {e.Message}");
                 throw;
             }
