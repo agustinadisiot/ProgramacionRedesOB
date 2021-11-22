@@ -3,6 +3,7 @@ using Common.Domain;
 using Common.Protocol;
 using Common.Utils;
 using Server.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -35,18 +36,26 @@ namespace Server.BusinessLogic
 
         public string PublishGame(Game newGame)
         {
-            VerifyGame(newGame);
+            try
+            {
+                VerifyGame(newGame);
+            }
+            catch (Exception e) when (e is ServerError || e is TitleAlreadyExistsException)
+            {
+                newGame.Id = -1;
+                LogGameWarning(newGame, $"Se intento crear un nuevo juego '{newGame.Title}' pero ocurrió el error: {e.Message}");
+                throw;
+            }
             List<Game> games = da.Games;
             lock (games)
             {
-                var gameWithSameTitle = games.Find(i => i.Title == newGame.Title);
-                if (gameWithSameTitle != null)
-                    throw new TitleAlreadyExistsException();
                 newGame.Id = da.NextGameID;
                 newGame.ReviewsRating = 0;
                 newGame.Reviews = new List<Review>();
                 games.Add(newGame);
-                return $"Se publicó el juego {newGame.Title} correctamente";
+                string msg = $"Se publicó el juego {newGame.Title} correctamente";
+                LogGameInfo(newGame, msg);
+                return msg;
             }
         }
         private void VerifyGame(Game newGame)
@@ -81,6 +90,7 @@ namespace Server.BusinessLogic
                 string pathToDelete = gameToDelete.CoverFilePath;
                 DeleteFile.DeleteFileAsync(pathToDelete);
                 success = games.Remove(gameToDelete);
+                LogGameInfo(gameToDelete, $"Se eliminó el juego {gameToDelete.Title} correctamente");
             }
             List<User> users = da.Users;
             lock (users)
@@ -98,29 +108,43 @@ namespace Server.BusinessLogic
             lock (games)
             {
                 Game gameToMod = utils.GetGameById(gameToModId);
-
-                if (modifiedGame.Title != "")
-                    gameToMod.Title = ModifiedValidTitle(modifiedGame.Title, gameToModId, games);
-
-                if (modifiedGame.Synopsis != "")
-                    gameToMod.Synopsis = ModifiedValidSynopsis(modifiedGame.Synopsis);
-
-                if (modifiedGame.ESRBRating != Common.ESRBRating.EmptyESRB)
-                    gameToMod.ESRBRating = ModifiedValidESRBRating(modifiedGame.ESRBRating);
-
-                if (modifiedGame.Genre != "")
-                    gameToMod.Genre = ModifedValidGenre(modifiedGame.Genre);
-
-                if (modifiedGame.CoverFilePath != null)
+                try
                 {
-                    string pathToDelete = gameToMod.CoverFilePath;
-                    gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
-                    DeleteFile.DeleteFileAsync(pathToDelete);
+                    ModifyAndVerifyGame(modifiedGame, gameToMod);
                 }
-                return $"Se modificó el juego {gameToMod.Title} correctamente";
+                catch (Exception e) when (e is ServerError || e is TitleAlreadyExistsException)
+                {
+                    LogGameWarning(gameToMod, $"Se intento modificar  juego '{gameToMod.Title}' pero ocurrió el error: {e.Message}");
+                    throw;
+                }
+
+                string msg = $"Se modificó el juego {gameToMod.Title} correctamente";
+                LogGameInfo(gameToMod, msg);
+                return msg;
             }
         }
 
+        private void ModifyAndVerifyGame(Game modifiedGame, Game gameToMod)
+        {
+            if (modifiedGame.Title != "")
+                gameToMod.Title = ModifiedValidTitle(modifiedGame.Title, gameToModId, games);
+
+            if (modifiedGame.Synopsis != "")
+                gameToMod.Synopsis = ModifiedValidSynopsis(modifiedGame.Synopsis);
+
+            if (modifiedGame.ESRBRating != Common.ESRBRating.EmptyESRB)
+                gameToMod.ESRBRating = ModifiedValidESRBRating(modifiedGame.ESRBRating);
+
+            if (modifiedGame.Genre != "")
+                gameToMod.Genre = ModifedValidGenre(modifiedGame.Genre);
+
+            if (modifiedGame.CoverFilePath != null)
+            {
+                string pathToDelete = gameToMod.CoverFilePath;
+                gameToMod.CoverFilePath = modifiedGame.CoverFilePath;
+                DeleteFile.DeleteFileAsync(pathToDelete);
+            }
+        }
 
         private string ModifiedValidTitle(string title, int gameToModId, List<Game> games)
         {
@@ -128,7 +152,9 @@ namespace Server.BusinessLogic
             if (gameWithSameTitle != null)
                 throw new TitleAlreadyExistsException();
             if (!Validation.IsValidTitle(title))
+            {
                 throw new ServerError("Título no válido");
+            }
             return title;
         }
         private string ModifiedValidSynopsis(string synopsis)
@@ -149,6 +175,32 @@ namespace Server.BusinessLogic
             if (!Validation.IsValidGenre(genre))
                 throw new ServerError("Genero no válido");
             return genre;
+        }
+
+        private void LogGameInfo(Game game, string message)
+        {
+            Logger.Log(new LogRecord
+            {
+                GameName = game.Title,
+                GameId = game.Id,
+                Severity = LogRecord.InfoSeverity,
+                UserId = game.Publisher.Id,
+                Username = game.Publisher.Name,
+                Message = message
+            });
+        }
+
+        private void LogGameWarning(Game game, string message)
+        {
+            Logger.Log(new LogRecord
+            {
+                GameName = game.Title,
+                GameId = game.Id,
+                Severity = LogRecord.WarningSeverity,
+                UserId = game.Publisher.Id,
+                Username = game.Publisher.Name,
+                Message = message
+            });
         }
     }
 }
