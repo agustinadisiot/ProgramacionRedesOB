@@ -78,7 +78,7 @@ namespace LogServer
                             .Where(l => filter.Username == null || l.Username.Contains(filter.Username))
                             .Where(l => filter.MinDateTime == null || l.DateAndTime >= filter.MinDateTime)
                             .Where(l => filter.MaxDateTime == null || l.DateAndTime <= filter.MaxDateTime)
-                            .Where(l => filter.Severity == null || l.Severity == filter.Severity)
+                            .Where(l => filter.Severity == null || l.Severity == filter.Severity) //TODO ver que hacer
                             .ToList();
             }
         }

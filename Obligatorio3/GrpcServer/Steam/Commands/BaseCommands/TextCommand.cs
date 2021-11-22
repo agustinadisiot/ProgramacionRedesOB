@@ -20,6 +20,7 @@ namespace Server
             try
             {
                 await ParsedRequestHandler(parsedData);
+                // TODO aca es el try de todo lo que hace el cliente, poner el log severity= "error"
             }
             catch (ServerError e)
             {
