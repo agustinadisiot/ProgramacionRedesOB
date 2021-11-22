@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"title\": \"Pubg\",\r\n  \"synopsis\": \"Accion and weapons\",\r\n  \"coverFilePath\": \"C:/Users/Agustina/Desktop/drawings/billie.jpg\",\r\n  \"esrbRating\": 5,\r\n  \"genre\": \"Otros\",\r\n  \"publisherId\": 0\r\n}",
+					"raw": "{\r\n  \"title\": \"Pubg\",\r\n  \"synopsis\": \"Accion and weapons\",\r\n  \"coverFilePath\": \"C:/Users/Agustina/Desktop/drawings/billie.jpg\",\r\n  \"esrbRating\": 5,\r\n  \"genre\": \"Otros\",\r\n  \"publisherId\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -84,7 +84,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/admin/games/0",
+					"raw": "http://localhost:5000/admin/games/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -93,7 +93,7 @@
 					"path": [
 						"admin",
 						"games",
-						"0"
+						"1"
 					]
 				}
 			},
@@ -106,7 +106,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"id\": 0,\r\n  \"title\": \"Pubg\",\r\n  \"synopsis\": \"Accion and weapons\",\r\n  \"coverFilePath\": \"C:\\\\Users\\\\Agustina\\\\Desktop\\\\drawings\\biliee.jpg\",\r\n  \"esrbRating\": 3,\r\n  \"genre\": \"Otros\",\r\n  \"publisherId\": 0\r\n}",
+					"raw": "{\r\n  \"id\": 1,\r\n  \"title\": \"Pubg\",\r\n  \"synopsis\": \"Accion and weapons\",\r\n  \"coverFilePath\": \"C:\\\\Users\\\\Agustina\\\\Desktop\\\\drawings\\biliee.jpg\",\r\n  \"esrbRating\": 3,\r\n  \"genre\": \"Otros\",\r\n  \"publisherId\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -143,7 +143,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/admin/games/0",
+					"raw": "http://localhost:5000/admin/games/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -152,7 +152,7 @@
 					"path": [
 						"admin",
 						"games",
-						"0"
+						"1"
 					]
 				}
 			},
@@ -237,7 +237,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/admin/users/0",
+					"raw": "http://localhost:5000/admin/users/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -246,7 +246,7 @@
 					"path": [
 						"admin",
 						"users",
-						"0"
+						"1"
 					]
 				}
 			},
@@ -259,7 +259,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"id\" : 0,\r\n  \"name\" : \"Agus\"\r\n}",
+					"raw": "{\r\n  \"id\" : 1,\r\n  \"name\" : \"Agus\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -296,7 +296,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/admin/users/0",
+					"raw": "http://localhost:5000/admin/users/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -305,7 +305,7 @@
 					"path": [
 						"admin",
 						"users",
-						"0"
+						"1"
 					]
 				}
 			},
@@ -326,7 +326,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/admin/games/0/users/0",
+					"raw": "http://localhost:5000/admin/games/1/users/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -335,9 +335,9 @@
 					"path": [
 						"admin",
 						"games",
-						"0",
+						"1",
 						"users",
-						"0"
+						"1"
 					]
 				}
 			},
@@ -358,7 +358,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/admin/games/0/users/0",
+					"raw": "http://localhost:5000/admin/games/1/users/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -367,9 +367,9 @@
 					"path": [
 						"admin",
 						"games",
-						"0",
+						"1",
 						"users",
-						"0"
+						"1"
 					]
 				}
 			},
