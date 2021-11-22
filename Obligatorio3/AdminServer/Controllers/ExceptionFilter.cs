@@ -1,11 +1,7 @@
-using Common.Protocol;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Server;
 using System;
-using System.IO;
-using System.Security.Authentication;
 
 namespace AdminServer
 {
@@ -27,7 +23,7 @@ namespace AdminServer
                 statusCode = 500;
             }
 
-            MessageReply message = new MessageReply() { Message = errorMessage};
+            MessageReply message = new MessageReply() { Message = errorMessage };
             context.Result = new ObjectResult(message)
             {
                 StatusCode = statusCode,
