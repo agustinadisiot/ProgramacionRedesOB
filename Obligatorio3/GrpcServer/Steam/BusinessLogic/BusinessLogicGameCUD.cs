@@ -80,6 +80,11 @@ namespace Server.BusinessLogic
                 throw new ServerError("CoverPath no válido");
         }
 
+        internal List<Game> GetGames()
+        {
+            return da.Games;
+        }
+
         public bool DeleteGame(int gameId)
         {
             List<Game> games = da.Games;
