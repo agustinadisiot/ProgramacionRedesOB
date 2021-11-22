@@ -19,6 +19,7 @@ namespace Server
 
             Server server = new Server(serverIpAddress, serverPort);
             StartServer(server);
+            Logger.CreateChannel();
 
             CreateHostBuilder(args).Build().Run();
             await Task.Run(() => server.ExitPrompt());

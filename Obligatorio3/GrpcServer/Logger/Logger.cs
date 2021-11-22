@@ -3,6 +3,7 @@ using RabbitMQ.Client;
 using System;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -33,7 +34,7 @@ namespace Server
 
         }
 
-        private static void CreateChannel()
+        public async static Task CreateChannel()
         {
             ConnectionFactory factory = new ConnectionFactory();
             factory.Uri = new Uri(host);
