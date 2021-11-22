@@ -35,7 +35,7 @@ namespace Server
                 modifiedGame.CoverFilePath = coverPath;
             }
 
-            BusinessLogicGameCUD GameCUD = BusinessLogicGameCUD.GetInstance();
+            BusinessLogicGameCRUD GameCUD = BusinessLogicGameCRUD.GetInstance();
             string message;
             try
             {

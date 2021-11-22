@@ -60,12 +60,13 @@ namespace Server.BusinessLogic
 
         public ReviewPage BrowseReviews(int pageNumber, int gameId)
         {
+            BusinessLogicGameCRUD crud = BusinessLogicGameCRUD.GetInstance();
             BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             if (pageNumber <= 0)
                 throw new ServerError($"Número de página {pageNumber} no válido");
             lock (da.Games)
             {
-                Game gameToGetReviews = utils.GetGameById(gameId);
+                Game gameToGetReviews = crud.GetGameById(gameId);
                 lock (gameToGetReviews.Reviews)
                 {
                     List<Review> allReviews = gameToGetReviews.Reviews;

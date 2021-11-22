@@ -17,7 +17,7 @@ namespace Server
         {
             int gameId = parseInt(req[0]);
 
-            BusinessLogicGameCUD GameCUD = BusinessLogicGameCUD.GetInstance();
+            BusinessLogicGameCRUD GameCUD = BusinessLogicGameCRUD.GetInstance();
             GameCUD.DeleteGame(gameId);
             string message = "Juego borrado exitosamente";
             await Respond(message);

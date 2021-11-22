@@ -60,17 +60,17 @@ namespace Server.BusinessLogic
         {
             var connections = da.Connections;
             bool res = false;
-            lock (connections)
-            {
-                res = connections.Remove(nwsh);
-            }
-            lock (da.Users)
             {
                 connections.TryGetValue(nwsh, out string username);
                 User loggedOutUser = da.Users.Find(u => u.Name == username);
                 LogUser(loggedOutUser, "User logged out");
             }
-            return res;
+            lock (connections)
+            {
+                res = connections.Remove(nwsh);
+            }
+            lock (da.Users)
+                return res;
         }
 
         internal string CreateUser(string name)
@@ -87,6 +87,14 @@ namespace Server.BusinessLogic
                 if (!alreadyExists)
                 {
                     da.Users.Add(newUser);
+
+                    Logger.Log(new LogRecord
+                    {
+                        UserId = newUser.Id,
+                        Username = newUser.Name,
+                        Severity = LogRecord.InfoSeverity,
+                        Message = $"Se  creo el usuario"
+                    });
                 }
 
                 return alreadyExists ? "Ya existe el usuario" : "Usuario creado correctamente";
@@ -118,7 +126,13 @@ namespace Server.BusinessLogic
                         });
                     }
                 }
-
+                Logger.Log(new LogRecord
+                {
+                    UserId = id,
+                    Username = modifiedUser.Name,
+                    Severity = LogRecord.InfoSeverity,
+                    Message = $"Se  modificar el nombre usuario"
+                });
                 return $"Se modificó el usuario {userToMod.Name} correctamente";
             }
 

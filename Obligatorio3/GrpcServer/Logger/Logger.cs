@@ -13,17 +13,17 @@ namespace Server
         private static string host;
         private static IModel channel;
 
-        public static void Log(LogRecord log)
+        public static async Task Log(LogRecord log)
         {
 
             ISettingsManager SettingsMgr = new SettingsManager();
             host = SettingsMgr.ReadSetting(ServerConfig.MQUri);
-
-            log.DateAndTime = DateTime.UtcNow;
+            var date = DateTime.UtcNow;
+            log.DateAndTime = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Kind);
             SendMessage(log);
         }
 
-        private static void SendMessage(LogRecord log)
+        private static async void SendMessage(LogRecord log)
         {
             if (channel == null)
                 CreateChannel();

@@ -20,7 +20,7 @@ namespace Server
 
         public override Task<MessageReply> PostGame(GameDTO request, ServerCallContext context)
         {
-            BusinessLogicGameCUD cud = BusinessLogicGameCUD.GetInstance();
+            BusinessLogicGameCRUD cud = BusinessLogicGameCRUD.GetInstance();
             BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             try
             {
@@ -49,7 +49,7 @@ namespace Server
 
         public override Task<GamesResponseList> GetGames(GamesRequest request, ServerCallContext context)
         {
-            BusinessLogicGameCUD crud = BusinessLogicGameCUD.GetInstance();
+            BusinessLogicGameCRUD crud = BusinessLogicGameCRUD.GetInstance();
             try
             {
                 List<Game> games = crud.GetGames();
@@ -75,10 +75,10 @@ namespace Server
 
         public override Task<GameDTO> GetGameById(Id request, ServerCallContext context)
         {
-            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            BusinessLogicGameCRUD crud = BusinessLogicGameCRUD.GetInstance();
             try
             {
-                Game game = utils.GetGameById(request.Id_);
+                Game game = crud.GetGameById(request.Id_);
                 GameDTO gamedto = new GameDTO
                 {
                     Id = game.Id,
@@ -99,7 +99,7 @@ namespace Server
 
         public override Task<MessageReply> UpdateGame(GameDTO request, ServerCallContext context)
         {
-            BusinessLogicGameCUD cud = BusinessLogicGameCUD.GetInstance();
+            BusinessLogicGameCRUD cud = BusinessLogicGameCRUD.GetInstance();
             try
             {
                 Game game = new Game()
@@ -126,7 +126,7 @@ namespace Server
 
         public override Task<MessageReply> DeleteGame(Id request, ServerCallContext context)
         {
-            BusinessLogicGameCUD cud = BusinessLogicGameCUD.GetInstance();
+            BusinessLogicGameCRUD cud = BusinessLogicGameCRUD.GetInstance();
             bool couldDelete = cud.DeleteGame(request.Id_);
             string message = couldDelete ? "Juego eliminado corretamente" : "No se pudo eliminar el juego";
             return Task.FromResult(new MessageReply { Message = message });

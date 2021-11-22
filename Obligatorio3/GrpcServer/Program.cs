@@ -20,15 +20,15 @@ namespace Server
             Server server = new Server(serverIpAddress, serverPort);
             StartServer(server);
             Logger.CreateChannel();
-
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().RunAsync();
             await Task.Run(() => server.ExitPrompt());
+            Logger.Log(new LogRecord { Severity = LogRecord.InfoSeverity, Message = "Se apagó el servidor" });
         }
 
         public static async Task StartServer(Server server)
         {
             Console.WriteLine("Server will start accepting connections from the clients");
-
+            Logger.Log(new LogRecord { Severity = LogRecord.InfoSeverity, Message = "Se prendió el servidor" });
             await Task.Run(() => server.StartReceivingConnections());
         }
 

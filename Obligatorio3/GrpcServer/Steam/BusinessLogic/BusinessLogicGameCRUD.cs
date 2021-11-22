@@ -9,27 +9,27 @@ using System.IO;
 
 namespace Server.BusinessLogic
 {
-    public class BusinessLogicGameCUD
+    public class BusinessLogicGameCRUD
     {
 
         private DataAccess da;
-        private static BusinessLogicGameCUD instance;
+        private static BusinessLogicGameCRUD instance;
 
         private static readonly object singletonPadlock = new object();
 
-        public static BusinessLogicGameCUD GetInstance()
+        public static BusinessLogicGameCRUD GetInstance()
         {
             lock (singletonPadlock)
             {
 
                 if (instance == null)
-                    instance = new BusinessLogicGameCUD();
+                    instance = new BusinessLogicGameCRUD();
             }
             return instance;
         }
 
 
-        public BusinessLogicGameCUD()
+        public BusinessLogicGameCRUD()
         {
             da = DataAccess.GetInstance();
         }
@@ -82,7 +82,24 @@ namespace Server.BusinessLogic
 
         internal List<Game> GetGames()
         {
-            return da.Games;
+            lock (da.Games)
+            {
+                return da.Games;
+            }
+        }
+
+
+        // PRE: Requires lock on da.Games 
+        public Game GetGameById(int gameId)
+        {
+            Game gameFound = da.Games.Find(game => game.Id == gameId);
+            if (gameFound == null)
+            {
+                string msg = " No existe el juego, tal vez haya sido eliminado";
+                Logger.Log(new LogRecord { GameId = gameId, Message = msg, Severity = LogRecord.WarningSeverity });
+                throw new ServerError(msg);
+            }
+            return gameFound;
         }
 
         public bool DeleteGame(int gameId)
@@ -108,7 +125,7 @@ namespace Server.BusinessLogic
 
         public string ModifyGame(int gameToModId, Game modifiedGame)
         {
-            BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
+            BusinessLogicGameCRUD utils = BusinessLogicGameCRUD.GetInstance();
             List<Game> games = da.Games;
             lock (games)
             {

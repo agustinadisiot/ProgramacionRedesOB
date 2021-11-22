@@ -81,18 +81,6 @@ namespace Server.BusinessLogic
 
 
 
-        // PRE: Requires lock on da.Games 
-        public Game GetGameById(int gameId)
-        {
-            Game gameFound = da.Games.Find(game => game.Id == gameId);
-            if (gameFound == null)
-            {
-                string msg = " No existe el juego, tal vez haya sido eliminado";
-                Logger.Log(new LogRecord { GameId = gameId, Message = msg, Severity = LogRecord.WarningSeverity });
-                throw new ServerError(msg);
-            }
-            return gameFound;
-        }
 
         public bool ExistsNextPage<T>(List<T> fullList, int pageNumber)
         {

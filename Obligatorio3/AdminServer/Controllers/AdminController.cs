@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Common;
+using Common.Interfaces;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +12,14 @@ namespace AdminServer.Controllers
     public class AdminController : ControllerBase
     {
         private Admin.AdminClient client;
+        private string grpcURL;
+
+        static readonly ISettingsManager SettingsMgr = new SettingsManager();
         public AdminController()
         {
             AppContext.SetSwitch(
                     "System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+            var serverIpAddress = SettingsMgr.ReadSetting(ServerConfig.GrpcURL);
         }
 
         [HttpPost("games")]
