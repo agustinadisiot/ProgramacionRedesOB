@@ -1,4 +1,5 @@
 using Common;
+using Common.Interfaces;
 using RabbitMQ.Client;
 using System;
 using System.Text;
@@ -9,13 +10,16 @@ namespace Server
 {
     public static class Logger
     {
-        // TODO pasar a app config
-        private const string host = "amqps://yqkizmwe:PLX7QHzf3_iKjXhKCgBcn_Lb3s6gbRKO@clam.rmq.cloudamqp.com/yqkizmwe";
+        private static string host;
         private static IModel channel;
 
         public static void Log(LogRecord log)
         {
-            log.DateAndTime = DateTime.Now;
+
+            ISettingsManager SettingsMgr = new SettingsManager();
+            host = SettingsMgr.ReadSetting(ServerConfig.MQUri);
+
+            log.DateAndTime = DateTime.UtcNow;
             SendMessage(log);
         }
 

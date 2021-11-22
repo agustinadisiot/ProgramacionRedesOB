@@ -102,7 +102,22 @@ namespace Server.BusinessLogic
                 User userToMod = utils.GetUser(id);
 
                 if (modifiedUser.Name != "")
-                    modifiedUser.Name = ModifiedValidName(modifiedUser.Name, id, users);
+                {
+                    try
+                    {
+                        modifiedUser.Name = ModifiedValidName(modifiedUser.Name, id, users);
+                    }
+                    catch (Exception e) when (e is NameAlreadyExistsException || e is ServerError)
+                    {
+                        Logger.Log(new LogRecord
+                        {
+                            UserId = id,
+                            Username = modifiedUser.Name,
+                            Severity = LogRecord.WarningSeverity,
+                            Message = $"Se intento modificar el nombre a {modifiedUser.Name} pero ocurrión el error: {e.Message}"
+                        });
+                    }
+                }
 
                 return $"Se modificó el usuario {userToMod.Name} correctamente";
             }
@@ -124,9 +139,9 @@ namespace Server.BusinessLogic
         {
             var userWithSameTitle = users.Find(i => (i.Name == name) && (i.Id != userToModId));
             if (userWithSameTitle != null)
-                throw new NameAlreadyExistsException(); // TODO log
+                throw new NameAlreadyExistsException();
             if (!Validation.IsValidTitle(name))
-                throw new ServerError("Nombre no válido"); // TODO log
+                throw new ServerError("Nombre no válido");
             return name;
         }
 
