@@ -53,7 +53,8 @@ namespace Server
             try
             {
                 List<Game> games = crud.GetGames();
-                List<GameDTO> gamesDto = games.ConvertAll(g => new GameDTO() {
+                List<GameDTO> gamesDto = games.ConvertAll(g => new GameDTO()
+                {
                     Id = g.Id,
                     Title = g.Title,
                     Synopsis = g.Synopsis,
@@ -62,9 +63,9 @@ namespace Server
                     PublisherId = g.Publisher.Id,
                     CoverFilePath = g.CoverFilePath,
                 });
-            GamesResponseList gamesResp = new GamesResponseList();
-            gamesDto.ForEach(g => gamesResp.Games.Add(g));
-            return Task.FromResult(gamesResp);
+                GamesResponseList gamesResp = new GamesResponseList();
+                gamesDto.ForEach(g => gamesResp.Games.Add(g));
+                return Task.FromResult(gamesResp);
             }
             catch (ServerError e)
             {
@@ -128,7 +129,7 @@ namespace Server
             BusinessLogicGameCUD cud = BusinessLogicGameCUD.GetInstance();
             bool couldDelete = cud.DeleteGame(request.Id_);
             string message = couldDelete ? "Juego eliminado corretamente" : "No se pudo eliminar el juego";
-            return Task.FromResult(new MessageReply{Message = message});
+            return Task.FromResult(new MessageReply { Message = message });
         }
 
         public override Task<MessageReply> PostUser(UserDTO request, ServerCallContext context)
@@ -181,14 +182,16 @@ namespace Server
         public override Task<MessageReply> UpdateUser(UserDTO request, ServerCallContext context)
         {
             BusinessLogicSession session = BusinessLogicSession.GetInstance();
-            try { 
-            User modifiedUser = new User()
+            try
             {
-                Id = request.Id,
-                Name = request.Name
-            };
-            string message = session.ModifyUser(request.Id, modifiedUser);
-            return Task.FromResult(new MessageReply { Message = message }); }
+                User modifiedUser = new User()
+                {
+                    Id = request.Id,
+                    Name = request.Name
+                };
+                string message = session.ModifyUser(request.Id, modifiedUser);
+                return Task.FromResult(new MessageReply { Message = message });
+            }
             catch (ServerError e)
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message));
@@ -210,8 +213,9 @@ namespace Server
         public override Task<MessageReply> AssociateGameWithUser(Purchase request, ServerCallContext context)
         {
             BusinessLogicGameInfo info = BusinessLogicGameInfo.GetInstance();
-            try {
-                bool couldBuy = info.BuyGame(request.IdGame, request.IdUser);
+            try
+            {
+                bool couldBuy = info.AssociateGameToUser(request.IdGame, request.IdUser);
                 string message = couldBuy ? "Juego comprado correctamente" : "No se pudo comprar juego";
                 return Task.FromResult(new MessageReply { Message = message });
             }
@@ -224,10 +228,12 @@ namespace Server
         public override Task<MessageReply> DisassociateGameWithUser(Purchase request, ServerCallContext context)
         {
             BusinessLogicGameInfo info = BusinessLogicGameInfo.GetInstance();
-            try { 
-            bool couldReturn = info.ReturnGame(request.IdGame, request.IdUser);
-            string message = couldReturn ? "Se retorno el juego correctamente" : "No se pudo retornar el juego";
-            return Task.FromResult(new MessageReply { Message = message }); }
+            try
+            {
+                bool couldReturn = info.ReturnGame(request.IdGame, request.IdUser);
+                string message = couldReturn ? "Se retorno el juego correctamente" : "No se pudo retornar el juego";
+                return Task.FromResult(new MessageReply { Message = message });
+            }
             catch (ServerError e)
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message));
