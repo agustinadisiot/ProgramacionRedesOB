@@ -1,4 +1,5 @@
-﻿using Common.NetworkUtils.Interfaces;
+﻿using Common;
+using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using System;
 using System.Text;
@@ -20,10 +21,11 @@ namespace Server
             try
             {
                 await ParsedRequestHandler(parsedData);
-                // TODO aca es el try de todo lo que hace el cliente, poner el log severity= "error"
             }
             catch (ServerError e)
             {
+
+                Logger.Log(new LogRecord { Message = $"Sever error: {e.Message}", Severity = LogRecord.ErrorSeverity });
                 await SendErrorToClient(e.Message);
             }
 

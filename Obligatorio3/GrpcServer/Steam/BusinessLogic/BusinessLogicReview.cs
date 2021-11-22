@@ -43,8 +43,7 @@ namespace Server.BusinessLogic
                 {
                     gameToAddReview.Reviews.Add(newReview);
                     gameToAddReview.UpdateReviewsRating();
-                    string msg = @$"Clasificación por {newReview.Author.Name} para el juego {gameToAddReview.Title}
-                    fue publicada correctamente";
+                    string msg = $"Clasificación por {newReview.Author.Name} para el juego {gameToAddReview.Title} fue publicada correctamente";
                     Logger.Log(new LogRecord
                     {
                         GameName = gameToAddReview.Title,

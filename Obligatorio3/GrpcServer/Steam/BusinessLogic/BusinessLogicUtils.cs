@@ -1,4 +1,5 @@
-﻿using Common.Domain;
+﻿using Common;
+using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Common.Utils;
@@ -49,8 +50,10 @@ namespace Server.BusinessLogic
                 bool userLoggedIn = connections.TryGetValue(nwsh, out string username);
                 if (userLoggedIn)
                     return username;
-                else
-                    throw new ServerError("No existe usuario con ese nombre");
+
+                string msg = "Error al conseguir nombre del usuario";
+                Logger.Log(new LogRecord { Message = msg, Severity = LogRecord.ErrorSeverity });
+                throw new ServerError(msg);
             }
         }
 
@@ -61,19 +64,28 @@ namespace Server.BusinessLogic
             lock (users)
             {
                 User actualUser = users.Find(i => i.Id == Id);
-                if (actualUser == null) throw new ServerError("No se encontró el usuario, rehacer login");
+                if (actualUser == null)
+                {
+                    string msg = "No se encontró el usuario, rehacer login";
+                    Logger.Log(new LogRecord { UserId = Id, Message = msg, Severity = LogRecord.WarningSeverity });
+                    throw new ServerError(msg);
+                }
                 return actualUser;
             }
         }
 
-   
+
 
         // PRE: Requires lock on da.Games 
         public Game GetGameById(int gameId)
         {
             Game gameFound = da.Games.Find(game => game.Id == gameId);
             if (gameFound == null)
-                throw new ServerError($" No existe el juego, tal vez haya sido eliminado");
+            {
+                string msg = " No existe el juego, tal vez haya sido eliminado";
+                Logger.Log(new LogRecord { GameId = gameId, Message = msg, Severity = LogRecord.WarningSeverity });
+                throw new ServerError(msg);
+            }
             return gameFound;
         }
 

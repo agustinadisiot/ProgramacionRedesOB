@@ -36,19 +36,21 @@ namespace Server.BusinessLogic
             List<User> users = da.Users;
             lock (users)
             {
-                User newUser = new User()
-                {
-                    Name = newUserName,
-                    Id = da.NextUserID
-                };
-                bool alreadyExists = users.Contains(newUser);
+                bool alreadyExists = users.Exists(u => u.Name == newUserName);
+
                 if (!alreadyExists)
                 {
+                    User newUser = new User()
+                    {
+                        Name = newUserName,
+                        Id = da.NextUserID
+                    };
                     da.Users.Add(newUser);
                     LogUser(newUser, "User created");
                 }
                 da.Connections.Add(nwsh, newUserName);
-                LogUser(newUser, "User logged in");
+                User loggedInUser = users.Find(u => u.Name == newUserName);
+                LogUser(loggedInUser, "User logged in");
 
                 return !alreadyExists;
             }
