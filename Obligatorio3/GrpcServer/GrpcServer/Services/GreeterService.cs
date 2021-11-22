@@ -97,7 +97,7 @@ namespace Server
         public override Task<MessageReply> AssociateGameWithUser(Purchase request, ServerCallContext context)
         {
             BusinessLogicGameInfo info = BusinessLogicGameInfo.GetInstance();
-            info.BuyGame(request.IdGame, request.IdUser);
+            info.AssociateGameToUser(request.IdGame, request.IdUser);
             return base.AssociateGameWithUser(request, context);
         }
     }

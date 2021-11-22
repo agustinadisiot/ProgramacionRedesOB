@@ -1,4 +1,5 @@
-﻿using Common.Domain;
+﻿using Common;
+using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using Common.Protocol;
 using Common.Utils;
@@ -42,8 +43,18 @@ namespace Server.BusinessLogic
                 {
                     gameToAddReview.Reviews.Add(newReview);
                     gameToAddReview.UpdateReviewsRating();
-                    return (@$"Clasificación por {newReview.Author.Name} para el juego {gameToAddReview.Title}
-                    fue publicada correctamente");
+                    string msg = @$"Clasificación por {newReview.Author.Name} para el juego {gameToAddReview.Title}
+                    fue publicada correctamente";
+                    Logger.Log(new LogRecord
+                    {
+                        GameName = gameToAddReview.Title,
+                        GameId = gameToAddReview.Id,
+                        Severity = LogRecord.InfoSeverity,
+                        UserId = newReview.Author.Id,
+                        Username = newReview.Author.Name,
+                        Message = msg
+                    });
+                    return msg;
                 }
             }
         }

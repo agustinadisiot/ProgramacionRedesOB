@@ -1,4 +1,5 @@
-﻿using Common.Domain;
+﻿using Common;
+using Common.Domain;
 using Common.NetworkUtils.Interfaces;
 using System.Collections.Generic;
 
@@ -78,14 +79,19 @@ namespace Server.BusinessLogic
                 User userToBuyGame = utils.GetUser(nwsh);
 
                 if (userToBuyGame.GamesOwned.Contains(gameToBuy))
+                {
+                    LogGameErrorBuyGameTwice(gameToBuy, userToBuyGame);
                     return false;
+                }
 
                 userToBuyGame.GamesOwned.Add(gameToBuy);
+                LogGamePurchase(gameToBuy, userToBuyGame);
+
                 return true;
             }
         }
 
-        public bool BuyGame(int gameID, int userId)
+        public bool AssociateGameToUser(int gameID, int userId)
         {
             BusinessLogicUtils utils = BusinessLogicUtils.GetInstance();
             lock (da.Games)
@@ -94,11 +100,54 @@ namespace Server.BusinessLogic
                 User userToBuyGame = utils.GetUser(userId);
 
                 if (userToBuyGame.GamesOwned.Contains(gameToBuy))
+                {
+                    LogGameAssociationError(gameToBuy, userToBuyGame);
                     return false;
+                }
 
                 userToBuyGame.GamesOwned.Add(gameToBuy);
+                LogGamePurchase(gameToBuy, userToBuyGame);
                 return true;
             }
+        }
+
+        private void LogGamePurchase(Game game, User buyer)
+        {
+            Logger.Log(new LogRecord
+            {
+                GameName = game.Title,
+                GameId = game.Id,
+                Severity = LogRecord.InfoSeverity,
+                UserId = buyer.Id,
+                Username = buyer.Name,
+                Message = $"El juego {game.Title} fue comprado por {buyer.Name}"
+            });
+        }
+
+        private void LogGameAssociationError(Game game, User buyer)
+        {
+            Logger.Log(new LogRecord
+            {
+                GameName = game.Title,
+                GameId = game.Id,
+                Severity = LogRecord.WarningSeverity,
+                UserId = buyer.Id,
+                Username = buyer.Name,
+                Message = $"El juego {game.Title} ya esta asociado al usuario {buyer.Name}"
+            });
+        }
+
+        private void LogGameErrorBuyGameTwice(Game game, User buyer)
+        {
+            Logger.Log(new LogRecord
+            {
+                GameName = game.Title,
+                GameId = game.Id,
+                Severity = LogRecord.ErrorSeverity,
+                UserId = buyer.Id,
+                Username = buyer.Name,
+                Message = $"El juego {game.Title} ya fue comprado por {buyer.Name}"
+            });
         }
     }
 }

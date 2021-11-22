@@ -110,6 +110,9 @@ namespace Server.BusinessLogic
                 Game gameToMod = utils.GetGameById(gameToModId);
                 try
                 {
+                    if (modifiedGame.Title != "")
+                        gameToMod.Title = ModifiedValidTitle(modifiedGame.Title, gameToModId, games);
+
                     ModifyAndVerifyGame(modifiedGame, gameToMod);
                 }
                 catch (Exception e) when (e is ServerError || e is TitleAlreadyExistsException)
@@ -126,9 +129,6 @@ namespace Server.BusinessLogic
 
         private void ModifyAndVerifyGame(Game modifiedGame, Game gameToMod)
         {
-            if (modifiedGame.Title != "")
-                gameToMod.Title = ModifiedValidTitle(modifiedGame.Title, gameToModId, games);
-
             if (modifiedGame.Synopsis != "")
                 gameToMod.Synopsis = ModifiedValidSynopsis(modifiedGame.Synopsis);
 

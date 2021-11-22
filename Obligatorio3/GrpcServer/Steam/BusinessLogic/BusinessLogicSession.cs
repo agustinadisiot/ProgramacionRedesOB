@@ -19,7 +19,6 @@ namespace Server.BusinessLogic
         {
             lock (singletonPadlock)
             {
-
                 if (instance == null)
                     instance = new BusinessLogicSession();
             }
@@ -46,16 +45,10 @@ namespace Server.BusinessLogic
                 if (!alreadyExists)
                 {
                     da.Users.Add(newUser);
+                    LogUser(newUser, "User created");
                 }
                 da.Connections.Add(nwsh, newUserName);
-
-                Logger.Log(new LogRecord
-                {
-                    Message = "User logged in",
-                    UserId = newUser.Id,
-                    Username = newUser.Name,
-                    Severity = LogRecord.InfoSeverity
-                });
+                LogUser(newUser, "User logged in");
 
                 return !alreadyExists;
             }
@@ -64,10 +57,18 @@ namespace Server.BusinessLogic
         public bool Logout(INetworkStreamHandler nwsh)
         {
             var connections = da.Connections;
+            bool res = false;
             lock (connections)
             {
-                return connections.Remove(nwsh);
+                res = connections.Remove(nwsh);
             }
+            lock (da.Users)
+            {
+                connections.TryGetValue(nwsh, out string username);
+                User loggedOutUser = da.Users.Find(u => u.Name == username);
+                LogUser(loggedOutUser, "User logged out");
+            }
+            return res;
         }
 
         internal string CreateUser(string name)
@@ -125,6 +126,17 @@ namespace Server.BusinessLogic
             if (!Validation.IsValidTitle(name))
                 throw new ServerError("Título no válido");
             return name;
+        }
+
+        private void LogUser(User userToLog, string msg)
+        {
+            Logger.Log(new LogRecord
+            {
+                Message = msg,
+                UserId = userToLog.Id,
+                Username = userToLog.Name,
+                Severity = LogRecord.InfoSeverity
+            });
         }
     }
 }
