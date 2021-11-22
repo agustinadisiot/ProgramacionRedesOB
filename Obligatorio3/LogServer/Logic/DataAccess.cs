@@ -59,16 +59,19 @@ namespace LogServer
 
         public List<LogRecord> GetLogs(Filter filter)
         {
-            List<LogRecord> result = new List<LogRecord>();
+            IEnumerable<LogRecord> result = new List<LogRecord>();
 
-            result = result.Concat(FilterList(InfoLogs, filter))
-                            .Concat(FilterList(WarningLogs, filter))
-                            .Concat(FilterList(ErrorLogs, filter)).ToList();
+            if (filter.Severity == null || filter.Severity == LogRecord.InfoSeverity)
+                result = result.Concat(FilterList(InfoLogs, filter));
+            if (filter.Severity == null || filter.Severity == LogRecord.WarningSeverity)
+                result = result.Concat(FilterList(WarningLogs, filter));
+            if (filter.Severity == null || filter.Severity == LogRecord.ErrorSeverity)
+                result = result.Concat(FilterList(ErrorLogs, filter));
 
-            return result;
+            return result.ToList();
         }
 
-        public List<LogRecord> FilterList(List<LogRecord> list, Filter filter)
+        public IEnumerable<LogRecord> FilterList(List<LogRecord> list, Filter filter)
         {
             lock (list)
             {
@@ -77,9 +80,7 @@ namespace LogServer
                             .Where(l => filter.UserId == null || l.UserId == filter.UserId)
                             .Where(l => filter.Username == null || l.Username.Contains(filter.Username))
                             .Where(l => filter.MinDateTime == null || l.DateAndTime >= filter.MinDateTime)
-                            .Where(l => filter.MaxDateTime == null || l.DateAndTime <= filter.MaxDateTime)
-                            .Where(l => filter.Severity == null || l.Severity == filter.Severity) //TODO ver que hacer
-                            .ToList();
+                            .Where(l => filter.MaxDateTime == null || l.DateAndTime <= filter.MaxDateTime);
             }
         }
     }

@@ -1,11 +1,8 @@
 ﻿using Common;
-using Common.Domain;
 using Common.Interfaces;
-using Common.NetworkUtils.Interfaces;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
@@ -28,18 +25,17 @@ namespace LogServer
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
             channel.ExchangeDeclare(exchange: "logs", ExchangeType.Topic);
-            CreateQueue(channel, LogRecord.ErrorSeverity);
-            CreateQueue(channel, LogRecord.WarningSeverity);
-            CreateQueue(channel, LogRecord.InfoSeverity);
 
-        }
+            var severities = SettingsMgr.ReadSetting(LogConfig.Severities).Split(",");
 
-        private void CreateQueue(IModel channel, string severity)
-        {
+
             var queueName = channel.QueueDeclare().QueueName;
-            channel.QueueBind(queue: queueName,
-                exchange: "logs",
-                routingKey: severity);
+            foreach (var severity in severities)
+            {
+                channel.QueueBind(queue: queueName,
+                    exchange: "logs",
+                    routingKey: severity);
+            }
 
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ea) =>
@@ -48,12 +44,13 @@ namespace LogServer
                 var message = Encoding.UTF8.GetString(body);
                 LogRecord log = JsonSerializer.Deserialize<LogRecord>(message);
                 da.SaveLog(log);
-
             };
             channel.BasicConsume(queue: queueName,
                 autoAck: true,
                 consumer: consumer);
 
+
         }
+
     }
 }
