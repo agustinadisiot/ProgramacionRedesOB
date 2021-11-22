@@ -8,7 +8,7 @@ namespace Common
     public class LogRecord
     {
         public const string ErrorSeverity = "error";
-        public const string WarningSeverity = "warn";
+        public const string WarningSeverity = "warning";
         public const string InfoSeverity = "info";
 
         public string Message { get; set; }

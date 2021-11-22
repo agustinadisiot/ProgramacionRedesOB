@@ -124,9 +124,9 @@ namespace Server.BusinessLogic
         {
             var userWithSameTitle = users.Find(i => (i.Name == name) && (i.Id != userToModId));
             if (userWithSameTitle != null)
-                throw new NameAlreadyExistsException();
+                throw new NameAlreadyExistsException(); // TODO log
             if (!Validation.IsValidTitle(name))
-                throw new ServerError("Nombre no válido");
+                throw new ServerError("Nombre no válido"); // TODO log
             return name;
         }
 

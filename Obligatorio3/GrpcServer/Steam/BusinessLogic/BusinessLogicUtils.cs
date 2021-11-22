@@ -38,7 +38,7 @@ namespace Server.BusinessLogic
             {
                 string username = GetUsername(nwsh);
                 User actualUser = users.Find(i => i.Name == username);
-                if (actualUser == null) throw new ServerError("No se encontró el usuario, rehacer login");
+                if (actualUser == null) throw new ServerError("No se encontró el usuario, rehacer login"); // TODO log
                 return users.Find(i => i.Name == username);
             }
         }
